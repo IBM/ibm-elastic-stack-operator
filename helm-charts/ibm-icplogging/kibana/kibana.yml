@@ -1,0 +1,42 @@
+{{ template "elk.settings.all.prepare" . -}}
+
+# 1. kibana general settings
+server.name: "{{ .Values.kibana.name }}"
+{{- if .Values.kibana.routerEnabled }}
+server.host: "127.0.0.1"
+{{- else }}
+server.host: "0.0.0.0"
+{{- end }}
+server.port: {{ .Values.kibana.internal }}
+{{- if eq  "ingress" .Values.kibana.access }}
+server.basePath: "{{ .Values.kibana.ingress.path }}"
+#server.rewriteBasePath: true
+  {{- if .Values.kibana.routerEnabled }}
+elasticsearch.customHeaders: {'kibana': 'kibana'}
+elasticsearch.requestHeadersWhitelist: ["authorization"]
+  {{- end }}
+{{- end }}
+kibana.defaultAppId: "discover"
+
+# 2. elastisearch settings
+{{- if .Values.elasticsearch.security.authc.enabled }}
+elasticsearch.hosts: "https://{{ .Values.elasticsearch.name }}:{{ .Values.elasticsearch.client.restPort }}"
+elasticsearch.ssl.alwaysPresentCertificate: true
+elasticsearch.ssl.certificate: /usr/share/elasticsearch/config/tls/kibana.crt
+elasticsearch.ssl.key: /usr/share/elasticsearch/config/tls/kibana.key
+elasticsearch.ssl.certificateAuthorities: /usr/share/elasticsearch/config/tls/ca.crt
+elasticsearch.ssl.keyPassphrase: "{{ .Values.security.app.keystore.password }}"
+elasticsearch.ssl.verificationMode: certificate
+{{- else }}
+elasticsearch.hosts: "http://{{ .Values.elasticsearch.name }}:{{ .Values.elasticsearch.client.restPort }}"
+{{- end }}
+
+# 3. ssl settings
+{{- if .Values.kibana.https }}
+# SSL for outgoing requests from the Kibana Server (PEM formatted)
+server.ssl.enabled: true
+server.ssl.key: /usr/share/elasticsearch/config/tls/kibana.key
+server.ssl.certificate: /usr/share/elasticsearch/config/tls/kibana.crt
+server.ssl.certificateAuthorities: /usr/share/elasticsearch/config/tls/ca.crt
+server.ssl.supportedProtocols: [ {{ .Values.security.tls.version }} ]
+{{- end }}

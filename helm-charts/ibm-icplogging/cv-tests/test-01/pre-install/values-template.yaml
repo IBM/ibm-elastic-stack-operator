@@ -1,0 +1,43 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+image:
+  pullSecret:
+    enabled: true
+    name: logregcred
+filebeat:
+  name: fb-{{ release }}
+  image:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-filebeat-amd64"
+logstash:
+  image:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-logstash-amd64"
+  name: ls-{{ release }}
+  port: 5000
+elasticsearch:
+  name: es-{{ release }}
+  internalPort: 9300
+  image:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-elasticsearch-amd64"
+  initImage:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-initcontainer-amd64"
+  master:
+    name: es-ma-{{ release }}
+    replicas: 1
+  client:
+    name: es-cl-{{ release }}
+    restPort: 9200
+  data:
+    name: es-da-{{ release }}
+    replicas: 1
+    storage:
+      persistent: false
+curator:
+  image:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/indices-cleaner-amd64"
+kibana:
+  install: false
+security:
+  enabled: false

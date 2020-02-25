@@ -1,0 +1,73 @@
+{{- if (.Values.kibana.install) }}
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ template "kibana.fullname" . }}-init"
+  labels:
+    app: "{{ template "elasticsearch.fullname" . }}"
+    component: "{{ .Values.kibana.name }}"
+    release: "{{ .Release.Name }}"
+    role: "kibana-init"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  backoffLimit: 30
+  template:
+    metadata:
+      labels:
+        app: "{{ template "elasticsearch.fullname" . }}"
+        component: "{{ .Values.kibana.name }}"
+        role: "kibana-init"
+        chart: "{{ .Chart.Name }}"
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+    spec:
+      restartPolicy: OnFailure
+{{ include "image.pullSecret" . | indent 6 }}
+{{- if .Values.elasticsearch.client.tolerations }}
+      tolerations:
+{{ toYaml .Values.elasticsearch.client.tolerations | indent 6 }}
+{{- end }}
+{{- if .Values.elasticsearch.client.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.elasticsearch.client.nodeSelector | indent 8 }}
+{{- end }}
+      containers:
+      - name: init
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsUser: 1000
+          runAsNonRoot: true
+        image: {{ .Values.kibana.initImage.repository }}:{{ .Values.kibana.initImage.tag }}
+        resources:
+{{ toYaml .Values.kibana.init.resources | indent 12 }}
+        command: ["/opt/entry/entrypoint.sh"]
+        env:
+        - name: "IAM_API_KEY"
+          valueFrom:
+            secretKeyRef:
+              name: "{{ template "kibana.fullname" . }}-init-secret"
+              key: "kibana-init-{{ $.Release.Name }}-api-key"
+        - name: CLUSTER_DOMAIN
+          value: "{{ template "clusterDomain" . }}"
+{{- if .Values.kibana.routerEnabled }}
+        - name: ROUTER_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kibana.fullname" . }}-nginx
+              key: client-api-key
+{{- end }}
+        volumeMounts:
+          - mountPath: "/opt/entry"
+            name: entrypoint
+      volumes:
+      - name: entrypoint
+        configMap:
+          name: {{ template "kibana.fullname" . }}-init-entrypoint
+          defaultMode: 0777
+{{ end }}

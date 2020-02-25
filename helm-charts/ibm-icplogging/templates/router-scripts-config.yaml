@@ -1,0 +1,32 @@
+{{ template "elk.settings.all.prepare" . -}}
+{{- if or .Values.kibana.routerEnabled .Values.elasticsearch.routerEnabled }}
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: "{{ template "elasticsearch.fullname" . }}"
+    component: "{{ .Values.kibana.name }}"
+    release: "{{ .Release.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: "{{ .Release.Service }}"
+  name: "{{ template "router.fullname" . }}-scripts"
+data:
+  kibanarouter.lua: |-
+{{ tpl (.Files.Get "router-scripts/kibanarouter.lua") . | indent 4 }}
+  pip.lua: |-
+{{ tpl (.Files.Get "router-scripts/pip.lua") . | indent 4 }}
+  pdp.lua: |-
+{{ tpl (.Files.Get "router-scripts/pdp.lua") . | indent 4 }}
+  pim.lua: |-
+{{ tpl (.Files.Get "router-scripts/pim.lua") . | indent 4 }}
+  set.lua: |-
+{{ tpl (.Files.Get "router-scripts/set.lua") . | indent 4 }}
+  util.lua: |-
+{{ tpl (.Files.Get "router-scripts/util.lua") . | indent 4 }}
+{{- end }}
+

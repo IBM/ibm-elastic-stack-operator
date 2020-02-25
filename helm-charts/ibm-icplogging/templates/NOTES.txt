@@ -1,0 +1,16 @@
+{{- if .Values.kibana.install }}
+{{ template "elk.settings.all.prepare" . -}}
+On first launch, Kibana will take several minutes to complete an optimization phase. During that time you will likely have connection errors.
+
+Once it has finished initializing, Kibana can be accessed via the following URL, where <proxy_ip> refers to your IBM Cloud Private proxy server:
+
+  {{- if eq .Values.kibana.access "ingress" }}
+      https://<proxy_ip>:{{ .Values.general.ingressPort }}{{ .Values.kibana.ingress.path }}
+  {{ else }}
+    {{- if .Values.kibana.https }}
+      https://<proxy_ip>:{{ .Values.kibana.external }}/app/kibana
+    {{- else }}
+      http://<proxy_ip>:{{ .Values.kibana.external }}/app/kibana
+    {{- end }}
+  {{- end }}
+{{- end }}

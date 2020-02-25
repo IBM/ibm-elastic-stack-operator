@@ -1,0 +1,40 @@
+{{- if .Values.kibana.install }}
+{{ template "elk.settings.all.prepare" . -}}
+{{- if eq  "ingress" .Values.kibana.access }}
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "{{ template "kibana.fullname" . }}-ingress"
+  labels:
+    app: "{{ template "elasticsearch.fullname" . }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    component: "{{ .Values.kibana.name }}"
+    heritage: "{{ .Release.Service }}"
+    release: "{{ .Release.Name }}"
+{{- if .Values.kibana.ingress.labels }}
+{{ toYaml .Values.kibana.ingress.labels | indent 4 }}
+{{- end }}
+  annotations:
+    kubernetes.io/ingress.class: "ibm-icp-management"
+    icp.management.ibm.com/secure-backends: {{ if .Values.kibana.https }}"true"{{ else }}"false"{{ end }}
+{{- if not .Values.kibana.routerEnabled }}
+    # Tells ingress to keep the /kibana context root
+    icp.management.ibm.com/rewrite-target: "/"
+{{- end }}
+{{- if .Values.kibana.ingress.annotations }}
+{{ toYaml .Values.kibana.ingress.annotations | indent 4 }}
+{{- end }}
+spec:
+  rules:
+  - http:
+      paths:
+      - path: {{ .Values.kibana.ingress.path }}
+        backend:
+          serviceName: {{ .Values.kibana.name }}
+          servicePort: {{ .Values.kibana.internal }}
+{{- end -}}
+{{- end -}}

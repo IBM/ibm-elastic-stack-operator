@@ -1,0 +1,314 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+general:
+  environment: IBMCloudPrivate
+  clusterDomain: cluster.local
+  clusterName: mycluster
+  ingressPort: 8443
+
+image:
+  pullPolicy: IfNotPresent
+  pullSecret:
+    enabled: false
+    name: regcred
+
+security:
+  ca:
+    keystore:
+      password: changeme
+    truststore:
+      password: changeme
+    # set to `external` to use existing CA stored in Kubernetes secret to generate certs
+    origin: internal
+    external:
+      # the secret need to be in the same namespace as the chart release
+      secretName: cluster-ca-cert
+      # the Kubenetes field name (key) within the specified secret that stores CA cert
+      certFieldName: tls.crt
+      # the Kubenets field name (key) within the specified secret that stores CA private key
+      keyFieldName: tls.key
+  app:
+    keystore:
+      password: changeme
+  tls:
+    version: TLSv1.2
+
+logstash:
+  replicas: 1
+  name: logstash
+  heapSize: "512m"
+  memoryLimit: "1024Mi"
+  port: 5000
+  image:
+    repository: "ibmcom/icp-logstash"
+    tag: "6.6.1"
+  nodeSelector:
+  tolerations:
+  probe:
+    enabled: false
+    periodSeconds: 60
+    minEventsPerPeriod: 1
+    maxUnavailablePeriod: 5
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 64Mi
+    image:
+      repository: "ibmcom/logstash-liveness-probe"
+      tag: "1.0.2-f4"
+
+kibana:
+  install: true
+  replicas: 1
+  name: kibana
+  nodeSelector:
+  tolerations:
+  # accepted values:
+  # ingress or loadBalancer, defaults to loadBalancer
+  access: loadBalancer
+  ingress:
+    # "/kibana" for managed service logging instance
+    # sample value for custom ingress: "/tenantA/kibana"
+    # no trailing /
+    path: "/tenantA/kibana"
+    # additional labels to facilitate link rendering in icp console
+    labels:
+      inmenu: "true"
+      # if provided, the link will open in a new tab with the target value in the <a> tag
+      target: "logging-sampleA"
+    annotations:
+  service:
+    # additional labels to facilitate link rendering in icp console
+    labels:
+      inmenu: "true"
+      # if provided, the link will open in a new tab with the target value in the <a> tag
+      target: "logging-sampleA"
+    # additional annotations to facilitate link rendering in icp console
+    annotations:
+      # display name that will show in the menu
+      name: "Logging - Sample A"
+      # provided by icp console
+      id: "add-ons"
+      # list of roles to be able to view TA in the menu
+      roles: "ClusterAdministrator,Administrator,Operator,Viewer"
+      # show link if user is in any of the teams
+      # ui.icp.ibm.com/tenant:
+  internal: 5601
+  # port to access the kibana instance from outside the cluster
+  # only used when ingress set to loadBalancer
+  external: 31601
+  # maximum old space size (in MB) of the V8 Javascript engine
+  maxOldSpaceSize: "1536"
+  memoryLimit: "2048Mi"
+  image:
+    repository: ibmcom/icp-kibana
+    tag: 6.6.1
+  init:
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 64Mi
+  initImage:
+    repository: "ibmcom/curl"
+    tag: "4.2.0-build.2"
+  routerImage:
+    repository: "ibmcom/icp-management-ingress"
+    tag: "latest"
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 64Mi
+  security:
+    authc:
+      enabled: false
+      # accepted values: icp
+      # what it does: redirects to icp login page first
+      provider: icp
+    authz:
+      enabled: false
+      # accepted values: icp
+      # what it does: only allow request to pass if user
+      # have access to the required namespaces
+      # that the current user has access to
+      # requires authc.enabled = true and authc.provider = icp
+      provider: icp
+      icp:
+        # 1. user is allowed to access the kibana ingress
+        #    if namespaces granted to user are listed below
+        # 2. when the list below is empty, only cluster admin
+        #    can access this kibana ingress
+        authorizedNamespaces:
+          - tenantadev
+          - tenantatest
+          - tenantaprod
+
+filebeat:
+  name: filebeat-ds
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 64Mi
+  image:
+    repository: "ibmcom/icp-filebeat"
+    tag: "6.6.1"
+  scope:
+    nodes:
+    namespaces:
+  tolerations:
+  registryHostPath: "/var/lib/icp/logging/filebeat-registry/{{ .Release.Name }}"
+elasticsearch:
+  name: "elasticsearch"
+  internalPort: 9300
+  image:
+    repository: "ibmcom/icp-elasticsearch"
+    tag: "6.6.1"
+  pkiInitImage:
+    repository: "ibmcom/logging-pki-init"
+    tag: "2.3.0"
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 64Mi
+  initImage:
+    repository: "ibmcom/icp-initcontainer"
+    tag: "1.0.0-f4"
+  routerImage:
+    repository: "ibmcom/icp-management-ingress"
+    tag: "latest"
+    resources:
+       limits:
+         memory: 256Mi
+       requests:
+         memory: 64Mi
+  security:
+    authc:
+      # accepted values: true
+      enabled: true
+      # accepted values: nginx
+      # what it does: mtls authz with account rbac
+      provider: nginx
+    authz:
+      enabled: false
+      # accepted values: icp
+      # what it does: filter log content by the namespace
+      # that the current user has access to
+      provider: icp
+
+  client:
+    name: client
+    replicas: 1
+    heapSize: "1024m"
+    memoryLimit: "1536Mi"
+    restPort: 9200
+    antiAffinity: soft
+    tolerations:
+    nodeSelector:
+
+  master:
+    name: master
+    # Set to the # of management (or master, if no mgmt) nodes
+    replicas: 1
+    heapSize: "1024m"
+    memoryLimit: "1536Mi"
+    antiAffinity: soft
+    tolerations:
+    nodeSelector:
+
+  data:
+    name: data
+    # Set to the # of management (or master, if no mgmt) nodes
+    replicas: 2
+    heapSize: 4000m
+    memoryLimit: 7000M
+    antiAffinity: hard
+    tolerations:
+    nodeSelector:
+    storage:
+      # When true will expect a PersistentVolume
+      persistent: true
+      # Set to true if you are using GlusterFS or other dynamic provisioner
+      useDynamicProvisioning: false
+      # If not using dynamic provisioning, you can use selectors to refine the binding process.
+      # These are IGNORED if using dynamic provisioning.
+      selector:
+        label: ""
+        value: ""
+      # 10Gi is not the recommended size, but rather a small default.
+      # It will match much larger drives as well.
+      size: 10Gi
+      accessModes:
+        - ReadWriteOnce
+      ## Specify the storageClass name you want to use
+      ## If you don't specify a storageClass name it will use the default
+      storageClass: ""
+
+curator:
+  name: log-curator
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 64Mi
+  image:
+    repository: "ibmcom/indices-cleaner"
+    tag: "1.2.0"
+  # runs at 23:30 UTC daily
+  schedule: "30 23 * * *"
+  nodeSelector:
+  tolerations:
+  app:
+    unit: days
+    count: 1
+  monitoring:
+    unit: days
+    count: 7
+  watcher:
+    unit: days
+    count: 1
+  va:
+    unit: days
+    count: 90
+  mapp:
+    unit: days
+    count: 2
+  auditLog:
+    unit: days
+    count: 1
+
+xpack:
+  monitoring: true
+  graph: false
+  reporting: false
+  ml: false
+  watcher: false
+  license:
+    # accepted values: secret, selfGenerated
+    # what it does: determines which xpack license will be used
+    source: selfGenerated
+    selfGenerated:
+      # accepted values: trial, basic
+      # what it does:
+      # see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/license-settings.html
+      type: basic
+    secret:
+      # the secret need to be in the same namespace as the chart release
+      secretName: es-license
+      # the Kubenetes field name (key) within the specified secret
+      # that stores license json file
+      fieldName: license.json
+upgrade:
+  elasticsearch:
+    # set to true if data from old version need to be imported
+    importData: true
+    # if set to true, a copy of existing data in old format will be left intact
+    # under pv-mount/nodes (/usr/share/elasticsearch/data/nodes)
+    # this allows data (up to point of upgrade) to be restored when rolling back
+    retainOldData: true

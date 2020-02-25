@@ -1,0 +1,23 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+# this configmap serves as a support and troubleshoot utility
+# it is not required for the ICP logging helm chart functionality
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ template "fullname" . }}-values"
+  labels:
+    app: "{{ template "fullname" . }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    component: "{{ .Values.kibana.name }}"
+    heritage: "{{ .Release.Service }}"
+    release: "{{ .Release.Name }}"
+  annotations:
+data:
+  calculated-values.yml: |-
+{{ tpl (.Files.Get "values/calculated-values.yml") . | indent 4 }}
+  user-values.yml: |-
+{{ tpl (.Files.Get "values/user-values.yml") . | indent 4 }}

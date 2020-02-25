@@ -1,0 +1,224 @@
+{{- if .Values.kibana.install -}}
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+{{ template "elk.settings.all.prepare" . -}}
+{{ template "apiVersionTryV1" }}
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ template "elasticsearch.fullname" . }}"
+    component: "{{ .Values.kibana.name }}"
+    release: "{{ .Release.Name }}"
+    role: "kibana"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: "{{ .Release.Service }}"
+  name: "{{ template "kibana.fullname" . }}"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ template "elasticsearch.fullname" . }}"
+      component: "{{ .Values.kibana.name }}"
+      release: "{{ .Release.Name }}"
+      role: "kibana"
+      heritage: "{{ .Release.Service }}"
+  replicas: {{ .Values.kibana.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: "{{ template "elasticsearch.fullname" . }}"
+        component: "{{ .Values.kibana.name }}"
+        role: "kibana"
+        release: "{{ .Release.Name }}"
+        chart: "{{ .Chart.Name }}"
+        heritage: "{{ .Release.Service }}"
+      annotations:
+        productName: Kibana
+        productVersion: 6.6.1
+        productID: none
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+    spec:
+{{- if eq .Release.Namespace "kube-system" }}
+      priorityClassName: system-cluster-critical
+{{- end }}
+{{ include "image.pullSecret" . | indent 6 }}
+{{- if .Values.kibana.tolerations }}
+      tolerations:
+{{ toYaml .Values.kibana.tolerations | indent 6 }}
+{{- end }}
+{{- if .Values.kibana.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.kibana.nodeSelector | indent 8 }}
+{{- end }}
+      # Required for multi-platform config
+      securityContext:
+        fsGroup: 1000
+      containers:
+{{- if .Values.kibana.routerEnabled }}
+      - name: router
+        securityContext:
+          allowPrivilegeEscalation: false
+        resources:
+{{ toYaml .Values.kibana.routerImage.resources | indent 12 }}
+        image: {{ .Values.kibana.routerImage.repository }}:{{ .Values.kibana.routerImage.tag }}
+        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+        command: ["/opt/ibm/router/entry/entrypoint.sh"]
+        env:
+        - name: KEYPASSPHRASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "elasticsearch.fullname" . }}-pki-secret
+              key: appKeystorePassword
+        - name: CLUSTER_DOMAIN
+          value: "{{ template "clusterDomain" . }}"
+        - name: CLUSTER_NAME
+          value: "{{ template "clusterName" . }}"
+        - name: AUTHORIZED_NAMESPACES
+{{- if .Values.kibana.security.authz.icp.authorizedNamespaces }}
+          value: '{{ toJson .Values.kibana.security.authz.icp.authorizedNamespaces }}'
+{{- end }}
+        - name: CLIENT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "kibana.fullname" . }}-nginx
+              key: client-api-key
+        - name: WLP_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: platform-oidc-credentials
+              key: WLP_CLIENT_ID
+        ports:
+        - name: router
+          containerPort: {{ .Values.general.ingressPort }}
+{{ include "router.probes" . | indent 8 }}
+        volumeMounts:
+          - name: router-config
+            mountPath: "/opt/ibm/router/conf"
+          - name: router-entry
+            mountPath: "/opt/ibm/router/entry"
+          - name: router-scripts
+            mountPath: "/opt/ibm/router/nginx/conf/rbac"
+          - name: certs
+            mountPath: "/opt/ibm/router/certs"
+{{- end }}
+      - name: kibana
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsNonRoot: true
+        image: {{ .Values.kibana.image.repository }}:{{ .Values.kibana.image.tag }}
+        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+        command: ["/bin/bash", "/scripts/entrypoint.sh"]
+{{- if not .Values.kibana.routerEnabled }}
+        ports:
+        - containerPort: {{ .Values.kibana.internal }}
+          name: ui
+{{- end }}
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/kibana/config
+        - name: cache
+          mountPath: /usr/share/kibana/optimize
+        - name: entrypoint
+          mountPath: /scripts
+{{- if or .Values.kibana.routerEnabled (or .Values.elasticsearch.security.authc.enabled .Values.kibana.https) }}
+        - name: certs
+          mountPath: "/usr/share/elasticsearch/config/tls"
+          readOnly: true
+{{- end }}
+        resources:
+          limits:
+            memory: {{ .Values.kibana.memoryLimit }}
+        env:
+        - name: "NODE_OPTIONS"
+          value: "--max-old-space-size={{ .Values.kibana.maxOldSpaceSize }}"
+        - name: CFG_BASEDIR
+          value: /usr/share/kibana
+{{- if or .Values.elasticsearch.security.authc.enabled .Values.kibana.https }}
+        - name: CA_TRUSTSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "elasticsearch.fullname" . }}-pki-secret
+              key: caTruststorePassword
+        - name: SERVER_SSL_KEYPASSPHRASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "elasticsearch.fullname" . }}-pki-secret
+              key: appKeystorePassword
+{{- end }}
+      volumes:
+        - name: cache
+          emptyDir:
+            medium: ""
+        - name: config
+          configMap:
+            name: {{ template "kibana.fullname" . }}-config
+            items:
+              - key: kibana.yml
+                path: kibana.yml
+        - name: entrypoint
+          configMap:
+            name: {{ template "elasticsearch.fullname" . }}-entrypoint
+            defaultMode: 365
+            items:
+              - key: kibana-entrypoint.sh
+                path: entrypoint.sh
+              - key: map-config.sh
+                path: map-config.sh
+{{- if .Values.kibana.routerEnabled }}
+        - name: router-config
+          configMap:
+            name: {{ template "kibana.fullname" . }}-nginx
+        - name: router-entry
+          configMap:
+            name: {{ template "kibana.fullname" . }}-router-entrypoint
+            defaultMode: 0744
+        - name: router-scripts
+          configMap:
+            name: {{ template "router.fullname" . }}-scripts
+            defaultMode: 0744
+{{- end }}
+{{- if or .Values.kibana.routerEnabled (or .Values.elasticsearch.security.authc.enabled .Values.kibana.https) }}
+        - name: certs
+          secret:
+            secretName: {{ template "fullname" . }}-certs
+{{- end }}
+        - name: migration-check-entrypoint
+          configMap:
+            name: {{ template "kibana.fullname" . }}-migration-check-entrypoint
+            defaultMode: 0777
+      restartPolicy: Always
+{{- if .Values.kibana.routerEnabled }}
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kibana.fullname" . }}-router-entrypoint
+data:
+  entrypoint.sh: |
+    #!/bin/sh
+    echo "Copying"
+    cp -f /opt/ibm/router/certs/kibanarouter.crt /opt/ibm/router/nginx/conf/server.crt
+    cp -f /opt/ibm/router/certs/kibanarouter.key /opt/ibm/router/nginx/conf/server.key
+    echo $KEYPASSPHRASE > /opt/ibm/router/nginx/conf/passphrases
+    cp -f /opt/ibm/router/conf/nginx.conf /opt/ibm/router/nginx/conf/nginx.conf
+
+  {{- if eq (.Values.general.environment | lower) "openshift" }}
+    export OPENSHIFT_RESOLVER=$(cat /etc/resolv.conf |grep nameserver|awk '{split($0, a, " "); print a[2]}')
+    sed -i "s/{OPENSHIFT_RESOLVER}/${OPENSHIFT_RESOLVER}/g" /opt/ibm/router/nginx/conf/nginx.conf
+  {{- end }}
+
+    echo "Starting..."
+    nginx -g 'daemon off;'
+
+{{- end }}
+{{- end}}

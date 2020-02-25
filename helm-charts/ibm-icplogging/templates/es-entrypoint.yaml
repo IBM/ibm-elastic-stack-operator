@@ -1,0 +1,69 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ template "elasticsearch.fullname" . }}-entrypoint"
+  labels:
+    app: "{{ template "elasticsearch.fullname" . }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: "{{ .Release.Service }}"
+    release: "{{ .Release.Name }}"
+data:
+  entrypoint.sh: |-
+    #!/bin/bash
+
+    cd /scripts
+    ./install-plugin.sh
+    ./map-config.sh
+
+    echo "launching elasticsearch"
+    cd /usr/share/elasticsearch
+    /usr/local/bin/docker-entrypoint.sh
+  install-plugin.sh: |-
+    #!/bin/bash
+    echo "searching for plugin"
+    plugin_path=/usr/share/elasticsearch/plugin-bundles/searchguard.zip
+    ls -l $plugin_path
+
+    if [ -f $plugin_path ]; then
+      echo "Searchguard plugin found."
+      elasticsearch-plugin install -b file://$plugin_path
+      echo "install done. exit code=$?"
+    else
+      echo "No searchguard plugin found. No need to install"
+    fi
+  logstash-entrypoint.sh: |-
+    #!/bin/sh
+    cd /scripts
+    echo "Launching Logstash"
+    # to debug: --log.level debug
+    /usr/local/bin/docker-entrypoint
+  kibana-entrypoint.sh: |-
+    #!/bin/sh
+    cd /scripts
+    echo "Launching Kibana"
+    /usr/local/bin/kibana-docker
+  map-config.sh: |-
+    #!/bin/bash
+    # Copies the configuration to the target directory. Modify it for any
+    # platform-specific needs. We could symlink, but Kubernetes still has a
+    # limitation for configmaps mounted to a subPath.
+
+    SRC=/usr/share/config/elasticsearch.yml
+    TARGET=${CFG_BASEDIR}/config/elasticsearch.yml
+    MACTYPE=`uname -m`
+    echo "Machine type: $MACTYPE"
+
+    rm -f $TARGET
+    cp $SRC $TARGET
+
+    if [ "$MACTYPE" == "s390x" ]; then
+      echo $'\r' >> $TARGET
+      echo "bootstrap.system_call_filter: false" >> $TARGET
+    fi
+  migrate-elk551-data.sh: |-
+{{ tpl (.Files.Get "es-migration/migrate-elk551-data.sh") . | indent 4 }}

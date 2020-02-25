@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elastic-stack-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: elastic-stack-operator
+  template:
+    metadata:
+      labels:
+        name: elastic-stack-operator
+    spec:
+      serviceAccountName: elastic-stack-operator
+      containers:
+        - name: elastic-stack-operator
+          # Replace this with the built image name
+          image: dianxh/cs-elastic-stack-operator:v0.0.1
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              value: ""
+              # valueFrom:
+              #   fieldRef:
+              #     fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "elastic-stack-operator"

@@ -1,0 +1,244 @@
+apiVersion: elasticstack.cloud.ibm.com/v1alpha1
+kind: ElasticStack
+metadata:
+  name: es3
+spec:
+  curator:
+    app:
+      count: 1
+      unit: days
+    auditLog:
+      count: 1
+      unit: days
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/indices-cleaner
+      tag: 1.2.0-build.1
+    mapp:
+      count: 2
+      unit: days
+    monitoring:
+      count: 7
+      unit: days
+    name: log-curator
+    nodeSelector: null
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 64Mi
+    schedule: 30 23 * * *
+    tolerations: null
+    va:
+      count: 90
+      unit: days
+    watcher:
+      count: 1
+      unit: days
+  elasticsearch:
+    client:
+      antiAffinity: soft
+      heapSize: 1024m
+      memoryLimit: 1536Mi
+      name: client
+      nodeSelector: null
+      replicas: 1
+      restPort: 9200
+      tolerations: null
+    data:
+      antiAffinity: hard
+      heapSize: 4000m
+      memoryLimit: 7000M
+      name: data
+      nodeSelector: null
+      replicas: 2
+      storage:
+        accessModes:
+        - ReadWriteOnce
+        persistent: true
+        selector:
+          label: ""
+          value: ""
+        size: 10Gi
+        storageClass: ""
+        useDynamicProvisioning: false
+      tolerations: null
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-elasticsearch-oss
+      tag: 6.6.1
+    initImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-initcontainer
+      tag: 1.0.0-build.1
+    internalPort: 9300
+    master:
+      antiAffinity: soft
+      heapSize: 1024m
+      memoryLimit: 1536Mi
+      name: master
+      nodeSelector: null
+      replicas: 1
+      tolerations: null
+    name: elasticsearch
+    pkiInitImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logging-pki-init
+      resources:
+        limits:
+          memory: 256Mi
+        requests:
+          memory: 64Mi
+      tag: 2.3.0-build.1
+    routerImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
+      resources:
+        limits:
+          memory: 256Mi
+        requests:
+          memory: 64Mi
+      tag: 2.5.0
+    security:
+      authc:
+        enabled: true
+        provider: nginx
+      authz:
+        enabled: false
+        provider: icp
+  filebeat:
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-filebeat-oss
+      tag: 6.6.1
+    logFormat: text
+    name: filebeat-ds
+    registryHostPath: /var/lib/icp/logging/filebeat-registry/{{ .Release.Name }}
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 64Mi
+    scope:
+      namespaces: null
+      nodes: null
+    tolerations: null
+  general:
+    clusterDomain: cluster.local
+    clusterName: mycluster
+    environment: IBMCloudPrivate
+    ingressPort: 8443
+  image:
+    pullPolicy: IfNotPresent
+    pullSecret:
+      enabled: false
+      name: regcred
+  kibana:
+    access: loadBalancer
+    external: 31601
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-kibana-oss
+      tag: 6.6.1
+    ingress:
+      annotations: null
+      labels:
+        inmenu: "true"
+        target: logging-sampleA
+      path: /tenantA/kibana
+    init:
+      resources:
+        limits:
+          memory: 256Mi
+        requests:
+          memory: 64Mi
+    initImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/curl
+      tag: 4.2.0-build.2
+    install: true
+    internal: 5601
+    maxOldSpaceSize: "1536"
+    memoryLimit: 2048Mi
+    name: kibana
+    nodeSelector: null
+    replicas: 1
+    routerImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
+      resources:
+        limits:
+          memory: 256Mi
+        requests:
+          memory: 64Mi
+      tag: 2.5.0
+    security:
+      authc:
+        enabled: false
+        provider: icp
+      authz:
+        enabled: false
+        icp:
+          authorizedNamespaces:
+          - tenantadev
+          - tenantatest
+          - tenantaprod
+        provider: icp
+    service:
+      annotations:
+        id: add-ons
+        name: Logging - Sample A
+        roles: ClusterAdministrator,Administrator,Operator,Viewer
+      labels:
+        inmenu: "true"
+        target: logging-sampleA
+    tolerations: null
+  logstash:
+    heapSize: 512m
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-logstash-oss
+      tag: 6.6.1
+    memoryLimit: 1024Mi
+    name: logstash
+    nodeSelector: null
+    port: 5000
+    probe:
+      enabled: false
+      image:
+        repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logstash-liveness-probe
+        tag: 1.0.2-build.1
+      maxUnavailablePeriod: 5
+      minEventsPerPeriod: 1
+      periodSeconds: 60
+      resources:
+        limits:
+          memory: 256Mi
+        requests:
+          memory: 64Mi
+    replicas: 1
+    tolerations: null
+  security:
+    app:
+      keystore:
+        password: changeme
+    ca:
+      external:
+        certFieldName: tls.crt
+        keyFieldName: tls.key
+        secretName: cluster-ca-cert
+      keystore:
+        password: changeme
+      origin: internal
+      truststore:
+        password: changeme
+    tls:
+      version: TLSv1.2
+  upgrade:
+    elasticsearch:
+      importData: true
+      retainOldData: true
+  xpack:
+    graph: false
+    license:
+      secret:
+        fieldName: license.json
+        secretName: es-license
+      selfGenerated:
+        type: basic
+      source: selfGenerated
+    ml: false
+    monitoring: true
+    reporting: false
+    watcher: false
+  

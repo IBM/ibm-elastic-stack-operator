@@ -1,0 +1,91 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+{{ template "elk.settings.all.prepare" . -}}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "{{ template "elasticsearch.fullname" . }}-curator"
+  labels:
+    app: "{{ template "elasticsearch.fullname" . }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    component: "curator"
+    heritage: "{{ .Release.Service }}"
+    release: "{{ .Release.Name }}"
+spec:
+  schedule: "{{ .Values.curator.schedule }}"
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: "{{ template "elasticsearch.fullname" . }}"
+            component: "curator"
+            role: "curator"
+            release: "{{ .Release.Name }}"
+            chart: "{{ .Chart.Name }}"
+            heritage: "{{ .Release.Service }}"
+        spec:
+          restartPolicy: "OnFailure"
+{{- if .Values.curator.tolerations }}
+          tolerations:
+{{ toYaml .Values.curator.tolerations | indent 10 }}
+{{- end }}
+{{- if .Values.curator.nodeSelector }}
+          nodeSelector:
+{{ toYaml .Values.curator.nodeSelector | indent 12 }}
+{{- end }}
+{{ include "image.pullSecret" . | indent 10 }}
+          containers:
+          - name: curator
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              runAsUser: 1000
+              runAsNonRoot: true
+            image: "{{ .Values.curator.image.repository }}:{{ .Values.curator.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command: ["/clean-indices.sh"]
+            resources:
+{{ toYaml .Values.curator.resources | indent 14 }}
+            volumeMounts:
+            - name: actionfile
+              mountPath: /action.yml
+              subPath: action.yml
+            - name: curator-config
+              mountPath: /etc/curator.yml
+              subPath: curator.yml
+    {{- if .Values.elasticsearch.security.authc.enabled }}
+            - name: certs
+              mountPath: "/curator/tls"
+              readOnly: true
+    {{- end }}
+            env:
+            - name: APP_KEYSTORE_PASSWORD
+              value: "{{ .Values.security.app.keystore.password | b64enc }}"
+            - name: CA_TRUSTSTORE_PASSWORD
+              value: "{{ .Values.security.ca.truststore.password | b64enc }}"
+            - name: ES_INTERNAL_PORT
+              value: "{{ .Values.elasticsearch.internalPort }}"
+          volumes:
+    {{- if .Values.elasticsearch.security.authc.enabled }}
+            - name: certs
+              secret:
+                secretName: "{{ template "fullname" . }}-certs"
+    {{- end }}
+            - name: "actionfile"
+              configMap:
+                name: {{ template "elasticsearch.fullname" . }}-curator-config
+                items:
+                  - key: action.yml
+                    path: action.yml
+            - name: "curator-config"
+              configMap:
+                name: {{ template "elasticsearch.fullname" . }}-curator-config
+                items:
+                  - key: config.yml
+                    path: curator.yml

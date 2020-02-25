@@ -1,0 +1,162 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+{{ template "elk.settings.all.prepare" . -}}
+{{ template "apiVersionTryV1" }}
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ template "elasticsearch.fullname" . }}"
+    component: "{{ .Values.logstash.name }}"
+    release: "{{ .Release.Name }}"
+    role: "logstash"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: "{{ .Release.Service }}"
+  name: "{{ template "logstash.fullname" . }}"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ template "elasticsearch.fullname" . }}"
+      component: "{{ .Values.logstash.name }}"
+      release: "{{ .Release.Name }}"
+      role: "logstash"
+      heritage: "{{ .Release.Service }}"
+  replicas: {{ .Values.logstash.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  revisionHistoryLimit: 3
+  minReadySeconds: 5
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: "{{ template "elasticsearch.fullname" . }}"
+        component: "{{ .Values.logstash.name }}"
+        role: "logstash"
+        release: "{{ .Release.Name }}"
+        chart: "{{ .Chart.Name }}"
+        heritage: "{{ .Release.Service }}"
+      annotations:
+        productName: Logstash
+        productVersion: 6.6.1
+        productID: none
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+    spec:
+{{- if eq .Release.Namespace "kube-system" }}
+      priorityClassName: system-cluster-critical
+{{- end }}
+{{- if .Values.logstash.tolerations }}
+      tolerations:
+{{ toYaml .Values.logstash.tolerations | indent 6 }}
+{{- end }}
+{{- if .Values.logstash.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.logstash.nodeSelector | indent 8 }}
+{{ include "image.pullSecret" . | indent 6 }}
+{{- end }}
+      containers:
+      - name: logstash
+        image: {{ .Values.logstash.image.repository }}:{{ .Values.logstash.image.tag }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsNonRoot: true
+        command: ["/bin/bash", "/scripts/entrypoint.sh"]
+        env:
+        - name: LS_JAVA_OPTS
+          value: -Xmx{{ .Values.logstash.heapSize }} -Xms{{ .Values.logstash.heapSize }}
+        - name: CFG_BASEDIR
+          value: /usr/share/logstash
+{{- if .Values.elasticsearch.security.authc.enabled }}
+        - name: CA_TRUSTSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "elasticsearch.fullname" . }}-pki-secret
+              key: caTruststorePassword
+        - name: APP_KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "elasticsearch.fullname" . }}-pki-secret
+              key: appKeystorePassword
+{{- end }}
+        image: {{ .Values.logstash.image.repository }}:{{ .Values.logstash.image.tag }}
+        command: ["/bin/bash", "/scripts/entrypoint.sh"]
+        resources:
+          limits:
+            memory: {{ .Values.logstash.memoryLimit }}
+        ports:
+        - containerPort: {{ .Values.logstash.port }}
+        volumeMounts:
+        - name: pipeline-config
+          mountPath: /usr/share/logstash/pipeline
+          readOnly: true
+        - name: logstash-config
+          mountPath: /usr/share/logstash/config
+          readOnly: true
+        - name: data
+          mountPath: /usr/share/logstash/data
+        - name: entrypoint
+          mountPath: /scripts
+{{- if .Values.elasticsearch.security.authc.enabled }}
+        - name: certs
+          mountPath: "/usr/share/elasticsearch/config/tls"
+          readOnly: true
+{{- end }}
+        readinessProbe:
+        livenessProbe:
+{{- if .Values.logstash.probe.enabled }}
+          httpGet:
+            path: /logstash/health
+            port: 9601
+          initialDelaySeconds: 300
+          periodSeconds: {{ .Values.logstash.probe.periodSeconds }}
+      - name: logstash-liveness-probe
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsNonRoot: true
+        resources:
+{{ toYaml .Values.logstash.probe.resources | indent 12 }}
+        image: {{ .Values.logstash.probe.image.repository }}:{{ .Values.logstash.probe.image.tag }}
+        volumeMounts:
+        - mountPath: /opt/ibm/logstash-liveness-probe/config/app.json
+          subPath: app.json
+          name: probe-config
+{{- end }}
+      restartPolicy: Always
+      volumes:
+      - name: pipeline-config
+        configMap:
+          name: {{ template "logstash.fullname" . }}-pipeline-config
+      - name: logstash-config
+        configMap:
+          name: {{ template "logstash.fullname" . }}-config
+      - name: entrypoint
+        configMap:
+          name: {{ template "elasticsearch.fullname" . }}-entrypoint
+          defaultMode: 365
+          items:
+            - key: logstash-entrypoint.sh
+              path: entrypoint.sh
+            - key: map-config.sh
+              path: map-config.sh
+{{- if .Values.elasticsearch.security.authc.enabled }}
+      - name: certs
+        secret:
+          secretName: {{ template "fullname" . }}-certs
+{{- end }}
+{{- if .Values.logstash.probe.enabled }}
+      - name: probe-config
+        configMap:
+          name: {{ template "logstash.fullname" . }}-probe-config
+          items:
+          - key: app.json
+            path: app.json
+{{- end }}
+      - emptyDir:
+          medium: ""
+        name: data

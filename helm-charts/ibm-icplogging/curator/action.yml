@@ -1,0 +1,130 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+# Remember, leave a key empty if there is no value.  None will be a string,
+# not a Python "NoneType"
+#
+# Also remember that all examples have 'disable_action' set to True.  If you
+# want to use this action as a template, be sure to set this to False after
+# copying it.
+actions:
+  1:
+    action: delete_indices
+    description: "Delete user log indices that are older than {{ .Values.curator.app.count }} {{ .Values.curator.app.unit }}. Cron schedule: {{ .Values.curator.schedule }}"
+    options:
+      timeout_override:
+      continue_if_exception: True
+      ignore_empty_list: True
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: logstash-
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: {{ .Values.curator.app.unit }}
+      unit_count: {{ .Values.curator.app.count }}
+  2:
+    action: delete_indices
+    description: "Delete elastic system monitoring log indices that are older than {{ .Values.curator.monitoring.count }} {{ .Values.curator.monitoring.unit }}. Cron schedule: {{ .Values.curator.schedule }}"
+    options:
+      timeout_override:
+      continue_if_exception: True
+      ignore_empty_list: True
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: .monitoring
+    - filtertype: pattern
+      kind: prefix
+      value: .monitoring-alerts
+      exclude: True
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: {{ .Values.curator.monitoring.unit }}
+      unit_count: {{ .Values.curator.monitoring.count }}
+  3:
+    action: delete_indices
+    description: "Delete elastic watcher history indices that are older than {{ .Values.curator.watcher.count }} {{ .Values.curator.watcher.unit }}. Cron schedule: {{ .Values.curator.schedule }}"
+    options:
+      timeout_override:
+      continue_if_exception: True
+      ignore_empty_list: True
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: .watcher-history
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: {{ .Values.curator.watcher.unit }}
+      unit_count: {{ .Values.curator.watcher.count }}
+{{- if .Values.curator.va }}
+  4:
+    action: delete_indices
+    description: "Delete vulnerability advisor indices that are older than {{ .Values.curator.va.count }} {{ .Values.curator.va.unit }}. Cron schedule: {{ .Values.curator.schedule }}"
+    options:
+      timeout_override:
+      continue_if_exception: True
+      ignore_empty_list: True
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: regex
+      value: '^(compliance-|secconfig1-|vulnerabilityscan-|sas_info-).*$'
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: {{ .Values.curator.va.unit }}
+      unit_count: {{ .Values.curator.va.count }}
+{{- end }}
+{{- if .Values.curator.mapp }}
+  5:
+    action: delete_indices
+    description: "Delete mapp indices that are older than {{ .Values.curator.mapp.count }} {{ .Values.curator.mapp.unit }}. Cron schedule: {{ .Values.curator.schedule }}"
+    options:
+      timeout_override:
+      continue_if_exception: True
+      ignore_empty_list: True
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: regex
+      value: '^(mapp-raw-|mapp-events-|mapp-accum-).*$'
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: {{ .Values.curator.mapp.unit }}
+      unit_count: {{ .Values.curator.mapp.count }}
+{{- end }}
+{{- if .Values.curator.auditLog }}
+  6:
+    action: delete_indices
+    description: "Delete audit log indices that are older than {{ .Values.curator.auditLog.count }} {{ .Values.curator.auditLog.unit }}. Cron schedule: {{ .Values.curator.schedule }}"
+    options:
+      timeout_override:
+      continue_if_exception: True
+      ignore_empty_list: True
+      disable_action: False
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: audit-
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: {{ .Values.curator.auditLog.unit }}
+      unit_count: {{ .Values.curator.auditLog.count }}
+{{- end }}

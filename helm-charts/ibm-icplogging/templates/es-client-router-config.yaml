@@ -1,0 +1,20 @@
+{{ template "elk.settings.all.prepare" . -}}
+{{- if .Values.elasticsearch.routerEnabled }}
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: "{{ template "elasticsearch.fullname" . }}"
+    component: "{{ .Values.elasticsearch.client.name }}"
+    release: "{{ .Release.Name }}"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: "{{ .Release.Service }}"
+  name: "{{ template "client.fullname" . }}-router-config"
+data:
+  nginx.conf: |-
+{{ tpl (.Files.Get "es-client-router/nginx.conf") . | indent 4 }}
+{{- end }}

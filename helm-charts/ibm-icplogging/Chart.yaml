@@ -1,0 +1,32 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+name: ibm-icplogging
+version: 3.0.3
+description: Log storage and search management solution
+kubeVersion: ">=1.9.0"
+home: https://elastic.co
+icon: https://static-www.elastic.co/assets/blt9a26f88bfbd20eb5/icon-elasticsearch-bb.svg?q=423
+sources:
+  - https://github.com/elastic/
+tillerVersion: ">=2.9.1"
+keywords:
+- kubernetes
+- IBM Cloud Private
+- logging
+- kibana
+- elk
+- elasticsearch
+- logstash
+- filebeat
+- ICP
+- amd64
+- ppc64le
+- OpenSource
+- Operations
+maintainers:
+- name: Elastic
+- email: icp@ibm.com
+  name: IBM Cloud Private

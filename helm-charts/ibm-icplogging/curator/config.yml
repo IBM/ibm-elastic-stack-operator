@@ -1,0 +1,30 @@
+{{ template "elk.settings.all.prepare" . -}}
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+# Remember, leave a key empty if there is no value.  None will be a string,
+# not a Python "NoneType"
+client:
+  hosts:
+    - {{ .Values.elasticsearch.name }}
+  port: {{ .Values.elasticsearch.client.restPort }}
+  url_prefix:
+{{- if .Values.elasticsearch.security.authc.enabled }}
+  use_ssl: True
+  certificate: /curator/tls/ca.crt
+  client_cert: /curator/tls/curator.crt
+  client_key: /curator/tls/curator.key
+  ssl_no_validate: False
+{{- else }}
+  use_ssl: False
+  ssl_no_validate: True
+{{- end }}
+  http_auth:
+  timeout: 30
+  master_only: False
+logging:
+  loglevel: INFO
+  logformat: default
+  blacklist: ['elasticsearch', 'urllib3']

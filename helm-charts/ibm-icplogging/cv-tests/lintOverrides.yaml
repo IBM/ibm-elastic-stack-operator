@@ -1,0 +1,23 @@
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2019. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+
+ignoreMessages:
+- "\\[ERROR\\] Deployment volumes should not be using hostPath:"
+- "^\\[WARNING\\] Missing required architecture node affinity support:"
+- "\\[ERROR\\] Container is being run with privileged access:"
+- "Probe not found for container 0 in ibm-icplogging/templates/kibana-deployment.yaml"
+- "found alpha annotation:"
+- "\\[WARNING\\] ICP or icp referenced in chart name: value ibm-icplogging not valid for name in Chart.yaml"
+- "\\[WARNING\\] ibm-icplogging: found 'ICP' or 'icp' in chart name"
+- "\\[WARNING\\] Parameter does not follow camelCase format standards: general.clusterDomain in values.yaml"
+- "parameter 'general.clusterDomain' is not camelCase"
+- "value 0 not valid for spec.template.spec.securityContext.runAsUser in rendered ibm-icplogging/templates/fb-ds-deploy.yaml"
+- "\\[WARNING\\] Duplicate service port name found in rendered template:"
+- "\\[WARNING\\] Unknown Helm hook value found:"
+- "\\[ERROR\\] Parameter is defined but never used in a template or requirements.yaml:"
+- "found duplicate launch link name:"
+- 'unknown field "podAntiAffinity" in io.k8s.api.core.v1.PodSpec'
+- "missing pod security-related keys"
+- '[INFO] "{{ ... }}" at the top of a template may cause YAML parse errors'

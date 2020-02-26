@@ -4,40 +4,29 @@ general:
 
 logstash:
   image:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-logstash
-    tag: 6.6.1-rhel
+    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-logstash-oss
   probe:
     image:
       repository: image-registry.openshift-image-registry.svc:5000/ibmcom/logstash-liveness-probe
-      tag: 1.0.2-f4-rhel
 kibana:
   image:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-kibana
-    tag: 6.6.1-rhel
+    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-kibana-oss
   initImage:
     repository: image-registry.openshift-image-registry.svc:5000/ibmcom/curl
-    tag: 4.2.0-build.2-rhel
   routerImage:
     repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-management-ingress
-    tag: 2.4.0-rhel
 filebeat:
   image:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-filebeat
-    tag: 6.6.1-rhel
+    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-filebeat-oss
 elasticsearch:
   image:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-elasticsearch
-    tag: 6.6.1-rhel
+    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-elasticsearch-oss
   pkiInitImage:
     repository: image-registry.openshift-image-registry.svc:5000/ibmcom/logging-pki-init
-    tag: 2.3.0-rhel
   initImage:
     repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-initcontainer
-    tag: 1.0.0-f4-rhel
   routerImage:
     repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-management-ingress
-    tag: 2.4.0-rhel
 curator:
   image:
     repository: image-registry.openshift-image-registry.svc:5000/ibmcom/indices-cleaner
-    tag: 1.2.0-rhel

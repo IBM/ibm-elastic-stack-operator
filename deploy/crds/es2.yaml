@@ -1,6 +1,0 @@
-apiVersion: elasticstack.cloud.ibm.com/v1alpha1
-kind: ElasticStack
-metadata:
-  name: es2
-spec:
-  a: 1

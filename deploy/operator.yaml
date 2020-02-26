@@ -16,7 +16,7 @@ spec:
       containers:
         - name: elastic-stack-operator
           # Replace this with the built image name
-          image: dianxh/cs-elastic-stack-operator:v0.0.1
+          image: quay.io/opencloudio/elastic-stack-operator:latest
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE

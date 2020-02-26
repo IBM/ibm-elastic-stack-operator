@@ -18,7 +18,7 @@ BUILD_LOCALLY ?= 1
 
 # Image URL to use all building/pushing image targets;
 # Use your own docker registry and image name for dev/test by overridding the IMG and REGISTRY environment variable.
-IMG ?= ibm-cs-elastic-stack-operator
+IMG ?= elastic-stack-operator
 REGISTRY ?= quay.io/opencloudio
 CSV_VERSION ?= $(VERSION)
 

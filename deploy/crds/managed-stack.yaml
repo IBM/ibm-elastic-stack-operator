@@ -145,6 +145,8 @@ spec:
       repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-elasticsearch-oss
     initImage:
       repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-initcontainer
+      # TODO remove after pushed to edge
+      tag: "1.0.0-build.1"
     pkiInitImage:
       repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logging-pki-init
     routerImage:

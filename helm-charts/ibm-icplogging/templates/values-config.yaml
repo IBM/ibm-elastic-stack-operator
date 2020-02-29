@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # this configmap serves as a support and troubleshoot utility
 # it is not required for the ICP logging helm chart functionality
 apiVersion: v1

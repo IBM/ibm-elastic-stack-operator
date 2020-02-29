@@ -14,7 +14,8 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limitations under the License.apiVersion: extensions/v1beta1
+# limitations under the License.
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: "{{ template "kibana.fullname" . }}-ingress"

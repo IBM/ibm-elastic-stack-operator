@@ -16,14 +16,11 @@ spec:
       containers:
         - name: elastic-stack-operator
           # Replace this with the built image name
-          image: quay.io/opencloudio/elastic-stack-operator:latest
+          image: quay.io/opencloudio/ibm-elastic-stack-operator:latest
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE
               value: ""
-              # valueFrom:
-              #   fieldRef:
-              #     fieldPath: metadata.namespace
             - name: POD_NAME
               valueFrom:
                 fieldRef:

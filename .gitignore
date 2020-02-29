@@ -15,3 +15,5 @@
 # vendor/
 
 build/_output/
+
+.DS_Store

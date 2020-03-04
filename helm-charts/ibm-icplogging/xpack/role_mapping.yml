@@ -1,0 +1,23 @@
+kibana_system:
+  - "CN=kibana,OU=IBM Cloud Private"
+readonly_user:
+  - "CN=kibana,OU=IBM Cloud Private"
+remote_monitoring_agent:
+  - "CN=kibana,OU=IBM Cloud Private"
+  - "CN=logstash-monitoring,OU=IBM Cloud Private"
+remote_monitoring_agent_2:
+  - "CN=kibana,OU=IBM Cloud Private"
+  - "CN=logstash-monitoring,OU=IBM Cloud Private"
+monitoring_user:
+  - "CN=kibana,OU=IBM Cloud Private"
+  - "CN=logstash-monitoring,OU=IBM Cloud Private"
+superuser:
+  - "CN=superuser,OU=IBM Cloud Private"
+  # this allows the kibana console to send REST calls to elasticsearch API
+  - "CN=kibana,OU=IBM Cloud Private"
+logstash_user:
+  - "CN=logstash-elasticsearch,OU=IBM Cloud Private"
+curator_user:
+  - "CN=curator,OU=IBM Cloud Private"
+fluentd_user:
+  - "CN=fluentd,O=cert-manager"

@@ -1,0 +1,889 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "elasticstack.ibm.com/v1alpha1",
+          "kind": "ElasticStack",
+          "metadata": {
+            "name": "example-elasticstack"
+          },
+          "spec": {
+            "curator": {
+              "app": {
+                "count": 1,
+                "unit": "days"
+              },
+              "auditLog": {
+                "count": 1,
+                "unit": "days"
+              },
+              "image": {
+                "repository": "ibmcom/indices-cleaner",
+                "tag": "1.2.0-build.2"
+              },
+              "mapp": {
+                "count": 2,
+                "unit": "days"
+              },
+              "monitoring": {
+                "count": 7,
+                "unit": "days"
+              },
+              "name": "log-curator",
+              "nodeSelector": null,
+              "resources": {
+                "limits": {
+                  "memory": "256Mi"
+                },
+                "requests": {
+                  "memory": "64Mi"
+                }
+              },
+              "schedule": "30 23 * * *",
+              "tolerations": null,
+              "va": {
+                "count": 90,
+                "unit": "days"
+              },
+              "watcher": {
+                "count": 1,
+                "unit": "days"
+              }
+            },
+            "elasticsearch": {
+              "client": {
+                "antiAffinity": "soft",
+                "heapSize": "1024m",
+                "memoryLimit": "1536Mi",
+                "name": "client",
+                "nodeSelector": null,
+                "replicas": 1,
+                "restPort": 9200,
+                "tolerations": null
+              },
+              "data": {
+                "antiAffinity": "hard",
+                "heapSize": "4000m",
+                "memoryLimit": "7000M",
+                "name": "data",
+                "nodeSelector": null,
+                "replicas": 2,
+                "storage": {
+                  "accessModes": [
+                    "ReadWriteOnce"
+                  ],
+                  "persistent": true,
+                  "selector": {
+                    "label": "",
+                    "value": ""
+                  },
+                  "size": "10Gi",
+                  "storageClass": "",
+                  "useDynamicProvisioning": false
+                },
+                "tolerations": null
+              },
+              "image": {
+                "repository": "ibmcom/icp-elasticsearch-oss",
+                "tag": "6.6.1-build.1"
+              },
+              "initImage": {
+                "repository": "ibmcom/icp-initcontainer",
+                "tag": "1.0.0-build.2"
+              },
+              "internalPort": 9300,
+              "master": {
+                "antiAffinity": "soft",
+                "heapSize": "1024m",
+                "memoryLimit": "1536Mi",
+                "name": "master",
+                "nodeSelector": null,
+                "replicas": 1,
+                "tolerations": null
+              },
+              "name": "elasticsearch",
+              "pkiInitImage": {
+                "repository": "ibmcom/logging-pki-init",
+                "resources": {
+                  "limits": {
+                    "memory": "256Mi"
+                  },
+                  "requests": {
+                    "memory": "64Mi"
+                  }
+                },
+                "tag": "2.3.0-build.2"
+              },
+              "routerImage": {
+                "repository": "ibmcom/icp-management-ingress",
+                "resources": {
+                  "limits": {
+                    "memory": "256Mi"
+                  },
+                  "requests": {
+                    "memory": "64Mi"
+                  }
+                },
+                "tag": "2.5.0"
+              },
+              "security": {
+                "authc": {
+                  "enabled": true,
+                  "provider": "nginx"
+                },
+                "authz": {
+                  "enabled": false,
+                  "provider": "icp"
+                }
+              }
+            },
+            "filebeat": {
+              "image": {
+                "repository": "ibmcom/icp-filebeat-oss",
+                "tag": "6.6.1-build.1"
+              },
+              "logFormat": "text",
+              "name": "filebeat-ds",
+              "registryHostPath": "/var/lib/icp/logging/filebeat-registry/{{ .Release.Name }}",
+              "resources": {
+                "limits": {
+                  "memory": "256Mi"
+                },
+                "requests": {
+                  "memory": "64Mi"
+                }
+              },
+              "scope": {
+                "namespaces": null,
+                "nodes": null
+              },
+              "tolerations": null
+            },
+            "general": {
+              "clusterDomain": "cluster.local",
+              "clusterName": "mycluster",
+              "environment": "IBMCloudPrivate",
+              "ingressPort": 8443
+            },
+            "image": {
+              "pullPolicy": "IfNotPresent",
+              "pullSecret": {
+                "enabled": false,
+                "name": "regcred"
+              }
+            },
+            "kibana": {
+              "access": "loadBalancer",
+              "external": 31601,
+              "image": {
+                "repository": "ibmcom/icp-kibana-oss",
+                "tag": "6.6.1-build.1"
+              },
+              "ingress": {
+                "annotations": null,
+                "labels": {
+                  "inmenu": "true",
+                  "target": "logging-sampleA"
+                },
+                "path": "/tenantA/kibana"
+              },
+              "init": {
+                "resources": {
+                  "limits": {
+                    "memory": "256Mi"
+                  },
+                  "requests": {
+                    "memory": "64Mi"
+                  }
+                }
+              },
+              "initImage": {
+                "repository": "ibmcom/curl",
+                "tag": "4.2.0-build.4"
+              },
+              "install": true,
+              "internal": 5601,
+              "maxOldSpaceSize": "1536",
+              "memoryLimit": "2048Mi",
+              "name": "kibana",
+              "nodeSelector": null,
+              "replicas": 1,
+              "routerImage": {
+                "repository": "ibmcom/icp-management-ingress",
+                "resources": {
+                  "limits": {
+                    "memory": "256Mi"
+                  },
+                  "requests": {
+                    "memory": "64Mi"
+                  }
+                },
+                "tag": "2.5.0"
+              },
+              "security": {
+                "authc": {
+                  "enabled": false,
+                  "provider": "icp"
+                },
+                "authz": {
+                  "enabled": false,
+                  "icp": {
+                    "authorizedNamespaces": [
+                      "tenantadev",
+                      "tenantatest",
+                      "tenantaprod"
+                    ]
+                  },
+                  "provider": "icp"
+                }
+              },
+              "service": {
+                "annotations": {
+                  "id": "add-ons",
+                  "name": "Logging - Sample A",
+                  "roles": "ClusterAdministrator,Administrator,Operator,Viewer"
+                },
+                "labels": {
+                  "inmenu": "true",
+                  "target": "logging-sampleA"
+                }
+              },
+              "tolerations": null
+            },
+            "logstash": {
+              "heapSize": "512m",
+              "image": {
+                "repository": "ibmcom/icp-logstash-oss",
+                "tag": "6.6.1-build.1"
+              },
+              "memoryLimit": "1024Mi",
+              "name": "logstash",
+              "nodeSelector": null,
+              "port": 5000,
+              "probe": {
+                "enabled": false,
+                "image": {
+                  "repository": "ibmcom/logstash-liveness-probe",
+                  "tag": "1.0.2-build.2"
+                },
+                "maxUnavailablePeriod": 5,
+                "minEventsPerPeriod": 1,
+                "periodSeconds": 60,
+                "resources": {
+                  "limits": {
+                    "memory": "256Mi"
+                  },
+                  "requests": {
+                    "memory": "64Mi"
+                  }
+                }
+              },
+              "replicas": 1,
+              "tolerations": null
+            },
+            "security": {
+              "app": {
+                "keystore": {
+                  "password": "changeme"
+                }
+              },
+              "ca": {
+                "external": {
+                  "certFieldName": "tls.crt",
+                  "keyFieldName": "tls.key",
+                  "secretName": "cluster-ca-cert"
+                },
+                "keystore": {
+                  "password": "changeme"
+                },
+                "origin": "internal",
+                "truststore": {
+                  "password": "changeme"
+                }
+              },
+              "tls": {
+                "version": "TLSv1.2"
+              }
+            },
+            "upgrade": {
+              "elasticsearch": {
+                "importData": true,
+                "retainOldData": true
+              }
+            },
+            "xpack": {
+              "graph": false,
+              "license": {
+                "secret": {
+                  "fieldName": "license.json",
+                  "secretName": "es-license"
+                },
+                "selfGenerated": {
+                  "type": "basic"
+                },
+                "source": "selfGenerated"
+              },
+              "ml": false,
+              "monitoring": true,
+              "reporting": false,
+              "watcher": false
+            }
+          }
+        },
+        {
+          "apiVersion": "elasticstack.ibm.com/v1alpha1",
+          "kind": "ElasticStack",
+          "metadata": {
+            "name": "logging"
+          },
+          "spec": {
+            "curator": {
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/indices-cleaner"
+              },
+              "nodeSelector": {
+                "management": "true"
+              },
+              "tolerations": [
+                {
+                  "effect": "NoSchedule",
+                  "key": "dedicated",
+                  "operator": "Exists"
+                }
+              ]
+            },
+            "elasticsearch": {
+              "client": {
+                "nodeSelector": {
+                  "management": "true"
+                },
+                "tolerations": [
+                  {
+                    "effect": "NoSchedule",
+                    "key": "dedicated",
+                    "operator": "Exists"
+                  }
+                ]
+              },
+              "data": {
+                "nodeSelector": {
+                  "management": "true"
+                },
+                "replicas": 1,
+                "storage": {
+                  "persistent": false
+                },
+                "tolerations": [
+                  {
+                    "effect": "NoSchedule",
+                    "key": "dedicated",
+                    "operator": "Exists"
+                  }
+                ]
+              },
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-elasticsearch-oss"
+              },
+              "initImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-initcontainer",
+                "tag": "1.0.0-build.1"
+              },
+              "master": {
+                "nodeSelector": {
+                  "management": "true"
+                },
+                "tolerations": [
+                  {
+                    "effect": "NoSchedule",
+                    "key": "dedicated",
+                    "operator": "Exists"
+                  }
+                ]
+              },
+              "pkiInitImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logging-pki-init"
+              },
+              "routerImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress"
+              },
+              "security": {
+                "authz": {
+                  "enabled": true,
+                  "provider": "icp"
+                }
+              }
+            },
+            "filebeat": {
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-filebeat-oss"
+              },
+              "scope": {
+                "namespaces": null,
+                "nodes": null
+              },
+              "tolerations": [
+                {
+                  "effect": "NoSchedule",
+                  "key": "dedicated",
+                  "operator": "Exists"
+                }
+              ]
+            },
+            "general": {
+              "environment": "Openshift",
+              "ingressPort": "443"
+            },
+            "kibana": {
+              "access": "ingress",
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-kibana-oss"
+              },
+              "ingress": {
+                "labels": {
+                  "inmenu": "false",
+                  "target": "platform-logging"
+                },
+                "path": "/kibana"
+              },
+              "initImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/curl"
+              },
+              "nodeSelector": {
+                "management": "true"
+              },
+              "replicas": 3,
+              "routerImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress"
+              },
+              "security": {
+                "authc": {
+                  "enabled": true,
+                  "provider": "icp"
+                },
+                "authz": {
+                  "enabled": false,
+                  "icp": {
+                    "authorizedNamespaces": null
+                  },
+                  "provider": "icp"
+                }
+              },
+              "service": {
+                "annotations": {
+                  "id": "add-ons",
+                  "name": "Logging",
+                  "roles": "ClusterAdministrator,Administrator,Operator,Viewer,Auditor,Editor"
+                },
+                "labels": {
+                  "inmenu": "false",
+                  "target": "platform-logging"
+                },
+                "path": "/kibana"
+              },
+              "tolerations": [
+                {
+                  "effect": "NoSchedule",
+                  "key": "dedicated",
+                  "operator": "Exists"
+                }
+              ]
+            },
+            "logstash": {
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-logstash-oss"
+              },
+              "nodeSelector": {
+                "management": "true"
+              },
+              "port": 5044,
+              "probe": {
+                "image": {
+                  "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logstash-liveness-probe"
+                }
+              },
+              "replicas": 3,
+              "tolerations": [
+                {
+                  "effect": "NoSchedule",
+                  "key": "dedicated",
+                  "operator": "Exists"
+                }
+              ]
+            },
+            "nameOverride": "elk",
+            "security": {
+              "ca": {
+                "external": {
+                  "certFieldName": "tls.crt",
+                  "keyFieldName": "tls.key",
+                  "secretName": "cluster-ca-cert"
+                },
+                "origin": "external"
+              },
+              "tls": {
+                "version": "TLSv1.2"
+              }
+            }
+          }
+        },
+        {
+          "apiVersion": "elasticstack.ibm.com/v1alpha1",
+          "kind": "ElasticStack",
+          "metadata": {
+            "name": "tenant-a",
+            "namespace": "tenant-a-elasticstack"
+          },
+          "spec": {
+            "curator": {
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/indices-cleaner"
+              },
+              "nodeSelector": {
+                "tenant": "a"
+              }
+            },
+            "elasticsearch": {
+              "client": {
+                "nodeSelector": {
+                  "tenant": "a"
+                }
+              },
+              "data": {
+                "nodeSelector": {
+                  "tenant": "a"
+                },
+                "replicas": 1,
+                "storage": {
+                  "persistent": false
+                }
+              },
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-elasticsearch-oss"
+              },
+              "initImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-initcontainer"
+              },
+              "master": {
+                "nodeSelector": {
+                  "tenant": "a"
+                }
+              },
+              "pkiInitImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logging-pki-init"
+              },
+              "routerImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress"
+              },
+              "security": {
+                "authz": {
+                  "enabled": true,
+                  "provider": "icp"
+                }
+              }
+            },
+            "filebeat": {
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-filebeat-oss"
+              },
+              "scope": {
+                "namespaces": null,
+                "nodes": {
+                  "tenant": "a"
+                }
+              }
+            },
+            "general": {
+              "environment": "Openshift",
+              "ingressPort": "443"
+            },
+            "kibana": {
+              "access": "ingress",
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-kibana-oss"
+              },
+              "ingress": {
+                "labels": {
+                  "inmenu": "true",
+                  "target": "logging-tenantA"
+                },
+                "path": "/tenantA/kibana"
+              },
+              "initImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/curl"
+              },
+              "nodeSelector": {
+                "tenant": "a"
+              },
+              "replicas": 3,
+              "routerImage": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress"
+              },
+              "security": {
+                "authc": {
+                  "enabled": true,
+                  "provider": "icp"
+                },
+                "authz": {
+                  "enabled": true,
+                  "icp": {
+                    "authorizedNamespaces": null
+                  },
+                  "provider": "icp"
+                }
+              },
+              "service": {
+                "annotations": {
+                  "id": "add-ons",
+                  "name": "Logging - Tenant A",
+                  "roles": "ClusterAdministrator,Administrator,Operator,Viewer",
+                  "ui.icp.ibm.com/tenant": "tenantA,tenantB"
+                },
+                "labels": {
+                  "inmenu": "true",
+                  "target": "logging-tenantA"
+                },
+                "path": "/tenantA/kibana"
+              }
+            },
+            "logstash": {
+              "image": {
+                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-logstash-oss"
+              },
+              "nodeSelector": {
+                "tenant": "a"
+              },
+              "probe": {
+                "image": {
+                  "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logstash-liveness-probe"
+                }
+              }
+            },
+            "security": {
+              "ca": {
+                "origin": "internal"
+              }
+            }
+          }
+        }
+      ]
+    capabilities: Basic Install
+  name: ibm-elastic-stack-operator.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: Log storage and search management solution
+      displayName: IBM Common Services Logging
+      kind: ElasticStack
+      name: ElasticStack.elasticstack.ibm.com
+      version: v1alpha1
+  description: Operator that installs and manages IBM Common Services Logging instances
+  displayName: IBM Elastic Stack Operator
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - get
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          - secrets
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - elastic-stack-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          - deployments
+          verbs:
+          - get
+        - apiGroups:
+          - elasticstack.ibm.com
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - networking.k8s.io
+          resources:
+          - networkpolicies
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - jobs
+          - cronjobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - extensions
+          resources:
+          - ingresses
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - roles
+          - rolebindings
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        serviceAccountName: elastic-stack-operator
+      deployments:
+      - name: elastic-stack-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: elastic-stack-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: elastic-stack-operator
+            spec:
+              containers:
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: elastic-stack-operator
+                image: quay.io/opencloudio/ibm-elastic-stack-operator:v0.0.1
+                imagePullPolicy: Always
+                name: elastic-stack-operator
+                resources: {}
+              serviceAccountName: elastic-stack-operator
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - IBM
+  - Cloud
+  - Logging
+  - Elastic
+  - Elasticsearch
+  - Kibana
+  - Logstash
+  - Filebeat
+  maintainers:
+  - email: support@ibm.com
+    name: IBM Support
+  maturity: alpha
+  provider: {}
+  replaces: ibm-elastic-stack-operator.v0.0.0
+  version: 0.0.1

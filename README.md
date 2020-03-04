@@ -1,2 +1,2 @@
-# ibm-cs-elastic-stack-operator
-Operator for IBM CloudPak common services
+# ibm-cloudctl-operator
+This operator provides IBM command line interface to manage cloud resources

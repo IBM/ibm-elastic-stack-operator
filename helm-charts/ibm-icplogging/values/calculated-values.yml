@@ -1,0 +1,2 @@
+{{ template "elk.settings.all.prepare" . -}}
+{{ include "elk.settings.all.redact" . -}}

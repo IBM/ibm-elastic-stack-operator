@@ -1,0 +1,44 @@
+general:
+  environment: Openshift
+  ingressPort: "443"
+
+image:
+  pullPolicy: Always
+  pullSecret:
+    enabled: false
+    name: regcred
+
+logstash:
+  image:
+    repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-logstash-oss
+  probe:
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logstash-liveness-probe
+kibana:
+  image:
+    repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-kibana-oss
+  initImage:
+    repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/curl
+  routerImage:
+    repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
+filebeat:
+  image:
+    repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-filebeat-oss
+elasticsearch:
+  image:
+    repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-elasticsearch-oss
+  pkiInitImage:
+    repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logging-pki-init
+  initImage:
+    #repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-initcontainer
+    repository: hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-initcontainer-amd64
+  routerImage:
+    repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
+  data:
+    storage:
+      # When true will expect a PersistentVolume
+      persistent: false
+    replicas: 1
+curator:
+  image:
+    repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/indices-cleaner

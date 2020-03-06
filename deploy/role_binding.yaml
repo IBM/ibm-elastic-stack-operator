@@ -6,9 +6,7 @@ subjects:
 - kind: ServiceAccount
   name: elastic-stack-operator
   namespace: ibm-elastic-stack-operator
-- kind: Group
-  name: system:serviceaccounts:ibm-common-services
-  apiGroup: rbac.authorization.k8s.io
+  # namespace: kube-system
 roleRef:
   kind: ClusterRole
   name: elastic-stack-operator

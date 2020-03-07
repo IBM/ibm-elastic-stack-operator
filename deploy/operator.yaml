@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: elastic-stack-operator
+  name: ibm-elastic-stack-operator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: elastic-stack-operator
+      name: ibm-elastic-stack-operator
   template:
     metadata:
       labels:
-        name: elastic-stack-operator
+        name: ibm-elastic-stack-operator
     spec:
-      serviceAccountName: elastic-stack-operator
+      serviceAccountName: ibm-elastic-stack-operator
       containers:
-        - name: elastic-stack-operator
+        - name: ibm-elastic-stack-operator
           # Replace this with the built image name
           image: quay.io/opencloudio/ibm-elastic-stack-operator:v0.0.1
           imagePullPolicy: Always

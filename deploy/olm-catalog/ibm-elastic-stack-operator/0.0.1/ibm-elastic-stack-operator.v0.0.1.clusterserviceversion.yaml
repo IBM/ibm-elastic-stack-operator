@@ -1,6 +1,8 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
+  name: ibm-elastic-stack-operator.v0.0.1
+  namespace: placeholder
   annotations:
     alm-examples: |-
       [
@@ -669,13 +671,17 @@ metadata:
           }
         }
       ]
-    capabilities: Basic Install
-  name: ibm-elastic-stack-operator.v0.0.1
-  namespace: placeholder
-  categories: Developer Tools, Logging & Tracing
-  certified: "false"
-  support: IBM
-  description: Operator that installs and manages Elastic Stack logging service instances
+    capabilities: "Basic Install"
+    categories: "Developer Tools, Logging & Tracing"
+    certified: "false"
+    support: "IBM"
+    description: |-
+      Operator that installs and manages Elastic Stack logging service instances
+      ## Heading A
+      ### Heading A1
+      A1
+      ### Heading A2
+      A2
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
@@ -685,7 +691,13 @@ spec:
       kind: ElasticStack
       name: ElasticStack.elasticstack.ibm.com
       version: v1alpha1
-  description: Operator that installs and manages Elastic Stack logging service instances
+  description: |
+    Operator that installs and manages Elastic Stack logging service instances
+    ## Heading A
+    ### Heading A1
+    * B1
+    ### Heading A2
+    * B2
   displayName: IBM Elastic Stack Operator
   install:
     spec:

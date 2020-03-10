@@ -706,14 +706,14 @@ metadata:
         - logstash - elasticsearch
         - elasticsearch - kibana
         - curator - elasticsearch
-      - Elasticsearch access control based on user role and namespac access. None admin users cannot see logs outside of their own namespace
-      - Kibana access control based on user role and namespace. None admin users cannot access Kibana if required namespace access is missing
+      - Elasticsearch access control based on user role and namespac access. None admin users cannot see logs outside of their own namespace (need IBM IAM)
+      - Kibana access control based on user role and namespace. None admin users cannot access Kibana if required namespace access is missing (need IBM IAM)
       - Both self-signed TLS keys, as well as bring-your-own signing CA
-      - Kibana authentication Login page with integrated Identity Management
+      - Kibana authentication Login page with integrated Identity Management (need IBM IAM)
 
       ### Platform and Architecutres
       - Supports and validated on amd64, IBM s390x, IBM Power PC
-      - Supports and validated on ICP 3.21, Openshift 3.11, 4.1, 4.2, 4.3, 4.4
+      - Supports and validated on Openshift 3.11, 4.1, 4.2, 4.3, 4.4, IBM Cloud Private 3.21
 
       ### Log pipeline customization
       - Collect log only from workloads on selected hosts
@@ -732,6 +732,24 @@ metadata:
       - Customizable kibana endpoint url (e.g. https://1.2.3.4:8443/tenant-a-kibana)
       - Zero user intervention two-way data migration between Elastic stack 5.5 and 6.6 (Elasticsearch and Kibana)
 
+      ## Capacity Planning
+      The Elastic Stack is designed to handle large amounts of log data. The more
+       data that you choose to retain, the more resources it requires. You could
+       prototype the cluster and applications before full production deployment
+       to measure the impact of log data on your system
+      
+      ### Default Resource Allocation is Minimal
+      The default memory and disk allocation for the in the Elastic Stack CR is not
+       intended for production use. Actual production usage might be much higher.
+       The default values provide a starting point for prototyping and other
+       demonstration efforts
+
+      ### Some Notes on Capacity Planning
+      - The Elastic stack works better by scaling out (adding more identical
+       pod instances) than scaling up (adding more memory to fixed number of pods)
+      - Elasticsearch pod heap size, pod memory limit, replica are some examples of key tuining points
+      - Deploy and validate in lab and staging environments before going to production
+      - Keep track of resource allocations and monitor workload periodically
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
@@ -742,12 +760,11 @@ spec:
       name: elasticstacks.elasticstack.ibm.com
       version: v1alpha1
   description: |
-    Operator that installs and manages Elastic Stack logging service instances
-    ## Heading A1
-    ### Heading A1
-    * B1
-    ### Heading A2
-    * B2
+    Operator that installs and manages Elastic Stack logging service instances. 
+    Each Elastic Stack instance provides user-friendly visibility to system/application
+     logs by collecting, transforming, storing, presenting and archiving logs in a
+     secure, scalable and customizable way. Filebeat, Logstash, Elasticsearch, Kibana,
+     Curator and Nginx are the main components
   displayName: IBM Elastic Stack Operator
   minKubeVersion: 1.9.0
   install:

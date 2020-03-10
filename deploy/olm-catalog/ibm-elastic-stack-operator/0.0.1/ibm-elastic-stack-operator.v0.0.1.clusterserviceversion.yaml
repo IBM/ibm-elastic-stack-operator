@@ -672,33 +672,84 @@ metadata:
         }
       ]
     capabilities: "Basic Install"
-    categories: "Developer Tools, Logging & Tracing"
+    "operatorframework.io/suggested-namespace": ibm-common-services
+    categories: "Logging & Tracing"
     certified: "false"
     support: "IBM"
+    repository: https://github.com/IBM/ibm-elastic-stack-operator
+    containerImage: quay.io/opencloudio/ibm-elastic-stack-operator:v0.0.1
+    createdAt: '2020-03-10T11:58:00Z'
     description: |-
       Operator that installs and manages Elastic Stack logging service instances
-      ## Heading A
-      ### Heading A1
-      A1
-      ### Heading A2
-      A2
+
+      ## Overview
+      Each Elastic Stack instance provides user-friendly visibility to system/application
+       logs by collecting, transforming, storing, presenting and archiving logs in a 
+       secure, scalable and customizable way. Filebeat, Logstash, Elasticsearch, Kibana,
+       Curator and Nginx are the main components
+
+      ## Key Features
+      ### Tenant Isolation
+      - Multiple customizd Logging instances can be deployed individually
+      - For each instance, isolation in hardware resource, data storage, data transportation, access control, encryption and retention policy
+      - Tenant instance provisioning/deprovisioning can be driven by automation scripts. All customization points controlled by parameters
+
+      ### Resource Customization
+      - Node affinity
+      - Resource limits, heap size, replica, etc
+      - Namespace
+      - Storage classes for data persistence
+
+      ### Security
+      - Traffic between the follow components are secured with mutual TLS:
+        - filebeat - logstash
+        - logstash - elasticsearch
+        - elasticsearch - kibana
+        - curator - elasticsearch
+      - Elasticsearch access control based on user role and namespac access. None admin users cannot see logs outside of their own namespace
+      - Kibana access control based on user role and namespace. None admin users cannot access Kibana if required namespace access is missing
+      - Both self-signed TLS keys, as well as bring-your-own signing CA
+      - Kibana authentication Login page with integrated Identity Management
+
+      ### Platform and Architecutres
+      - Supports and validated on amd64, IBM s390x, IBM Power PC
+      - Supports and validated on ICP 3.21, Openshift 3.11, 4.1, 4.2, 4.3, 4.4
+
+      ### Log pipeline customization
+      - Collect log only from workloads on selected hosts
+      - Collect log only from workloads in configurable namespaces
+
+      ### Data Retention
+      - Customize data retention policy for individual indices
+      - Customize data retention job schedule
+
+      ### Stability
+      - Persistent queue to buffer traffic surges
+      - Persistent log harvest pointers to avoid payload replay upon node restart
+      
+      ### Usablity
+      - Automatically set kibana default index and timestamp fields upon start
+      - Customizable kibana endpoint url (e.g. https://1.2.3.4:8443/tenant-a-kibana)
+      - Zero user intervention two-way data migration between Elastic stack 5.5 and 6.6 (Elasticsearch and Kibana)
+
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - description: Log processing, storage, management, analysis, search and visalization solution
-      displayName: Elastic Stack logging service instance including Elasticsearch, Kibana, Logstash, Filebeats and Curator
+    - description: Log processing, storage, management, analysis, search and visalization solution including  logging service instance including Elasticsearch, Kibana, Logstash, Filebeats and Curator
+      displayName: Elastic Stack
       kind: ElasticStack
-      name: ElasticStack.elasticstack.ibm.com
+      name: elasticstacks.elasticstack.ibm.com
       version: v1alpha1
   description: |
     Operator that installs and manages Elastic Stack logging service instances
-    ## Heading A
+    ## Heading A1
     ### Heading A1
     * B1
     ### Heading A2
     * B2
   displayName: IBM Elastic Stack Operator
+  minKubeVersion: 1.9.0
   install:
     spec:
       clusterPermissions:
@@ -900,6 +951,12 @@ spec:
   - email: support@ibm.com
     name: IBM Support
   maturity: alpha
-  provider: {}
+  provider:
+    name: IBM
+  links:
+  - name: Elastic
+    url: https://www.elastic.co/
+  - name: Elastic Stack Operator
+    url: https://github.com/IBM/ibm-elastic-stack-operator
   replaces: ibm-elastic-stack-operator.v0.0.0
   version: 0.0.1

@@ -680,76 +680,11 @@ metadata:
     containerImage: quay.io/opencloudio/ibm-elastic-stack-operator:v0.0.1
     createdAt: '2020-03-10T11:58:00Z'
     description: |-
-      Operator that installs and manages Elastic Stack logging service instances
-
-      ## Overview
+      Operator that installs and manages Elastic Stack logging service instances. 
       Each Elastic Stack instance provides user-friendly visibility to system/application
-       logs by collecting, transforming, storing, presenting and archiving logs in a 
-       secure, scalable and customizable way. Filebeat, Logstash, Elasticsearch, Kibana,
-       Curator and Nginx are the main components
-
-      ## Key Features
-      ### Tenant Isolation
-      - Multiple customizd Logging instances can be deployed individually
-      - For each instance, isolation in hardware resource, data storage, data transportation, access control, encryption and retention policy
-      - Tenant instance provisioning/deprovisioning can be driven by automation scripts. All customization points controlled by parameters
-
-      ### Resource Customization
-      - Node affinity
-      - Resource limits, heap size, replica, etc
-      - Namespace
-      - Storage classes for data persistence
-
-      ### Security
-      - Traffic between the follow components are secured with mutual TLS:
-        - filebeat - logstash
-        - logstash - elasticsearch
-        - elasticsearch - kibana
-        - curator - elasticsearch
-      - Elasticsearch access control based on user role and namespac access. None admin users cannot see logs outside of their own namespace (need IBM IAM)
-      - Kibana access control based on user role and namespace. None admin users cannot access Kibana if required namespace access is missing (need IBM IAM)
-      - Both self-signed TLS keys, as well as bring-your-own signing CA
-      - Kibana authentication Login page with integrated Identity Management (need IBM IAM)
-
-      ### Platform and Architecutres
-      - Supports and validated on amd64, IBM s390x, IBM Power PC
-      - Supports and validated on Openshift 3.11, 4.1, 4.2, 4.3, 4.4, IBM Cloud Private 3.21
-
-      ### Log pipeline customization
-      - Collect log only from workloads on selected hosts
-      - Collect log only from workloads in configurable namespaces
-
-      ### Data Retention
-      - Customize data retention policy for individual indices
-      - Customize data retention job schedule
-
-      ### Stability
-      - Persistent queue to buffer traffic surges
-      - Persistent log harvest pointers to avoid payload replay upon node restart
-      
-      ### Usablity
-      - Automatically set kibana default index and timestamp fields upon start
-      - Customizable kibana endpoint url (e.g. https://1.2.3.4:8443/tenant-a-kibana)
-      - Zero user intervention two-way data migration between Elastic stack 5.5 and 6.6 (Elasticsearch and Kibana)
-
-      ## Capacity Planning
-      The Elastic Stack is designed to handle large amounts of log data. The more
-       data that you choose to retain, the more resources it requires. You could
-       prototype the cluster and applications before full production deployment
-       to measure the impact of log data on your system
-      
-      ### Default Resource Allocation is Minimal
-      The default memory and disk allocation for the in the Elastic Stack CR is not
-       intended for production use. Actual production usage might be much higher.
-       The default values provide a starting point for prototyping and other
-       demonstration efforts
-
-      ### Some Notes on Capacity Planning
-      - The Elastic stack works better by scaling out (adding more identical
-       pod instances) than scaling up (adding more memory to fixed number of pods)
-      - Elasticsearch pod heap size, pod memory limit, replica are some examples of key tuining points
-      - Deploy and validate in lab and staging environments before going to production
-      - Keep track of resource allocations and monitor workload periodically
+      logs by collecting, transforming, storing, presenting and archiving logs in a
+      secure, scalable and customizable way. Filebeat, Logstash, Elasticsearch, Kibana,
+      Curator and Nginx are the main components
 spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
@@ -760,11 +695,79 @@ spec:
       name: elasticstacks.elasticstack.ibm.com
       version: v1alpha1
   description: |
-    Operator that installs and manages Elastic Stack logging service instances. 
+    Operator that installs and manages Elastic Stack logging service instances
+
+    ## Overview
     Each Elastic Stack instance provides user-friendly visibility to system/application
-     logs by collecting, transforming, storing, presenting and archiving logs in a
-     secure, scalable and customizable way. Filebeat, Logstash, Elasticsearch, Kibana,
-     Curator and Nginx are the main components
+      logs by collecting, transforming, storing, presenting and archiving logs in a 
+      secure, scalable and customizable way. Filebeat, Logstash, Elasticsearch, Kibana,
+      Curator and Nginx are the main components
+
+    ## Key Features
+    ### Tenant Isolation
+    - Multiple customizd Logging instances can be deployed individually
+    - For each instance, isolation in hardware resource, data storage, data transportation, access control, encryption and retention policy
+    - Tenant instance provisioning/deprovisioning can be driven by automation scripts. All customization points controlled by parameters
+
+    ### Resource Customization
+    - Node affinity
+    - Resource limits, heap size, replica, etc
+    - Namespace
+    - Storage classes for data persistence
+
+    ### Security
+    - Traffic between the follow components are secured with mutual TLS:
+      - filebeat - logstash
+      - logstash - elasticsearch
+      - elasticsearch - kibana
+      - curator - elasticsearch
+    - Elasticsearch access control based on user role and namespac access. None admin users cannot see logs outside of their own namespace (need IBM IAM)
+    - Kibana access control based on user role and namespace. None admin users cannot access Kibana if required namespace access is missing (need IBM IAM)
+    - Both self-signed TLS keys, as well as bring-your-own signing CA
+    - Kibana authentication Login page with integrated Identity Management (need IBM IAM)
+
+    ### Platform and Architecutres
+    - Supports and validated on amd64, IBM s390x, IBM Power PC
+    - Supports and validated on Openshift 3.11, 4.1, 4.2, 4.3, 4.4, IBM Cloud Private 3.21
+
+    ### Log pipeline customization
+    - Collect log only from workloads on selected hosts
+    - Collect log only from workloads in configurable namespaces
+
+    ### Data Retention
+    - Customize data retention policy for individual indices
+    - Customize data retention job schedule
+
+    ### Stability
+    - Persistent queue to buffer traffic surges
+    - Persistent log harvest pointers to avoid payload replay upon node restart
+    
+    ### Usablity
+    - Automatically set kibana default index and timestamp fields upon start
+    - Customizable kibana endpoint url (e.g. https://1.2.3.4:8443/tenant-a-kibana)
+    - Zero user intervention two-way data migration between Elastic stack 5.5 and 6.6 (Elasticsearch and Kibana)
+
+    ## Capacity Planning
+    The Elastic Stack is designed to handle large amounts of log data. The more
+      data that you choose to retain, the more resources it requires. You could
+      prototype the cluster and applications before full production deployment
+      to measure the impact of log data on your system
+    
+    ### Default Resource Allocation is Minimal
+    The default memory and disk allocation for the in the Elastic Stack CR is not
+      intended for production use. Actual production usage might be much higher.
+      The default values provide a starting point for prototyping and other
+      demonstration efforts
+
+    ### Some Notes on Capacity Planning
+    - The Elastic stack works better by scaling out (adding more identical
+      pod instances) than scaling up (adding more memory to fixed number of pods)
+    - Elasticsearch pod heap size, pod memory limit, replica are some examples of key tuining points
+    - Deploy and validate in lab and staging environments before going to production
+    - Keep track of resource allocations and monitor workload periodically
+
+    ## Installing in Namespaces Other than kube-system
+    Additional permissions might be needed
   displayName: IBM Elastic Stack Operator
   minKubeVersion: 1.9.0
   install:

@@ -13,7 +13,7 @@ spec:
       origin: external
       external:
         # the secret need to be in the same namespace as the chart release
-        secretName: cluster-ca-cert
+        secretName: cs-ca-certificate-secret
         # the Kubenetes field name (key) within the specified secret that stores CA cert
         certFieldName: tls.crt
         # the Kubenets field name (key) within the specified secret that stores CA private key
@@ -176,9 +176,9 @@ spec:
       nodeSelector:
         management: "true"
       storage:
-        # When true will expect a PersistentVolume
-        # debug
-        persistent: false
+        size: "20Gi"
+        storageClass: "gp2"
+        useDynamicProvisioning: true
 
   curator:
     nodeSelector:

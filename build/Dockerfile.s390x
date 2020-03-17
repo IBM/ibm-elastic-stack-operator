@@ -15,5 +15,17 @@
 #
 FROM quay.io/operator-framework/helm-operator-s390x:master
 
+LABEL org.label-schema.vendor="IBM" \
+    org.label-schema.name="ibm-elastic-stack-operator" \
+    org.label-schema.description="IBM Elastic Stack Operator" \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url=$VCS_URL \
+    org.label-schema.license="Apache License 2.0" \
+    org.label-schema.schema-version="1.0" \
+    name="ibm-elastic-stack-operator" \
+    vendor="IBM" \
+    description="Operator that installs and manages Elastic Stack logging service instances" \
+    summary="IBM Elastic Stack Operator"
+
 COPY watches.yaml ${HOME}/watches.yaml
 COPY helm-charts/ ${HOME}/helm-charts/

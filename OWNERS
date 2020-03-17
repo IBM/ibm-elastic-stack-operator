@@ -1,14 +1,12 @@
 reviewers:
-- hxiao
-- kevincarr
-- dybo
+- dian-xh
+- kgcarr
+- dongyingbo
 - carrolp
-- dreichek
 - ibm-ci-bot
 approvers:
-- hxiao
-- kevincarr
-- dybo
-- dreichek
+- dian-xh
+- kgcarr
+- dongyingbo
 - carrolp
 - ibm-ci-bot

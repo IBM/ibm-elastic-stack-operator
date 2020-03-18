@@ -1,0 +1,53 @@
+#
+# Copyright 2020 IBM Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http:#www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+image:
+  pullSecret:
+    enabled: true
+    name: logregcred
+filebeat:
+  name: fb-{{ release }}
+  image:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-filebeat-amd64"
+logstash:
+  image:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-logstash-amd64"
+  name: ls-{{ release }}
+  port: 5000
+elasticsearch:
+  name: es-{{ release }}
+  internalPort: 9300
+  image:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-elasticsearch-amd64"
+  initImage:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-initcontainer-amd64"
+  master:
+    name: es-ma-{{ release }}
+    replicas: 1
+  client:
+    name: es-cl-{{ release }}
+    restPort: 9200
+  data:
+    name: es-da-{{ release }}
+    replicas: 1
+    storage:
+      persistent: false
+curator:
+  image:
+    repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/indices-cleaner-amd64"
+kibana:
+  install: false
+security:
+  enabled: false

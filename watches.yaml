@@ -1,0 +1,5 @@
+---
+- version: v1alpha1
+  group: elasticstack.ibm.com
+  kind: ElasticStack
+  chart: helm-charts/ibm-icplogging

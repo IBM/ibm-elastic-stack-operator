@@ -1,0 +1,133 @@
+apiVersion: elasticstack.ibm.com/v1alpha1
+kind: ElasticStack
+metadata:
+  name: tenant-a
+  namespace: tenant-a-elasticstack
+spec:
+  general:
+    environment: Openshift
+    ingressPort: "443"
+  security:
+    ca:
+      # set to `external` to use existing CA stored in Kubernetes secret to generate certs
+      origin: internal
+
+  logstash:
+    nodeSelector:
+      tenant: "a"
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-logstash-oss
+    probe:
+      image:
+        repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logstash-liveness-probe
+  kibana:
+    replicas: 3
+    nodeSelector:
+      tenant: "a"
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-kibana-oss
+    routerImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
+    initImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/curl
+    # accepted values:
+    # ingress or loadBalancer, defaults to loadBalancer
+    access: ingress
+    ingress:
+      # "/kibana" for managed service logging instance
+      # sample value for custom ingress: "/tenantA/kibana"
+      # no trailing /
+      path: "/tenantA/kibana"
+      # additional labels to facilitate link rendering in icp console
+      labels:
+        inmenu: "true"
+        # if provided, the link will open in a new tab with the target value in the <a> tag
+        target: "logging-tenantA"
+    service:
+      # "/kibana" for managed service logging instance
+      # sample value for custom ingress: "/tenantA/kibana"
+      # no trailing /
+      path: "/tenantA/kibana"
+      # additional labels to facilitate link rendering in icp console
+      labels:
+        inmenu: "true"
+        # if provided, the link will open in a new tab with the target value in the <a> tag
+        target: "logging-tenantA"
+      # additional annotations to facilitate link rendering in icp console
+      annotations:
+        # display name that will show in the menu
+        name: "Logging - Tenant A"
+        # provided by icp console
+        id: "add-ons"
+        # list of roles to be able to view TA in the menu
+        roles: "ClusterAdministrator,Administrator,Operator,Viewer"
+        # show link if user is in any of the teams
+        ui.icp.ibm.com/tenant: "tenantA,tenantB"
+    security:
+      authc:
+        enabled: true
+        # accepted values: icp
+        # what it does: redirects to icp login page first
+        provider: icp
+      authz:
+        enabled: true
+        # accepted values: icp
+        # what it does: only allow request to pass if user
+        # have access to the required namespaces
+        # that the current user has access to
+        # requires authc.enabled = true and authc.provider = icp
+        provider: icp
+        icp:
+          # 1. user is allowed to access the kibana ingress
+          #    if namespaces granted to user are listed below
+          # 2. when the list below is empty, only cluster admin
+          #    can access this kibana ingress
+          authorizedNamespaces:
+            # - tenantadev
+            # - tenantatest
+            # - tenantaprod
+
+  filebeat:
+    scope:
+      nodes:
+        tenant: "a"
+      namespaces:
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-filebeat-oss
+
+  elasticsearch:
+    security:
+      authz:
+        enabled: true
+        # accepted values: icp
+        # what it does: filter log content by the namespace
+        # that the current user has access to
+        provider: icp
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-elasticsearch-oss
+    initImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-initcontainer
+    pkiInitImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logging-pki-init
+    routerImage:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
+    client:
+      nodeSelector:
+        tenant: "a"
+    master:
+      nodeSelector:
+        tenant: "a"
+    data:
+      replicas: 1
+      nodeSelector:
+        tenant: "a"
+      storage:
+        # When true will expect a PersistentVolume
+        # debug
+        persistent: false
+
+  curator:
+    nodeSelector:
+      tenant: "a"
+    image:
+      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/indices-cleaner

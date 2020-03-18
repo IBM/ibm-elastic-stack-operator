@@ -1,0 +1,6 @@
+{
+  "index_patterns": "logstash-*",
+  "settings": {
+    "index.mapping.ignore_malformed": true
+  }
+}

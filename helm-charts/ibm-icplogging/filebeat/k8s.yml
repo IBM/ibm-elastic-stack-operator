@@ -1,0 +1,29 @@
+- type: log
+  paths:
+  {{- if .Values.filebeat.scope.namespaces }}
+    {{- range .Values.filebeat.scope.namespaces }}
+    - "/var/log/containers/*_{{.}}_*.log"
+    {{- end }}
+  {{- else }}
+    - /var/log/containers/*.log
+  {{- end }}
+  close_timeout: 10m
+  scan_frequency: 10s
+  symlinks: true
+  {{- if eq "json" .Values.filebeat.logFormat }}
+  json:
+    message_key: log
+    keys_under_root: true
+    overwrite_keys: true
+    add_error_key: true
+  multiline:
+    pattern: '^\s'
+    match: after
+  {{- end }}
+
+  fields_under_root: true
+  fields:
+    beat.podip: ${POD_IP}
+  tags:
+    - k8s-app
+  processors:

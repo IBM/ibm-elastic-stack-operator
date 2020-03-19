@@ -23,9 +23,6 @@ metadata:
               "image": {
                 "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/indices-cleaner"
               },
-              "nodeSelector": {
-                "management": "true"
-              },
               "tolerations": [
                 {
                   "effect": "NoSchedule",
@@ -36,9 +33,6 @@ metadata:
             },
             "elasticsearch": {
               "client": {
-                "nodeSelector": {
-                  "management": "true"
-                },
                 "tolerations": [
                   {
                     "effect": "NoSchedule",
@@ -48,13 +42,9 @@ metadata:
                 ]
               },
               "data": {
-                "nodeSelector": {
-                  "management": "true"
-                },
                 "replicas": 1,
                 "storage": {
                   "persistent": true,
-                  "storageClass": "gp2"
                 },
                 "tolerations": [
                   {
@@ -72,9 +62,6 @@ metadata:
                 "tag": "1.0.0-build.1"
               },
               "master": {
-                "nodeSelector": {
-                  "management": "true"
-                },
                 "tolerations": [
                   {
                     "effect": "NoSchedule",
@@ -132,10 +119,7 @@ metadata:
               "initImage": {
                 "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/curl"
               },
-              "nodeSelector": {
-                "management": "true"
-              },
-              "replicas": 3,
+              "replicas": 1,
               "routerImage": {
                 "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress"
               },
@@ -176,16 +160,13 @@ metadata:
               "image": {
                 "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-logstash-oss"
               },
-              "nodeSelector": {
-                "management": "true"
-              },
               "port": 5044,
               "probe": {
                 "image": {
                   "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logstash-liveness-probe"
                 }
               },
-              "replicas": 3,
+              "replicas": 1,
               "tolerations": [
                 {
                   "effect": "NoSchedule",

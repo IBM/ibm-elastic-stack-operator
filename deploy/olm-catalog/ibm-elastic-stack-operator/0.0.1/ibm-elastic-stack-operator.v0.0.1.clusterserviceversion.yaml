@@ -15,7 +15,7 @@ metadata:
           "spec": {
             "image": {
               "pullSecret": {
-                "enabled": "true",
+                "enabled": "false",
                 "name": "infra-registry-key"
               }
             },

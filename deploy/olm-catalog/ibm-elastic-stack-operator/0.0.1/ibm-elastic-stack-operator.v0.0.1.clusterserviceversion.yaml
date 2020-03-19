@@ -53,7 +53,8 @@ metadata:
                 },
                 "replicas": 1,
                 "storage": {
-                  "persistent": false
+                  "persistent": true,
+                  "storageClass": "gp2"
                 },
                 "tolerations": [
                   {

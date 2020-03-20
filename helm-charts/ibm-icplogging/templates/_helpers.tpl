@@ -133,7 +133,7 @@ readinessProbe:
     command:
     - sh
     - -c
-    - "wget --spider --no-check-certificate -S 'https://platform-identity-provider.kube-system.svc:4300/v1/info'"
+    - "wget --spider --no-check-certificate -S 'https://platform-identity-provider.ibm-common-services.svc:4300/v1/info'"
   initialDelaySeconds: 10
   periodSeconds: 10
 livenessProbe:
@@ -141,7 +141,7 @@ livenessProbe:
     command:
     - sh
     - -c
-    - "wget --spider --no-check-certificate -S 'https://platform-identity-provider.kube-system.svc:4300/v1/info'"
+    - "wget --spider --no-check-certificate -S 'https://platform-identity-provider.ibm-common-services.svc:4300/v1/info'"
   initialDelaySeconds: 30
   periodSeconds: 20
 {{- end -}}

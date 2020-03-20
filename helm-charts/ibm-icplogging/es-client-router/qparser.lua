@@ -22,7 +22,7 @@
 --     "bool":{
 --      "must":[
 --        {
---          "query_string":{ "analyze_wildcard":true, "query":"kubernetes.namespace: kube-system"}
+--          "query_string":{ "analyze_wildcard":true, "query":"kubernetes.namespace: ibm-common-services"}
 --        },
 --        {
 --          "match_phrase":{

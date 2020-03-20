@@ -57,9 +57,6 @@ spec:
         productMetric: "FREE"
         clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
     spec:
-{{- if eq .Release.Namespace "kube-system" }}
-      priorityClassName: system-cluster-critical
-{{- end }}
 {{ include "image.pullSecret" . | indent 6 }}
 {{- if .Values.elasticsearch.data.tolerations }}
       tolerations:

@@ -59,9 +59,6 @@ spec:
         productMetric: "FREE"
         clusterhealth.ibm.com/dependencies: namespace.dependencyservice1, dependencyservice2
     spec:
-{{- if eq .Release.Namespace "kube-system" }}
-      priorityClassName: system-cluster-critical
-{{- end }}
 {{- if .Values.logstash.tolerations }}
       tolerations:
 {{ toYaml .Values.logstash.tolerations | indent 6 }}

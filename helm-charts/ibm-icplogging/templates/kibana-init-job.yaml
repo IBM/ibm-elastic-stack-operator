@@ -35,6 +35,13 @@ spec:
         chart: "{{ .Chart.Name }}"
         release: "{{ .Release.Name }}"
         heritage: "{{ .Release.Service }}"
+        app.kubernetes.io/instance: "common-logging"
+      annotations:
+        productName: "IBM Cloud Platform Common Services"
+        productID: "068a62892a1e4db39641342e592daa25"
+        productVersion: "3.3.0"
+        productMetric: "FREE"
+        clusterhealth.ibm.com/dependencies: secret-watcher
     spec:
       restartPolicy: OnFailure
 {{ include "image.pullSecret" . | indent 6 }}

@@ -39,6 +39,12 @@ spec:
         release: "{{ .Release.Name }}"
         chart: "{{ .Chart.Name }}"
         heritage: "{{ .Release.Service }}"
+        app.kubernetes.io/instance: "common-logging"
+      annotations:
+        productName: "IBM Cloud Platform Common Services"
+        productID: "068a62892a1e4db39641342e592daa25"
+        productVersion: "3.3.0"
+        productMetric: "FREE"
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
 {{- if .Values.elasticsearch.client.tolerations }}

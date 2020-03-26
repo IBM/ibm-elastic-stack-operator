@@ -52,9 +52,6 @@ logstash:
   heapSize: "512m"
   memoryLimit: "1024Mi"
   port: 5000
-  image:
-    repository: "ibmcom/icp-logstash"
-    tag: "6.6.1"
   nodeSelector:
   tolerations:
   probe:
@@ -67,9 +64,6 @@ logstash:
         memory: 256Mi
       requests:
         memory: 64Mi
-    image:
-      repository: "ibmcom/logstash-liveness-probe"
-      tag: "1.0.2-f4"
 
 kibana:
   install: true
@@ -114,21 +108,13 @@ kibana:
   # maximum old space size (in MB) of the V8 Javascript engine
   maxOldSpaceSize: "1536"
   memoryLimit: "2048Mi"
-  image:
-    repository: ibmcom/icp-kibana
-    tag: 6.6.1
   init:
     resources:
       limits:
         memory: 256Mi
       requests:
         memory: 64Mi
-  initImage:
-    repository: "ibmcom/curl"
-    tag: "4.2.0-build.2"
   routerImage:
-    repository: "ibmcom/icp-management-ingress"
-    tag: "latest"
     resources:
       limits:
         memory: 256Mi
@@ -165,9 +151,6 @@ filebeat:
       memory: 256Mi
     requests:
       memory: 64Mi
-  image:
-    repository: "ibmcom/icp-filebeat"
-    tag: "6.6.1"
   scope:
     nodes:
     namespaces:
@@ -176,23 +159,13 @@ filebeat:
 elasticsearch:
   name: "elasticsearch"
   internalPort: 9300
-  image:
-    repository: "ibmcom/icp-elasticsearch"
-    tag: "6.6.1"
   pkiInitImage:
-    repository: "ibmcom/logging-pki-init"
-    tag: "2.3.0"
     resources:
       limits:
         memory: 256Mi
       requests:
         memory: 64Mi
-  initImage:
-    repository: "ibmcom/icp-initcontainer"
-    tag: "1.0.0-f4"
   routerImage:
-    repository: "ibmcom/icp-management-ingress"
-    tag: "latest"
     resources:
        limits:
          memory: 256Mi
@@ -267,9 +240,6 @@ curator:
       memory: 256Mi
     requests:
       memory: 64Mi
-  image:
-    repository: "ibmcom/indices-cleaner"
-    tag: "1.2.0"
   # runs at 23:30 UTC daily
   schedule: "30 23 * * *"
   nodeSelector:

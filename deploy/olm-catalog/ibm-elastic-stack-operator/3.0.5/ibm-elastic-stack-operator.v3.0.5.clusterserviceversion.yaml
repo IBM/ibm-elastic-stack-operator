@@ -20,9 +20,6 @@ metadata:
               }
             },
             "curator": {
-              "image": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/indices-cleaner"
-              },
               "tolerations": [
                 {
                   "effect": "NoSchedule",
@@ -54,12 +51,6 @@ metadata:
                   }
                 ]
               },
-              "image": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-elasticsearch-oss"
-              },
-              "initImage": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-initcontainer"
-              },
               "master": {
                 "tolerations": [
                   {
@@ -69,12 +60,6 @@ metadata:
                   }
                 ]
               },
-              "pkiInitImage": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logging-pki-init"
-              },
-              "routerImage": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress"
-              },
               "security": {
                 "authz": {
                   "enabled": true,
@@ -83,9 +68,6 @@ metadata:
               }
             },
             "filebeat": {
-              "image": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-filebeat-oss"
-              },
               "scope": {
                 "namespaces": null,
                 "nodes": null
@@ -104,9 +86,6 @@ metadata:
             },
             "kibana": {
               "access": "ingress",
-              "image": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-kibana-oss"
-              },
               "ingress": {
                 "labels": {
                   "inmenu": "false",
@@ -114,13 +93,7 @@ metadata:
                 },
                 "path": "/kibana"
               },
-              "initImage": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/curl"
-              },
               "replicas": 1,
-              "routerImage": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress"
-              },
               "security": {
                 "authc": {
                   "enabled": true,
@@ -155,15 +128,7 @@ metadata:
               ]
             },
             "logstash": {
-              "image": {
-                "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-logstash-oss"
-              },
               "port": 5044,
-              "probe": {
-                "image": {
-                  "repository": "hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logstash-liveness-probe"
-                }
-              },
               "replicas": 1,
               "tolerations": [
                 {

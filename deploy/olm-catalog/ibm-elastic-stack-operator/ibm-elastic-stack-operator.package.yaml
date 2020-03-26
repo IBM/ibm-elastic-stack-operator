@@ -1,5 +1,5 @@
 channels:
-- currentCSV: ibm-elastic-stack-operator.v0.0.1
-  name: alpha
-defaultChannel: alpha
+- currentCSV: ibm-elastic-stack-operator.v3.0.5
+  name: stable-v1
+defaultChannel: stable-v1
 packageName: ibm-elastic-stack-operator-app

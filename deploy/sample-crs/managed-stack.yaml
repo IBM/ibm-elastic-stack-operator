@@ -30,11 +30,6 @@ spec:
       - key: "dedicated"
         operator: "Exists"
         effect: "NoSchedule"
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-logstash-oss
-    probe:
-      image:
-        repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logstash-liveness-probe
   kibana:
     replicas: 3
     nodeSelector:
@@ -43,12 +38,6 @@ spec:
       - key: "dedicated"
         operator: "Exists"
         effect: "NoSchedule"
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-kibana-oss
-    routerImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
-    initImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/curl
     # accepted values:
     # ingress or loadBalancer, defaults to loadBalancer
     access: ingress
@@ -130,8 +119,6 @@ spec:
       - key: "dedicated"
         operator: "Exists"
         effect: "NoSchedule"
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-filebeat-oss
 
   elasticsearch:
     security:
@@ -141,16 +128,6 @@ spec:
         # what it does: filter log content by the namespace
         # that the current user has access to
         provider: icp
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-elasticsearch-oss
-    initImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-initcontainer
-      # TODO remove after pushed to edge
-      tag: "1.0.0-build.1"
-    pkiInitImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logging-pki-init
-    routerImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
     client:
       tolerations:
         - key: "dedicated"
@@ -187,5 +164,3 @@ spec:
       - key: "dedicated"
         operator: "Exists"
         effect: "NoSchedule"
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/indices-cleaner

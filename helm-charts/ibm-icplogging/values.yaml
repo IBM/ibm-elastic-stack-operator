@@ -53,7 +53,7 @@ logstash:
   memoryLimit: "1024Mi"
   port: 5000
   image:
-    repository: "ibmcom/icp-logstash-oss"
+    repository: "quay.io/opencloudio/icp-logstash-oss"
     tag: "6.6.1-build.1"
   nodeSelector:
   tolerations:
@@ -68,7 +68,7 @@ logstash:
       requests:
         memory: 64Mi
     image:
-      repository: "ibmcom/logstash-liveness-probe"
+      repository: "quay.io/opencloudio/logstash-liveness-probe"
       tag: "1.0.2-build.2"
 
 kibana:
@@ -115,7 +115,7 @@ kibana:
   maxOldSpaceSize: "1536"
   memoryLimit: "2048Mi"
   image:
-    repository: ibmcom/icp-kibana-oss
+    repository: quay.io/opencloudio/icp-kibana-oss
     tag: 6.6.1-build.1
   init:
     resources:
@@ -124,11 +124,11 @@ kibana:
       requests:
         memory: 64Mi
   initImage:
-    repository: "ibmcom/curl"
-    tag: "4.2.0-build.4"
+    repository: "quay.io/opencloudio/curl"
+    tag: "4.2.0-build.3"
   routerImage:
-    repository: "ibmcom/icp-management-ingress"
-    tag: "2.5.0"
+    repository: "quay.io/opencloudio/icp-management-ingress"
+    tag: "2.5.1"
     resources:
       limits:
         memory: 256Mi
@@ -166,7 +166,7 @@ filebeat:
     requests:
       memory: 64Mi
   image:
-    repository: "ibmcom/icp-filebeat-oss"
+    repository: "quay.io/opencloudio/icp-filebeat-oss"
     tag: "6.6.1-build.1"
   scope:
     nodes:
@@ -180,10 +180,10 @@ elasticsearch:
   name: "elasticsearch"
   internalPort: 9300
   image:
-    repository: "ibmcom/icp-elasticsearch-oss"
+    repository: "quay.io/opencloudio/icp-elasticsearch-oss"
     tag: "6.6.1-build.1"
   pkiInitImage:
-    repository: "ibmcom/logging-pki-init"
+    repository: "quay.io/opencloudio/logging-pki-init"
     tag: "2.3.0-build.2"
     resources:
       limits:
@@ -191,11 +191,11 @@ elasticsearch:
       requests:
         memory: 64Mi
   initImage:
-    repository: "ibmcom/icp-initcontainer"
-    tag: "1.0.0-build.2"
+    repository: "quay.io/opencloudio/icp-initcontainer"
+    tag: "1.0.0-build.3"
   routerImage:
-    repository: "ibmcom/icp-management-ingress"
-    tag: "2.5.0"
+    repository: "quay.io/opencloudio/icp-management-ingress"
+    tag: "2.5.1"
     resources:
        limits:
          memory: 256Mi
@@ -271,7 +271,7 @@ curator:
     requests:
       memory: 64Mi
   image:
-    repository: "ibmcom/indices-cleaner"
+    repository: "quay.io/opencloudio/indices-cleaner"
     tag: "1.2.0-build.2"
   # runs at 23:30 UTC daily
   schedule: "30 23 * * *"

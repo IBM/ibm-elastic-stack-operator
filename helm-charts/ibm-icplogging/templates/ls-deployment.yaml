@@ -57,11 +57,7 @@ spec:
         productID: "068a62892a1e4db39641342e592daa25"
         productVersion: "3.3.0"
         productMetric: "FREE"
-        clusterhealth.ibm.com/dependencies: namespace.dependencyservice1, dependencyservice2
     spec:
-{{- if eq .Release.Namespace "kube-system" }}
-      priorityClassName: system-cluster-critical
-{{- end }}
 {{- if .Values.logstash.tolerations }}
       tolerations:
 {{ toYaml .Values.logstash.tolerations | indent 6 }}

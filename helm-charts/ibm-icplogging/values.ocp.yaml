@@ -1,32 +1,3 @@
 general:
   environment: Openshift
   ingressPort: "443"
-
-logstash:
-  image:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-logstash-oss
-  probe:
-    image:
-      repository: image-registry.openshift-image-registry.svc:5000/ibmcom/logstash-liveness-probe
-kibana:
-  image:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-kibana-oss
-  initImage:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/curl
-  routerImage:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-management-ingress
-filebeat:
-  image:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-filebeat-oss
-elasticsearch:
-  image:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-elasticsearch-oss
-  pkiInitImage:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/logging-pki-init
-  initImage:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-initcontainer
-  routerImage:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/icp-management-ingress
-curator:
-  image:
-    repository: image-registry.openshift-image-registry.svc:5000/ibmcom/indices-cleaner

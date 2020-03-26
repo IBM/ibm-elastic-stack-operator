@@ -13,7 +13,7 @@ spec:
       count: 1
       unit: days
     image:
-      repository: ibmcom/indices-cleaner
+      repository: quay.io/opencloudio/indices-cleaner
       tag: 1.2.0-build.2
     mapp:
       count: 2
@@ -65,11 +65,11 @@ spec:
         useDynamicProvisioning: false
       tolerations: null
     image:
-      repository: ibmcom/icp-elasticsearch-oss
+      repository: quay.io/opencloudio/icp-elasticsearch-oss
       tag: 6.6.1-build.1
     initImage:
-      repository: ibmcom/icp-initcontainer
-      tag: 1.0.0-build.2
+      repository: quay.io/opencloudio/icp-initcontainer
+      tag: 1.0.0-build.3
     internalPort: 9300
     master:
       antiAffinity: soft
@@ -81,7 +81,7 @@ spec:
       tolerations: null
     name: elasticsearch
     pkiInitImage:
-      repository: ibmcom/logging-pki-init
+      repository: quay.io/opencloudio/logging-pki-init
       resources:
         limits:
           memory: 256Mi
@@ -89,13 +89,13 @@ spec:
           memory: 64Mi
       tag: 2.3.0-build.2
     routerImage:
-      repository: ibmcom/icp-management-ingress
+      repository: quay.io/opencloudio/icp-management-ingress
       resources:
         limits:
           memory: 256Mi
         requests:
           memory: 64Mi
-      tag: 2.5.0
+      tag: 2.5.1
     security:
       authc:
         enabled: true
@@ -105,7 +105,7 @@ spec:
         provider: icp
   filebeat:
     image:
-      repository: ibmcom/icp-filebeat-oss
+      repository: quay.io/opencloudio/icp-filebeat-oss
       tag: 6.6.1-build.1
     logFormat: text
     name: filebeat-ds
@@ -133,7 +133,7 @@ spec:
     access: loadBalancer
     external: 31601
     image:
-      repository: ibmcom/icp-kibana-oss
+      repository: quay.io/opencloudio/icp-kibana-oss
       tag: 6.6.1-build.1
     ingress:
       annotations: null
@@ -148,8 +148,8 @@ spec:
         requests:
           memory: 64Mi
     initImage:
-      repository: ibmcom/curl
-      tag: 4.2.0-build.4
+      repository: quay.io/opencloudio/curl
+      tag: 4.2.0-build.3
     install: true
     internal: 5601
     maxOldSpaceSize: "1536"
@@ -158,13 +158,13 @@ spec:
     nodeSelector: null
     replicas: 1
     routerImage:
-      repository: ibmcom/icp-management-ingress
+      repository: quay.io/opencloudio/icp-management-ingress
       resources:
         limits:
           memory: 256Mi
         requests:
           memory: 64Mi
-      tag: 2.5.0
+      tag: 2.5.1
     security:
       authc:
         enabled: false
@@ -189,7 +189,7 @@ spec:
   logstash:
     heapSize: 512m
     image:
-      repository: ibmcom/icp-logstash-oss
+      repository: quay.io/opencloudio/icp-logstash-oss
       tag: 6.6.1-build.1
     memoryLimit: 1024Mi
     name: logstash
@@ -198,7 +198,7 @@ spec:
     probe:
       enabled: false
       image:
-        repository: ibmcom/logstash-liveness-probe
+        repository: quay.io/opencloudio/logstash-liveness-probe
         tag: 1.0.2-build.2
       maxUnavailablePeriod: 5
       minEventsPerPeriod: 1

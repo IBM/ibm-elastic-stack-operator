@@ -54,9 +54,6 @@ spec:
         productVersion: "3.3.0"
         productMetric: "FREE"
     spec:
-{{- if eq .Release.Namespace "kube-system" }}
-      priorityClassName: system-cluster-critical
-{{- end }}
       terminationGracePeriodSeconds: 30
       {{- if .Values.filebeat.scope.nodes }}
       nodeSelector:

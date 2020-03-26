@@ -11,12 +11,17 @@ spec:
     metadata:
       labels:
         name: ibm-elastic-stack-operator
+      annotations:
+         productName: IBM Cloud Platform Common Services
+         productID: "068a62892a1e4db39641342e592daa25"
+         productVersion: "3.3.0"
+         productMetric: FREE
     spec:
       serviceAccountName: ibm-elastic-stack-operator
       containers:
         - name: ibm-elastic-stack-operator
           # Replace this with the built image name
-          image: quay.io/opencloudio/ibm-elastic-stack-operator:v0.0.1
+          image: quay.io/opencloudio/ibm-elastic-stack-operator:v3.0.5
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE

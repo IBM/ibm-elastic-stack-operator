@@ -12,20 +12,9 @@ spec:
       # set to `external` to use existing CA stored in Kubernetes secret to generate certs
       origin: internal
 
-  logstash:
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-logstash-oss
-    probe:
-      image:
-        repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logstash-liveness-probe
+
   kibana:
     replicas: 1
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-kibana-oss
-    routerImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
-    initImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/curl
     # accepted values:
     # ingress or loadBalancer, defaults to loadBalancer
     access: ingress
@@ -64,10 +53,6 @@ spec:
             # - tenantatest
             # - tenantaprod
 
-  filebeat:
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-filebeat-oss
-
   elasticsearch:
     security:
       authz:
@@ -76,21 +61,8 @@ spec:
         # what it does: filter log content by the namespace
         # that the current user has access to
         provider: icp
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-elasticsearch-oss
-    initImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-initcontainer
-    pkiInitImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/logging-pki-init
-    routerImage:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/icp-management-ingress
     data:
       replicas: 1
       storage:
         # When true will expect a PersistentVolume
-        # debug
         persistent: false
-
-  curator:
-    image:
-      repository: hyc-cloud-private-edge-docker-local.artifactory.swg-devops.com/ibmcom-amd64/indices-cleaner

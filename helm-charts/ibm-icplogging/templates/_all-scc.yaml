@@ -1,3 +1,4 @@
+{{ template "elk.settings.all.prepare" . -}}
 #
 # Copyright 2020 IBM Corporation
 #
@@ -12,8 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
+apiVersion: security.openshift.io/v1
 metadata:
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
@@ -22,40 +23,31 @@ metadata:
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
   name: "{{ template "elasticsearch.fullname" . }}"
-  annotations:
-    "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback, post-delete"
-    "helm.sh/hook-weight": "-20"
-    "helm.sh/hook-delete-policy": "hook-succeeded, before-hook-creation"
 priority: 10
 allowHostDirVolumePlugin: true
-allowHostIPC: true
-allowHostNetwork: true
+allowHostIPC: false
+allowHostNetwork: false
 allowHostPID: true
-allowHostPorts: true
+allowHostPorts: false
 allowPrivilegeEscalation: true
 allowPrivilegedContainer: true
 allowedCapabilities:
-- '*'
-allowedUnsafeSysctls:
-- '*'
+- SYS_ADMIN
+- SYS_RESOURCE
 defaultAddCapabilities: []
 fsGroup:
   type: RunAsAny
-groups:
-- system:cluster-admins
-- system:nodes
-- system:masters
 readOnlyRootFilesystem: false
 requiredDropCapabilities: []
 runAsUser:
   type: RunAsAny
 seLinuxContext:
   type: RunAsAny
-seccompProfiles:
-- '*'
 supplementalGroups:
   type: RunAsAny
-users:
-- system:serviceaccount:{{.Release.Namespace}}:default
 volumes:
 - '*'
+seccompProfiles:
+- docker/default
+users:
+- system:serviceaccount:{{.Release.Namespace}}:default

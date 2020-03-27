@@ -53,5 +53,5 @@ volumes:
 seccompProfiles:
 - docker/default
 users:
-- system:serviceaccount:ibm-common-services:default
+- system:serviceaccount:{{.Release.Namespace}}:default
 {{- end }}

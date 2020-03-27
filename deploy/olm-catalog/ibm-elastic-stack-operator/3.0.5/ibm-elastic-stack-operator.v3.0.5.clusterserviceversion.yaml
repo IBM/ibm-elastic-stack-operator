@@ -161,7 +161,7 @@ metadata:
     certified: "false"
     support: "IBM"
     repository: https://github.com/IBM/ibm-elastic-stack-operator
-    containerImage: quay.io/opencloudio/ibm-elastic-stack-operator:v3.0.5
+    containerImage: quay.io/opencloudio/ibm-elastic-stack-operator:3.0.5
     createdAt: '2020-03-10T11:58:00Z'
     description: |-
       Operator that installs and manages Elastic Stack logging service instances. 
@@ -427,7 +427,7 @@ spec:
                       fieldPath: metadata.name
                 - name: OPERATOR_NAME
                   value: ibm-elastic-stack-operator
-                image: quay.io/opencloudio/ibm-elastic-stack-operator:v3.0.5
+                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.0.5
                 imagePullPolicy: Always
                 name: ibm-elastic-stack-operator
                 resources: {}

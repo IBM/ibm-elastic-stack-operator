@@ -23,9 +23,9 @@ metadata:
     release: "{{ .Release.Name }}"
   name: "{{ template "elasticsearch.fullname" . }}"
   annotations:
-    "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback, post-delete"
+    "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback"
     "helm.sh/hook-weight": "-20"
-    "helm.sh/hook-delete-policy": "hook-succeeded, before-hook-creation"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
 priority: 10
 allowHostDirVolumePlugin: true
 allowHostIPC: true

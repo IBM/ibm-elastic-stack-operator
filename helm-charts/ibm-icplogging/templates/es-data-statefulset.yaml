@@ -95,7 +95,7 @@ spec:
     {{- end }}
     {{- if eq (.Values.general.environment | lower) "openshift" }}
       securityContext:
-        fsGroup: 1001
+        #fsGroup: 1001
     {{- else }}
       securityContext:
         fsGroup: 1000

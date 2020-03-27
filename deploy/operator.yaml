@@ -21,7 +21,7 @@ spec:
       containers:
         - name: ibm-elastic-stack-operator
           # Replace this with the built image name
-          image: quay.io/opencloudio/ibm-elastic-stack-operator:v3.0.5
+          image: quay.io/opencloudio/ibm-elastic-stack-operator:3.0.5
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE

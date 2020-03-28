@@ -41,7 +41,8 @@ metadata:
               "data": {
                 "replicas": 1,
                 "storage": {
-                  "persistent": true
+                  "persistent": true,
+                  "useDynamicProvisioning": true
                 },
                 "tolerations": [
                   {

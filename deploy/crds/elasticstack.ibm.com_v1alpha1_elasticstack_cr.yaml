@@ -62,7 +62,7 @@ spec:
           value: ""
         size: 10Gi
         storageClass: ""
-        useDynamicProvisioning: false
+        useDynamicProvisioning: true
       tolerations: null
     image:
       repository: quay.io/opencloudio/icp-elasticsearch-oss

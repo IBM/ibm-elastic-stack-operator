@@ -1,7 +1,7 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: ibm-elastic-stack-operator.v3.0.5
+  name: ibm-elastic-stack-operator.v3.1.1
   namespace: placeholder
   annotations:
     alm-examples: |-
@@ -162,7 +162,7 @@ metadata:
     certified: "false"
     support: "IBM"
     repository: https://github.com/IBM/ibm-elastic-stack-operator
-    containerImage: quay.io/opencloudio/ibm-elastic-stack-operator:3.0.5
+    containerImage: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.1
     createdAt: '2020-03-10T11:58:00Z'
     description: |-
       Operator that installs and manages Elastic Stack logging service instances. 
@@ -425,6 +425,11 @@ spec:
             metadata:
               labels:
                 name: ibm-elastic-stack-operator
+              annotations:
+                productName: IBM Cloud Platform Common Services
+                productID: "068a62892a1e4db39641342e592daa25"
+                productVersion: "3.3.0"
+                productMetric: FREE
             spec:
               containers:
               - env:
@@ -438,7 +443,7 @@ spec:
                       fieldPath: metadata.name
                 - name: OPERATOR_NAME
                   value: ibm-elastic-stack-operator
-                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.0.5
+                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.1
                 imagePullPolicy: Always
                 name: ibm-elastic-stack-operator
                 resources: {}
@@ -474,4 +479,4 @@ spec:
   - name: Elastic Stack Operator
     url: https://github.com/IBM/ibm-elastic-stack-operator
   replaces: ibm-elastic-stack-operator.v0.0.0
-  version: 3.0.5
+  version: 3.1.1

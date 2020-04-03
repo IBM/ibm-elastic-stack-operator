@@ -29,4 +29,5 @@ LABEL org.label-schema.vendor="IBM" \
 
 COPY watches.yaml ${HOME}/watches.yaml
 COPY helm-charts/ ${HOME}/helm-charts/
+RUN mkdir /licenses
 COPY LICENSE /licenses

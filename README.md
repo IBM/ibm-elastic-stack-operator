@@ -1,5 +1,5 @@
 
-# ibm-elastic-stack-operator
+# Elastic Stack Operator
 
 Operator that installs and manages Elastic Stack logging service instances. 
 Each Elastic Stack instance provides visibility to system and application

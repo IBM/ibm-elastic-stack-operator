@@ -19,7 +19,7 @@ Configurable features include:
 
 ## Resources Required
 
-* Elasticsearch resource needs can vary widely based on your cluster and workload details. Please read the capacity planning guide in the [Knowledge Center](https://www.ibm.com/support/knowledgecenter/en/SSBS6K/product_welcome_cloud_private.html) for helpful information to plan the necessary resources.
+* Elasticsearch resource needs can vary widely based on your cluster and workload details. Please read the capacity planning guide in the [IBM Cloud Platform Common Services documentation](http://ibm.biz/cpcsdocs) for helpful information to plan the necessary resources.
 * See [Storage](#storage)
 
 
@@ -63,8 +63,8 @@ Parameter | Description | Default
 `image.pullSecret.enabled` | If set to true, adds an imagePullSecret annotation to all deployments. This enables the use of private image repositories that require authentication. | `false`
 `image.pullSecret.name`    | The name of the image pull secret to specify. The pull secret is a resource created by an authorized user. | `regcred`
 `general.environment`      | Describes the target Kubernetes environment to enable the chart to meet specific vendor requirements. Valid values are `IBMCloudPrivate`, `Openshift`, and `Generic`. | `IBMCloudPrivate`
-`general.clusterDomain`   | The value that was used during configuration installation of IBM Cloud Private. The chart default corresponds to IBM Cloud Private default. | `cluster.local`
-`general.ingressPort`      | The secure port number used to access services deployed within the IBM Cloud Private cluster. | `8443`
+`general.clusterDomain`   | The value that was used during configuration installation of the Kubernetes cluster. | `cluster.local`
+`general.ingressPort`      | The secure port number used to access services deployed within the Kubernetes cluster. | `8443`
 
 ### Filebeat
 
@@ -132,7 +132,7 @@ Parameter | Description | Default
 `kibana.ingress.annotations.id` | The parent navigation menu item. | `add-ons`
 `kibana.ingress.annotations.roles` | The roles able to see the UI navigation link. | `ClusterAdministrator,Administrator,Operator,Viewer`
 `kibana.ingress.annotations.ui.icp.ibm.com/tenant` | The teams able to see the UI navigation link. | `tenantAdev,tenantAsupport (tenantA examples)`
-`kibana.security.authc.enabled` | Determines whether IBM Cloud Private login is required before access is allowed. | `false`
+`kibana.security.authc.enabled` | Determines whether login is required before access is allowed. | `false`
 `kibana.security.authz.enabled` | Determines whether namespace access is required before access is allowed (requires `authc.enabled: true`). | `false`
 `kibana.security.authz.icp.authorizedNamespaces` | List of namespaces that allow access. | `(tenantA examples)`
 
@@ -197,10 +197,10 @@ Parameter | Description | Default
 `curator.schedule`          | A [Linux cron schedule](https://en.wikipedia.org/wiki/Cron#CRON_expression), identifying when the curator process should be launched. The default schedule runs at midnight. | `59 23 * * *`
 `curator.log.unit`          | The [age unit type](https://www.elastic.co/guide/en/elasticsearch/client/curator/5.2/filtertype_age.html) to retain application logs | `days`
 `curator.log.count`         | The number of `curator.log.unit`s to retain application logs | `1`
-`curator.va.unit`      | The [age unit type](https://www.elastic.co/guide/en/elasticsearch/client/curator/5.2/filtertype_age.html) to retain Vulnerability Advisor logs. This setting only applies to the instance of Logging installed with IBM Cloud Private and used by Vunlerability Advisor. | `days`
-`curator.va.count`     | The number of `curator.va.unit`s to retain Vulnerability Advisor logs. This setting only applies to the instance of Logging installed with IBM Cloud Private and used by Vunlerability Advisor. | `90`
-`curator.auditLog.unit`      | The [age unit type](https://www.elastic.co/guide/en/elasticsearch/client/curator/5.2/filtertype_age.html) to retain audit logs. This setting only applies to the instance of Logging installed with IBM Cloud Private and used by Audit Logging. | `days`
-`curator.auditLog.count`     | The number of `curator.auditLog.unit`s to retain audit logs. This setting only applies to the instance of Logging installed with IBM Cloud Private and used by Audit Logging. | `1`
+`curator.va.unit`      | The [age unit type](https://www.elastic.co/guide/en/elasticsearch/client/curator/5.2/filtertype_age.html) to retain Vulnerability Advisor logs. | `days`
+`curator.va.count`     | The number of `curator.va.unit`s to retain Vulnerability Advisor logs. | `90`
+`curator.auditLog.unit`      | The [age unit type](https://www.elastic.co/guide/en/elasticsearch/client/curator/5.2/filtertype_age.html) to retain audit logs. | `days`
+`curator.auditLog.count`     | The number of `curator.auditLog.unit`s to retain audit logs. | `1`
 `curator.tolerations`       | Kubernetes tolerations that can allow the pod to run on certain nodes | `empty (nil)`
 `curator.nodeSelector`      | Kubernetes selector that can restrict the pod to run on certain nodes | `empty (nil)`
 `curator.resources.limits.memory` | The maximum memory allowed per pod    | `256Mi`

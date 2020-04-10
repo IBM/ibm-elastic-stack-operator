@@ -117,25 +117,6 @@ spec:
 {{- end }}
         readinessProbe:
         livenessProbe:
-{{- if .Values.logstash.probe.enabled }}
-          httpGet:
-            path: /logstash/health
-            port: 9601
-          initialDelaySeconds: 300
-          periodSeconds: {{ .Values.logstash.probe.periodSeconds }}
-      - name: logstash-liveness-probe
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsUser: 1000
-          runAsNonRoot: true
-        resources:
-{{ toYaml .Values.logstash.probe.resources | indent 12 }}
-        image: {{ .Values.logstash.probe.image.repository }}:{{ .Values.logstash.probe.image.tag }}
-        volumeMounts:
-        - mountPath: /opt/ibm/logstash-liveness-probe/config/app.json
-          subPath: app.json
-          name: probe-config
-{{- end }}
       restartPolicy: Always
       volumes:
       - name: pipeline-config
@@ -157,14 +138,6 @@ spec:
       - name: certs
         secret:
           secretName: {{ template "fullname" . }}-certs
-{{- end }}
-{{- if .Values.logstash.probe.enabled }}
-      - name: probe-config
-        configMap:
-          name: {{ template "logstash.fullname" . }}-probe-config
-          items:
-          - key: app.json
-            path: app.json
 {{- end }}
       - emptyDir:
           medium: ""

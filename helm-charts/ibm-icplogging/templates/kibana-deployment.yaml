@@ -111,7 +111,6 @@ spec:
         ports:
         - name: router
           containerPort: {{ .Values.general.ingressPort }}
-{{ include "router.probes" . | indent 8 }}
         volumeMounts:
           - name: router-config
             mountPath: "/opt/ibm/router/conf"

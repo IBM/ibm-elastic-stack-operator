@@ -156,7 +156,6 @@ spec:
         ports:
         - name: router
           containerPort: 8443
-{{ include "router.probes" . | indent 8 }}
         volumeMounts:
           - name: router-config
             mountPath: "/opt/ibm/router/conf"

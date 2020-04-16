@@ -104,6 +104,15 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
+Create a default fully qualified job name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "job.fullname" -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- printf "%s-%s-%s" .Release.Name $name "job" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 To avoid split-brain we need to set the minimum number of master pods to (elasticsearch.master.replicas / 2) + 1.
 Expected input -> output:
   - 0 -> 0

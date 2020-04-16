@@ -100,6 +100,7 @@ spec:
       securityContext:
         fsGroup: 1000
     {{- end }}
+      serviceAccountName: "{{ template "elasticsearch.fullname" . }}"
       initContainers:
     {{- if ne (.Values.general.environment | lower) "openshift" }}
       - name: "chmod"
@@ -142,7 +143,7 @@ spec:
 {{ toYaml .Values.elasticsearch.routerImage.resources | indent 12 }}
         image: {{ .Values.elasticsearch.routerImage.repository }}:{{ .Values.elasticsearch.routerImage.tag }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-        command: ["/opt/ibm/router/entry/entrypoint.sh"]
+        command: ["nginx"]
         env:
         - name: CLUSTER_DOMAIN
           value: "{{ template "clusterDomain" . }}"
@@ -158,9 +159,8 @@ spec:
           containerPort: 8443
         volumeMounts:
           - name: router-config
-            mountPath: "/opt/ibm/router/conf"
-          - name: router-entry
-            mountPath: "/opt/ibm/router/entry"
+            mountPath: "/opt/ibm/router/nginx/conf/nginx.conf"
+            subPath: nginx.conf
           - name: rbac-config
             mountPath: "/opt/ibm/router/rbac"
   {{- if .Values.elasticsearch.security.authc.enabled }}
@@ -171,8 +171,6 @@ spec:
             mountPath: "/opt/ibm/router/tls-pass"
             readOnly: true
   {{- end }}
-          - name: qparser-config
-            mountPath: "/opt/ibm/router/qparser"
 {{- end }}
       - name: es-data
         securityContext:
@@ -277,16 +275,9 @@ spec:
         - name: router-config
           configMap:
             name: {{ template "client.fullname" . }}-router-config
-        - name: router-entry
-          configMap:
-            name: {{ template "client.fullname" . }}-router-entrypoint
-            defaultMode: 0744
         - name: rbac-config
           configMap:
             name: {{ template "client.fullname" . }}-rbac-config
-        - name: qparser-config
-          configMap:
-            name: {{ template "client.fullname" . }}-qparser-config
 {{- end }}
         - name: plugin-bundle
           emptyDir:

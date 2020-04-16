@@ -47,6 +47,7 @@ spec:
         productMetric: "FREE"
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
+      serviceAccountName: "{{ template "job.fullname" . }}"
       containers:
       - name: kubectl
         securityContext:

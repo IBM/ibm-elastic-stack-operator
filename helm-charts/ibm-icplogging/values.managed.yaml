@@ -18,7 +18,7 @@ nameOverride: elk
 security:
   ca:
     # set to `external` to use existing CA stored in Kubernetes secret to generate certs
-    origin: external
+    origin: internal
     external:
       # the secret need to be in the same namespace as the chart release
       secretName: cluster-ca-cert
@@ -30,19 +30,15 @@ security:
     version: TLSv1.2
 
 logstash:
-  replicas: 3
+  replicas: 1
   port: 5044
-  nodeSelector:
-    management: "true"
   tolerations:
     - key: "dedicated"
       operator: "Exists"
       effect: "NoSchedule"
 
 kibana:
-  replicas: 3
-  nodeSelector:
-    management: "true"
+  replicas: 1
   tolerations:
     - key: "dedicated"
       operator: "Exists"
@@ -143,16 +139,12 @@ elasticsearch:
       - key: "dedicated"
         operator: "Exists"
         effect: "NoSchedule"
-    nodeSelector:
-      management: "true"
 
   master:
     tolerations:
       - key: "dedicated"
         operator: "Exists"
         effect: "NoSchedule"
-    nodeSelector:
-      management: "true"
 
   data:
     replicas: 1
@@ -160,12 +152,10 @@ elasticsearch:
       - key: "dedicated"
         operator: "Exists"
         effect: "NoSchedule"
-    nodeSelector:
-      management: "true"
-
+    storage:
+      "persistent": true
+      "useDynamicProvisioning": true
 curator:
-  nodeSelector:
-    management: "true"
   tolerations:
     - key: "dedicated"
       operator: "Exists"

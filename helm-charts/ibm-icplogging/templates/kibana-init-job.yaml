@@ -53,6 +53,7 @@ spec:
       nodeSelector:
 {{ toYaml .Values.elasticsearch.client.nodeSelector | indent 8 }}
 {{- end }}
+      serviceAccountName: "{{ template "job.fullname" . }}"
       containers:
       - name: init
         securityContext:

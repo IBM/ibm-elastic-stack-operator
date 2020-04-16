@@ -21,41 +21,31 @@ metadata:
     component: "{{ .Values.elasticsearch.data.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
-  name: "{{ template "elasticsearch.fullname" . }}"
+  name: "{{ template "job.fullname" . }}"
   annotations:
     "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback"
-    "helm.sh/hook-weight": "-20"
+    "helm.sh/hook-weight": "-27"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 priority: 10
-allowHostDirVolumePlugin: true
-allowHostIPC: true
-allowHostNetwork: true
-allowHostPID: true
-allowHostPorts: true
-allowPrivilegeEscalation: true
-allowPrivilegedContainer: true
-allowedCapabilities:
-- '*'
-allowedUnsafeSysctls:
-- '*'
-defaultAddCapabilities: []
-fsGroup:
-  type: RunAsAny
-groups:
-- system:cluster-admins
-- system:nodes
-- system:masters
 readOnlyRootFilesystem: false
-requiredDropCapabilities: []
+requiredDropCapabilities:
+- KILL
+- MKNOD
+- SETUID
+- SETGID
 runAsUser:
-  type: RunAsAny
+  type: MustRunAs
+  uid: 1000
 seLinuxContext:
-  type: RunAsAny
-seccompProfiles:
-- '*'
+  type: MustRunAs
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:{{.Release.Namespace}}:default
+- system:serviceaccount:{{.Release.Namespace}}:{{ template "job.fullname" . }}
 volumes:
-- '*'
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret

@@ -67,6 +67,7 @@ spec:
       securityContext:
         runAsUser: 0
       hostPID: true
+      serviceAccountName: "{{ template "filebeat.fullname" . }}"
       containers:
       - name: filebeat
         securityContext:
@@ -76,19 +77,7 @@ spec:
         resources:
 {{ toYaml .Values.filebeat.resources | indent 12 }}
         readinessProbe:
-          exec:
-            command:
-              - sh
-              - -c
-              - "ps aux | grep '[f]ilebeat' || exit 1"
-          initialDelaySeconds: 10
         livenessProbe:
-          exec:
-            command:
-              - sh
-              - -c
-              - "ps aux | grep '[f]ilebeat' || exit 1"
-          periodSeconds: 30
         env:
         - name: NODE_HOSTNAME
           valueFrom:

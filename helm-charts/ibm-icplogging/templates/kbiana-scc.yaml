@@ -1,5 +1,3 @@
-{{ template "elk.settings.all.prepare" . -}}
-{{- if .Values.elasticsearch.routerEnabled }}
 #
 # Copyright 2020 IBM Corporation
 #
@@ -14,17 +12,33 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-apiVersion: v1
-kind: ConfigMap
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
 metadata:
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.elasticsearch.client.name }}"
-    release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    component: "{{ .Values.kibana.name }}"
     heritage: "{{ .Release.Service }}"
-  name: {{ template "client.fullname" . }}-router-entrypoint  
-data:
-  entrypoint.sh: |-
-{{ tpl (.Files.Get "es-client-router/entrypoint.sh") . | indent 4 }}
-{{- end }}
+    release: "{{ .Release.Name }}"
+  name: "{{ template "kibana.fullname" . }}"
+priority: 10
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+fsGroup:
+  type: RunAsAny
+users:
+- system:serviceaccount:{{.Release.Namespace}}:{{ template "kibana.fullname" . }}
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret

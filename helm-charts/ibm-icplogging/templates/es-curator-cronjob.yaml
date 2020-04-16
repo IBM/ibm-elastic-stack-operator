@@ -56,6 +56,7 @@ spec:
 {{ toYaml .Values.curator.nodeSelector | indent 12 }}
 {{- end }}
 {{ include "image.pullSecret" . | indent 10 }}
+          serviceAccountName: "{{ template "job.fullname" . }}"
           containers:
           - name: curator
             securityContext:

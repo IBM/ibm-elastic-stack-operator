@@ -67,6 +67,7 @@ spec:
 {{ toYaml .Values.logstash.nodeSelector | indent 8 }}
 {{- end }}
 {{ include "image.pullSecret" . | indent 6 }}
+      serviceAccountName: "{{ template "logstash.fullname" . }}"
       containers:
       - name: logstash
         image: {{ .Values.logstash.image.repository }}:{{ .Values.logstash.image.tag }}

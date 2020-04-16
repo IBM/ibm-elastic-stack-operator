@@ -1,5 +1,3 @@
-{{ template "elk.settings.all.prepare" . -}}
-{{- if .Values.general.pkiInitEnabled }}
 #
 # Copyright 2020 IBM Corporation
 #
@@ -14,27 +12,38 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
 metadata:
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "pki-init"
+    component: "{{ .Values.filebeat.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
-  name: "{{ template "elasticsearch.fullname" . }}-pki-init-binding"
-  annotations:
-    "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback, post-delete"
-    "helm.sh/hook-weight": "-18"
-    "helm.sh/hook-delete-policy": "hook-succeeded, before-hook-creation"
-subjects:
-- kind: ServiceAccount
-  name: {{ template "job.fullname" . }}
-  namespace: {{ .Release.Namespace }}
-roleRef:
-  kind: Role
-  name: {{ template "elasticsearch.fullname" . }}-pki-init
-  apiGroup: rbac.authorization.k8s.io
-{{- end }}
+  name: "{{ template "elasticsearch.fullname" . }}"
+priority: 10
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+allowedCapabilities:
+  - IPC_LOCK
+  - SYS_RESOURCE
+fsGroup:
+  type: RunAsAny
+readOnlyRootFilesystem: false
+requiredDropCapabilities: []
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:{{.Release.Namespace}}:{{ template "elasticsearch.fullname" . }}
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret

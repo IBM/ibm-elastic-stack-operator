@@ -29,4 +29,6 @@ metadata:
 data:
   rbac.lua: |-
 {{ tpl (.Files.Get "es-client-router/rbac.lua") . | indent 4 }}
+  qparser.lua: |-
+{{ tpl (.Files.Get "es-client-router/qparser.lua") . | indent 4 }}
 {{- end -}}

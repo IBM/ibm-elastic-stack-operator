@@ -27,21 +27,18 @@ allowHostDirVolumePlugin: true
 allowHostPID: true
 allowPrivilegeEscalation: true
 allowPrivilegedContainer: true
-#defaultAddCapabilities: []
 fsGroup:
   type: RunAsAny
 readOnlyRootFilesystem: true
 requiredDropCapabilities:
-# - KILL
-# - MKNOD
-# - SETUID
-# - SETGID
+- KILL
+- MKNOD
+- SETUID
+- SETGID
 runAsUser:
   type: RunAsAny
 seLinuxContext:
   type: RunAsAny
-seccompProfiles:
-#- '*'
 supplementalGroups:
   type: RunAsAny
 users:

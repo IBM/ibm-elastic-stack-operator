@@ -93,13 +93,8 @@ spec:
                   release: "{{ .Release.Name }}"
                   heritage: "{{ .Release.Service }}"
     {{- end }}
-    {{- if eq (.Values.general.environment | lower) "openshift" }}
-      securityContext:
-        fsGroup: 1001
-    {{- else }}
       securityContext:
         fsGroup: 1000
-    {{- end }}
       serviceAccountName: "{{ template "elasticsearch.fullname" . }}"
       initContainers:
     {{- if ne (.Values.general.environment | lower) "openshift" }}

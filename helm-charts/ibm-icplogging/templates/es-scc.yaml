@@ -18,7 +18,7 @@ metadata:
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "{{ .Values.filebeat.name }}"
+    component: "{{ .Values.elasticsearch.data.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
   name: "{{ template "elasticsearch.fullname" . }}"

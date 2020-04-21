@@ -23,11 +23,17 @@ metadata:
     release: "{{ .Release.Name }}"
   name: "{{ template "elasticsearch.fullname" . }}"
 priority: 10
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
 allowPrivilegeEscalation: true
 allowPrivilegedContainer: true
 allowedCapabilities:
   - IPC_LOCK
   - SYS_RESOURCE
+defaultAddCapabilities: []
 fsGroup:
   type: RunAsAny
 readOnlyRootFilesystem: false

@@ -23,8 +23,16 @@ metadata:
     release: "{{ .Release.Name }}"
   name: "{{ template "kibana.fullname" . }}"
 priority: 10
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowedCapabilities:
+allowPrivilegedContainer: false
+defaultAddCapabilities: []
 readOnlyRootFilesystem: false
-requiredDropCapabilities:
+requiredDropCapabilities: []
 runAsUser:
   type: RunAsAny
 seLinuxContext:

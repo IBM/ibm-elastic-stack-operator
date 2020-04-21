@@ -24,9 +24,14 @@ metadata:
   name: "{{ template "filebeat.fullname" . }}"
 priority: 10
 allowHostDirVolumePlugin: true
+allowHostIPC: false
+allowHostNetwork: false
 allowHostPID: true
+allowHostPorts: false
 allowPrivilegeEscalation: true
 allowPrivilegedContainer: true
+allowedCapabilities: []
+defaultAddCapabilities: []
 fsGroup:
   type: RunAsAny
 readOnlyRootFilesystem: true

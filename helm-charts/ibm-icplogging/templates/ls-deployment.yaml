@@ -42,7 +42,6 @@ spec:
   minReadySeconds: 5
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: "{{ template "elasticsearch.fullname" . }}"
         component: "{{ .Values.logstash.name }}"

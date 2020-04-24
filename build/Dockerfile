@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM quay.io/operator-framework/helm-operator:v0.15.1
+FROM quay.io/operator-framework/helm-operator:v0.17.0
 
 LABEL org.label-schema.vendor="IBM" \
     org.label-schema.name="ibm-elastic-stack-operator" \

@@ -1,5 +1,3 @@
-{{ template "elk.settings.all.prepare" . -}}
-{{- if .Values.general.pkiInitEnabled }}
 #
 # Copyright 2020 IBM Corporation
 #
@@ -14,27 +12,41 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
 metadata:
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "pki-init"
+    component: "{{ .Values.kibana.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
-  name: "{{ template "elasticsearch.fullname" . }}-pki-init-binding"
-  annotations:
-    "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback, post-delete"
-    "helm.sh/hook-weight": "-18"
-    "helm.sh/hook-delete-policy": "hook-succeeded, before-hook-creation"
-subjects:
-- kind: ServiceAccount
-  name: {{ template "job.fullname" . }}
-  namespace: {{ .Release.Namespace }}
-roleRef:
-  kind: Role
-  name: {{ template "elasticsearch.fullname" . }}-pki-init
-  apiGroup: rbac.authorization.k8s.io
-{{- end }}
+  name: "{{ template "kibana.fullname" . }}"
+priority: 10
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowedCapabilities: []
+allowPrivilegedContainer: false
+defaultAddCapabilities: []
+readOnlyRootFilesystem: false
+requiredDropCapabilities: []
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+fsGroup:
+  type: RunAsAny
+users:
+- system:serviceaccount:{{.Release.Namespace}}:{{ template "kibana.fullname" . }}
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret

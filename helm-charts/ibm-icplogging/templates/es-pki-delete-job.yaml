@@ -47,6 +47,7 @@ spec:
         productMetric: "FREE"
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
+      serviceAccountName: "{{ template "job.fullname" . }}"
       containers:
       - name: kubectl
         securityContext:
@@ -59,6 +60,6 @@ spec:
         resources:
 {{ toYaml .Values.elasticsearch.pkiInitImage.resources | indent 12 }}
         command: ['/bin/sh']
-        args: ['-c', 'kubectl delete secret {{ template "fullname" . }}-certs --ignore-not-found=true && kubectl delete secret {{ template "fullname" . }}-ca --ignore-not-found=true']
+        args: ['-c', 'kubectl delete secret {{ template "fullname" . }}-certs --ignore-not-found=true && kubectl delete secret {{ template "fullname" . }}-ca --ignore-not-found=true && kubectl delete secret {{ template "kibana.fullname" . }}-init-secret --ignore-not-found=true']
       restartPolicy: Never
 {{- end }}

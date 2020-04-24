@@ -26,7 +26,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
   annotations:
-    "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback"
+    "helm.sh/hook": "pre-install"
     "helm.sh/hook-delete-policy": "before-hook-creation"
     "helm.sh/hook-weight": "-9"
 spec:
@@ -55,6 +55,7 @@ spec:
       nodeSelector:
 {{ toYaml .Values.elasticsearch.client.nodeSelector | indent 8 }}
 {{- end }}
+      serviceAccountName: "{{ template "job.fullname" . }}"
       containers:
       - name: kubectl
         securityContext:

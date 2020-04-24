@@ -18,44 +18,41 @@ metadata:
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "{{ .Values.elasticsearch.data.name }}"
+    component: "{{ .Values.filebeat.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
-  name: "{{ template "elasticsearch.fullname" . }}"
-  annotations:
-    "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback"
-    "helm.sh/hook-weight": "-20"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
+  name: "{{ template "filebeat.fullname" . }}"
 priority: 10
 allowHostDirVolumePlugin: true
-allowHostIPC: true
-allowHostNetwork: true
+allowHostIPC: false
+allowHostNetwork: false
 allowHostPID: true
-allowHostPorts: true
+allowHostPorts: false
 allowPrivilegeEscalation: true
 allowPrivilegedContainer: true
-allowedCapabilities:
-- '*'
-allowedUnsafeSysctls:
-- '*'
+allowedCapabilities: []
 defaultAddCapabilities: []
 fsGroup:
   type: RunAsAny
-groups:
-- system:cluster-admins
-- system:nodes
-- system:masters
-readOnlyRootFilesystem: false
-requiredDropCapabilities: []
+readOnlyRootFilesystem: true
+requiredDropCapabilities:
+- KILL
+- MKNOD
+- SETUID
+- SETGID
 runAsUser:
   type: RunAsAny
 seLinuxContext:
   type: RunAsAny
-seccompProfiles:
-- '*'
 supplementalGroups:
   type: RunAsAny
 users:
-- system:serviceaccount:{{.Release.Namespace}}:default
+- system:serviceaccount:{{.Release.Namespace}}:{{ template "filebeat.fullname" . }}
 volumes:
-- '*'
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret
+- hostPath

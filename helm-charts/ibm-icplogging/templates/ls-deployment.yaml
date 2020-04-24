@@ -42,7 +42,6 @@ spec:
   minReadySeconds: 5
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: "{{ template "elasticsearch.fullname" . }}"
         component: "{{ .Values.logstash.name }}"
@@ -67,6 +66,7 @@ spec:
 {{ toYaml .Values.logstash.nodeSelector | indent 8 }}
 {{- end }}
 {{ include "image.pullSecret" . | indent 6 }}
+      serviceAccountName: "{{ template "logstash.fullname" . }}"
       containers:
       - name: logstash
         image: {{ .Values.logstash.image.repository }}:{{ .Values.logstash.image.tag }}

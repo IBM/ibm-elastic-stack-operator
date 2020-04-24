@@ -473,5 +473,4 @@ spec:
     url: https://www.elastic.co/
   - name: Elastic Stack Operator
     url: https://github.com/IBM/ibm-elastic-stack-operator
-  replaces: ibm-elastic-stack-operator.v0.0.0
   version: 3.0.5

@@ -33,6 +33,8 @@ spec:
           heritage: "{{ .Release.Service }}"
   - ports:
     - port: 8443
+    - port: 9200
     from:
-    - podSelector:
+    - namespaceSelector:
         matchLabels:
+          app: vulnerability-advisor

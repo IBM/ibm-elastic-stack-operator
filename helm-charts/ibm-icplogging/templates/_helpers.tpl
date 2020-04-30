@@ -133,29 +133,6 @@ If the calculated value is higher than the # of replicas, use the replica value.
 {{- end -}}
 
 {{/*
-Note: to avoid DNS resolution issues seen late in release (issues/24851), Logging probes avoid using the cluster domain in the service 'hostname'.
-The DNS issue was since resolved, but the probes used by logging and monitoring remain slightly out of sync as a result.
-*/}}
-{{- define "router.probes" -}}
-readinessProbe:
-  exec:
-    command:
-    - sh
-    - -c
-    - "wget --spider --no-check-certificate -S 'https://platform-identity-provider.ibm-common-services.svc:4300/v1/info'"
-  initialDelaySeconds: 10
-  periodSeconds: 10
-livenessProbe:
-  exec:
-    command:
-    - sh
-    - -c
-    - "wget --spider --no-check-certificate -S 'https://platform-identity-provider.ibm-common-services.svc:4300/v1/info'"
-  initialDelaySeconds: 30
-  periodSeconds: 20
-{{- end -}}
-
-{{/*
 Allow for private repository support.
 */}}
 {{- define "image.pullSecret" -}}

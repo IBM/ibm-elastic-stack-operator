@@ -12,46 +12,35 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-{{- if eq (.Values.general.environment | lower) "openshift" }}
-apiVersion: security.openshift.io/v1
-kind: SecurityContextConstraints
+{{- if ne (.Values.general.environment | lower) "openshift" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
 metadata:
+  name: "{{ template "fullname" . }}-sa-psp"
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "{{ .Values.logstash.name }}"
+    component: "{{ .Values.elasticsearch.data.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ibm-privileged-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: "{{ template "elasticsearch.fullname" . }}"
+  namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: "{{ template "kibana.fullname" . }}"
+  namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: "{{ template "filebeat.fullname" . }}"
+  namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
   name: "{{ template "logstash.fullname" . }}"
-priority: 10
-allowHostDirVolumePlugin: false
-allowHostIPC: false
-allowHostNetwork: false
-allowHostPID: false
-allowHostPorts: false
-allowedCapabilities: []
-allowPrivilegedContainer: false
-defaultAddCapabilities: []
-readOnlyRootFilesystem: false
-requiredDropCapabilities:
-- KILL
-- MKNOD
-- SETUID
-- SETGID
-runAsUser:
-  type: MustRunAs
-  uid: 1000
-seLinuxContext:
-  type: MustRunAs
-supplementalGroups:
-  type: RunAsAny
-users:
-- system:serviceaccount:{{.Release.Namespace}}:{{ template "logstash.fullname" . }}
-volumes:
-- configMap
-- downwardAPI
-- emptyDir
-- persistentVolumeClaim
-- projected
-- secret
+  namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: "{{ template "job.fullname" . }}"
+  namespace: {{ .Release.Namespace }}
 {{- end }}

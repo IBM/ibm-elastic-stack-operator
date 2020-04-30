@@ -39,9 +39,3 @@ spec:
     - namespaceSelector:
         matchLabels:
           app: vulnerability-advisor
-  - ports:
-    - port: 9200
-    from:
-    - namespaceSelector:
-        matchLabels:
-          app: vulnerability-advisor

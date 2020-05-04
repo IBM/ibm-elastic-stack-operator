@@ -145,8 +145,8 @@ spec:
                     storage:
                       type: object
                       properties:
-                        accessMode:
-                          type: object
+                        accessModes:
+                          type: object #may be a list
                         persistent:
                           type: string
                         selector:

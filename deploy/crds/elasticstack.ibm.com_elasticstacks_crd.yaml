@@ -128,40 +128,42 @@ spec:
                     tolerations:
                       type: object #null
                 data:
-                  antiAffinity:
-                    type: string
-                  heapSize:
-                    type: string
-                  memoryLimit:
-                    type: string
-                  name:
-                    type: string
-                  nodeSelector:
-                    type: object #null
-                  replicas:
-                    type: integer
-                  storage:
-                    type: object
-                    properties:
-                      accessMode:
-                        type: object
-                      persistent:
-                        type: string
-                      selector:
-                        type: object
-                        properties:
-                          label: #both of these values are blank
-                            type: string
-                          value:
-                            type: string
-                      size:
-                        type: string
-                      storageClass:
-                        type: string #also blank
-                      useDynamicProvisioning:
-                        type: boolean
-                  tolerations:
-                    type: object #null
+                  type: object
+                  properties:
+                    antiAffinity:
+                      type: string
+                    heapSize:
+                      type: string
+                    memoryLimit:
+                      type: string
+                    name:
+                      type: string
+                    nodeSelector:
+                      type: object #null
+                    replicas:
+                      type: integer
+                    storage:
+                      type: object
+                      properties:
+                        accessMode:
+                          type: object
+                        persistent:
+                          type: string
+                        selector:
+                          type: object
+                          properties:
+                            label: #both of these values are blank
+                              type: string
+                            value:
+                              type: string
+                        size:
+                          type: string
+                        storageClass:
+                          type: string #also blank
+                        useDynamicProvisioning:
+                          type: boolean
+                    tolerations:
+                      type: object #null
                 image:
                   type: object
                   properties:
@@ -200,41 +202,45 @@ spec:
                 name:
                   type: string
                 pkiInitImage:
-                  repository:
-                    type: string
-                  resources:
-                    type: object
-                    properties:
-                      limits:
-                        type: object
-                        properties:
-                          memory:
-                            type: string
-                      requests:
-                        type: object
-                        properties:
-                          memory: 
-                            type: string
-                  tag:
-                    type: string
+                  type: object
+                  properties:
+                    repository:
+                      type: string
+                    resources:
+                      type: object
+                      properties:
+                        limits:
+                          type: object
+                          properties:
+                            memory:
+                              type: string
+                        requests:
+                          type: object
+                          properties:
+                            memory: 
+                              type: string
+                    tag:
+                      type: string
                 routerImage:
-                  repository:
-                    type: string
-                  resources:
-                    type: object
-                    properties:
-                      limits:
-                        type: object
-                        properties:
-                          memory:
-                            type: string
-                      requests:
-                        type: object
-                        properties:
-                          memory: 
-                            type: string
-                  tag:
-                    type: string
+                  type: object
+                  properties:
+                    repository:
+                      type: string
+                    resources:
+                      type: object
+                      properties:
+                        limits:
+                          type: object
+                          properties:
+                            memory:
+                              type: string
+                        requests:
+                          type: object
+                          properties:
+                            memory: 
+                              type: string
+                    tag:
+                      type: string
                 security:
                   type: object
                   properties:
@@ -342,24 +348,28 @@ spec:
                     path:
                       type: string
                 init:
-                  resources:
                   type: object
                   properties:
-                    limits:
+                    resources:
                       type: object
                       properties:
-                        memory:
-                          type: string
-                    requests:
-                      type: object
-                      properties:
-                        memory:
-                          type: string
+                        limits:
+                          type: object
+                          properties:
+                            memory:
+                              type: string
+                        requests:
+                          type: object
+                          properties:
+                            memory:
+                              type: string
                 initImage:
-                  repository:
-                    type: string
-                  tag:
-                    type: string
+                  type: object
+                  properties:
+                    repository:
+                      type: string
+                    tag:
+                      type: string
                 install:
                   type: boolean
                 internal:

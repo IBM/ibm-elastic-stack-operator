@@ -146,7 +146,7 @@ spec:
                       type: object
                       properties:
                         accessModes:
-                          type: object #may be a list
+                          type: array #may be a list
                         persistent:
                           type: string
                         selector:
@@ -423,7 +423,7 @@ spec:
                           type: object
                           properties:
                             authorizedNamespaces:
-                              type: object #some kind of list, object may not be correct
+                              type: array #some kind of list, object may not be correct
                         provider:
                           type: string
                 service:

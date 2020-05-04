@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+{{- if eq (.Values.general.environment | lower) "openshift" }}
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
@@ -23,9 +24,6 @@ metadata:
     release: "{{ .Release.Name }}"
   name: "{{ template "job.fullname" . }}"
   annotations:
-    "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback, pre-delete"
-    "helm.sh/hook-weight": "-27"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
 priority: 10
 allowHostDirVolumePlugin: false
 allowHostIPC: false
@@ -57,3 +55,4 @@ volumes:
 - persistentVolumeClaim
 - projected
 - secret
+{{- end }}

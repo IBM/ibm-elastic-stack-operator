@@ -3,3 +3,4 @@
   group: elasticstack.ibm.com
   kind: ElasticStack
   chart: helm-charts/ibm-icplogging
+  watchDependentResources: false

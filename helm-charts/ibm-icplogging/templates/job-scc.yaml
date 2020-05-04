@@ -24,9 +24,6 @@ metadata:
     release: "{{ .Release.Name }}"
   name: "{{ template "job.fullname" . }}"
   annotations:
-    "helm.sh/hook": "pre-install, pre-rollback, pre-delete"
-    "helm.sh/hook-weight": "-27"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
 priority: 10
 allowHostDirVolumePlugin: false
 allowHostIPC: false

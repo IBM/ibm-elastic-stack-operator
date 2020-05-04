@@ -28,7 +28,7 @@ url=$url{{ .Values.kibana.ingress.path }}
 
 # 2. if nginx is on, get token from iam
 # Use short name (without .svc.$CLUSTER_DOMAIN) to avoid ingress issues.
-iam_url="https://iam-token-service.ibm-common-services:10443/oidc/token"
+iam_url="https://iam-token-service.ibm-common-services:10443/oidc/token" #NoPrivateIAMEndpoints see: https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L658
 set -x
 token=$(curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: application/json" \
     -d "grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=$IAM_API_KEY&response_type=cloud_iam" \

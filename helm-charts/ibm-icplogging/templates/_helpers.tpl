@@ -135,6 +135,7 @@ If the calculated value is higher than the # of replicas, use the replica value.
 {{/*
 Note: to avoid DNS resolution issues seen late in release (issues/24851), Logging probes avoid using the cluster domain in the service 'hostname'.
 The DNS issue was since resolved, but the probes used by logging and monitoring remain slightly out of sync as a result.
+Will need to change the urls for wget to satisfy NoPrivateIAMEndpoints Linting Error, see https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L661
 */}}
 {{- define "router.probes" -}}
 readinessProbe:

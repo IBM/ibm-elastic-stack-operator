@@ -13,7 +13,7 @@ local http = require "lib.resty.http"
 function PIP:query_user_id(token)
     local httpc = http.new()
     local res, err = httpc:request_uri(
-        "https://platform-identity-provider.ibm-common-services.svc."..self.cluster_domain..":4300/v1/auth/userInfo", 
+        "https://platform-identity-provider.ibm-common-services.svc."..self.cluster_domain..":4300/v1/auth/userInfo", --NoPrivateIAMEndpoints, see https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L660
         {
             method = "POST",
             ssl_verify = false,

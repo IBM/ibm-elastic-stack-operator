@@ -51,7 +51,7 @@ end
 
 local function get_user_id(token)
     local httpc = http.new()
-    local res, err = httpc:request_uri("https://platform-identity-provider.ibm-common-services.svc."..cluster_domain..":4300/v1/auth/userInfo", {
+    local res, err = httpc:request_uri("https://platform-identity-provider.ibm-common-services.svc."..cluster_domain..":4300/v1/auth/userInfo", { --NoPrivateIAMEndpoints, may need to replace this url with a variable according to https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L656
         method = "POST",
         ssl_verify = false,
         body = "access_token=" .. token,
@@ -77,7 +77,7 @@ end
 
 local function get_user_role(token, uid)
     local httpc = http.new()
-    local res, err = httpc:request_uri("https://platform-identity-management.ibm-common-services.svc."..cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getHighestRoleForCRN", {
+    local res, err = httpc:request_uri("https://platform-identity-management.ibm-common-services.svc."..cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getHighestRoleForCRN", { --NoPrivateIAMEndpoints, may need to replace this url with a variable according to https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L656
         method = "GET",
         ssl_verify = false,
         headers = {
@@ -104,7 +104,7 @@ end
 
 local function get_user_namespaces(token, uid)
     local httpc = http.new()
-    res, err = httpc:request_uri("https://platform-identity-management.ibm-common-services.svc."..cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getTeamResources", {
+    res, err = httpc:request_uri("https://platform-identity-management.ibm-common-services.svc."..cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getTeamResources", { --NoPrivateIAMEndpoints, may need to replace this url with a variable according to https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L656
         method = "GET",
         ssl_verify = false,
         headers = {
@@ -156,7 +156,7 @@ local function get_user_audit_namespaces(token, namespaces)
     local req_body = '{"inputArray":'..cjson.encode(input_array)..'}'
     ngx.log(ngx.DEBUG, "req body  ",req_body)
 
-    res, err = httpc:request_uri("https://iam-pdp.ibm-common-services.svc."..cluster_domain..":7998/v1/authz_bulk" , {
+    res, err = httpc:request_uri("https://iam-pdp.ibm-common-services.svc."..cluster_domain..":7998/v1/authz_bulk" , { --NoPrivateIAMEndpoints, may need to replace this url with a variable according to https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L656
         method = "POST",
         ssl_verify = false,
         body = req_body,

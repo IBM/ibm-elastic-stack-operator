@@ -53,11 +53,31 @@ spec:
       nodeSelector:
 {{ toYaml .Values.elasticsearch.client.nodeSelector | indent 8 }}
 {{- end }}
+      #Also part of PodSecurityContext
+      # hostNetwork: false
+      # hostPID: false
+      # hostIPC: false
       serviceAccountName: "{{ template "job.fullname" . }}"
+      #PodHasNodeBasedArchAffinity
+      # affinity:
+        # nodeAffinity:
+        #   requiredDuringSchedulingIgnoredDuringExecution:
+        #     nodeSelectorTerms:
+        #     - matchExpressions:
+        #       - key: kubernetes.io/arch
+        #         operator: In
+        #         values:
+        #           - amd64
+        #           - ppc64le
+        #           - s390x
       containers:
       - name: init
-        securityContext:
+        securityContext: #Needs the commented values for PodSecurityContextDefined & ContainerHasDropAll
           allowPrivilegeEscalation: false
+      #   capabilities:
+      #     drop:
+      #     - ALL
+      #   privileged: false
           readOnlyRootFilesystem: true
           runAsUser: 1000
           runAsNonRoot: true

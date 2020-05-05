@@ -19,11 +19,37 @@ spec:
          productMetric: FREE
     spec:
       serviceAccountName: ibm-elastic-stack-operator
+      #Also part of PodSecurityContext
+      # hostNetwork: false
+      # hostPID: false
+      # hostIPC: false
+      #PodHasNodeBasedArchAffinity
+      # affinity:
+        # nodeAffinity:
+        #   requiredDuringSchedulingIgnoredDuringExecution:
+        #     nodeSelectorTerms:
+        #     - matchExpressions:
+        #       - key: kubernetes.io/arch
+        #         operator: In
+        #         values:
+        #           - amd64
+        #           - ppc64le
+        #           - s390x
       containers:
         - name: ibm-elastic-stack-operator
           # Replace this with the built image name
           image: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.1
           imagePullPolicy: Always
+          #PodSecurityContextDefined & ContainerHasDropAll
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   capabilities:
+          #     drop:
+          #     - ALL
+          #   privileged: false
+          #   readOnlyRootFilesystem: true
+          #   runAsNonRoot: true
+          #   runAsUser: 1001
           env:
             - name: WATCH_NAMESPACE
               value: ""

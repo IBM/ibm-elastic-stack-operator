@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 {{ template "elk.settings.all.prepare" . -}}
-{{ template "apiVersionTryV1" .  }}
+{{ template "apiVersionTryV1" .  }} #tagged for NoDeprecatedAPIs (v1beta2), not really sure what this template value is
 kind: Deployment
 metadata:
   labels:
@@ -66,12 +66,33 @@ spec:
 {{ toYaml .Values.logstash.nodeSelector | indent 8 }}
 {{- end }}
 {{ include "image.pullSecret" . | indent 6 }}
+      #Also part of PodSecurityContext
+      # hostNetwork: false
+      # hostPID: false
+      # hostIPC: false
       serviceAccountName: "{{ template "logstash.fullname" . }}"
+      #PodHasNodeBasedArchAffinity
+      # affinity:
+        # nodeAffinity:
+        #   requiredDuringSchedulingIgnoredDuringExecution:
+        #     nodeSelectorTerms:
+        #     - matchExpressions:
+        #       - key: kubernetes.io/arch
+        #         operator: In
+        #         values:
+        #           - amd64
+        #           - ppc64le
+        #           - s390x
       containers:
       - name: logstash
         image: {{ .Values.logstash.image.repository }}:{{ .Values.logstash.image.tag }}
-        securityContext:
+        securityContext: #Needs the commented values for PodSecurityContextDefined & ContainerHasDropAll
           allowPrivilegeEscalation: false
+          # capabilities:
+          #   drop:
+          #   - ALL
+          # privileged: false
+          # readOnlyRootFilesystem: true
           runAsUser: 1000
           runAsNonRoot: true
         command: ["/bin/bash", "/scripts/entrypoint.sh"]

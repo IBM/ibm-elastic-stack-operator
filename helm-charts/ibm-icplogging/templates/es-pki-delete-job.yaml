@@ -47,7 +47,23 @@ spec:
         productMetric: "FREE"
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
+      #Also part of PodSecurityContext
+      # hostNetwork: false
+      # hostPID: false
+      # hostIPC: false
       serviceAccountName: "{{ template "job.fullname" . }}"
+      #PodHasNodeBasedArchAffinity
+      # affinity:
+        # nodeAffinity:
+        #   requiredDuringSchedulingIgnoredDuringExecution:
+        #     nodeSelectorTerms:
+        #     - matchExpressions:
+        #       - key: kubernetes.io/arch
+        #         operator: In
+        #         values:
+        #           - amd64
+        #           - ppc64le
+        #           - s390x
       containers:
       - name: kubectl
         securityContext:
@@ -55,6 +71,10 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 1000
           runAsNonRoot: true
+          #   capabilities: Need these values for PodSecurityContextDefined & ContainerHasDropAll
+          #     drop:
+          #     - ALL
+          #   privileged: false
         image: "{{ .Values.elasticsearch.pkiInitImage.repository }}:{{ .Values.elasticsearch.pkiInitImage.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         resources:

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 {{ template "elk.settings.all.prepare" . -}}
-{{ template "apiVersionTryV1" . }}
+{{ template "apiVersionTryV1" . }} #tagged for NoDeprecatedAPIs (v1beta2), not really sure what this template value is
 kind: StatefulSet
 metadata:
   labels:
@@ -66,6 +66,7 @@ spec:
       nodeSelector:
 {{ toYaml .Values.elasticsearch.data.nodeSelector | indent 8 }}
 {{- end }}
+#PodHasNodeBasedArchAffinity see addition to operator.yaml, need kubernetes.io/arch for error
     {{- if eq .Values.elasticsearch.data.antiAffinity "hard" }}
       affinity:
         podAntiAffinity:
@@ -95,11 +96,25 @@ spec:
     {{- end }}
       securityContext:
         fsGroup: 1000
+      #Also part of PodSecurityContext
+      # hostNetwork: false
+      # hostPID: false
+      # hostIPC: false
       serviceAccountName: "{{ template "elasticsearch.fullname" . }}"
       initContainers:
     {{- if ne (.Values.general.environment | lower) "openshift" }}
       - name: "chmod"
-        securityContext:
+        #PodSecurityContextDefined & ContainerHasDropAll
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   capabilities:
+        #     drop:
+        #     - ALL
+        #   privileged: false
+        #   readOnlyRootFilesystem: true
+        #   runAsNonRoot: true
+        #   runAsUser: 1001
+        securityContext: #see comment above
           privileged: true
           readOnlyRootFilesystem: true
         image: "{{ .Values.elasticsearch.initImage.repository }}:{{ .Values.elasticsearch.initImage.tag }}"
@@ -110,7 +125,7 @@ spec:
           mountPath: /data-dir
     {{- end }}
       - name: "sysctl"
-        securityContext:
+        securityContext: #see comment above
           privileged: true
         image: "{{ .Values.elasticsearch.initImage.repository }}:{{ .Values.elasticsearch.initImage.tag }}"
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
@@ -168,7 +183,7 @@ spec:
   {{- end }}
 {{- end }}
       - name: es-data
-        securityContext:
+        securityContext: #see comment above
           allowPrivilegeEscalation: false
         {{- if ne (.Values.general.environment | lower) "openshift" }}
           privileged: false

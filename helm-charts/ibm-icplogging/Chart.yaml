@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#will need appversion defined (RequiredChartKeysDefined) https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L599
+
 name: ibm-icplogging
 version: 3.1.1
 description: Log storage and search management solution

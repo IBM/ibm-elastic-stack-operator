@@ -56,7 +56,23 @@ spec:
 {{ toYaml .Values.curator.nodeSelector | indent 12 }}
 {{- end }}
 {{ include "image.pullSecret" . | indent 10 }}
+          #Also part of PodSecurityContext
+          # hostNetwork: false
+          # hostPID: false
+          # hostIPC: false
           serviceAccountName: "{{ template "job.fullname" . }}"
+          #PodHasNodeBasedArchAffinity
+          #affinity:
+          #  nodeAffinity:
+          #    requiredDuringSchedulingIgnoredDuringExecution:
+          #      nodeSelectorTerms:
+          #      - matchExpressions:
+          #        - key: kubernetes.io/arch
+          #          operator: In
+          #          values:
+          #            - amd64
+          #            - ppc64le
+          #            - s390x
           containers:
           - name: curator
             securityContext:
@@ -64,6 +80,11 @@ spec:
               allowPrivilegeEscalation: false
               runAsUser: 1000
               runAsNonRoot: true
+              #PodHasSecurityContextDefined just missing privileged value. Also, ContainerHasDropAll
+              # capabilities:
+              #   drop:
+              #   - ALL
+              # privileged: false
             image: "{{ .Values.curator.image.repository }}:{{ .Values.curator.image.tag }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["/clean-indices.sh"]

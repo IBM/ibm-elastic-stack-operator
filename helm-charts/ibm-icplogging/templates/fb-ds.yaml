@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 {{ template "elk.settings.all.prepare" . -}}
-{{ template "apiVersionTryV1" .  }}
+{{ template "apiVersionTryV1" .  }} #tagged for NoDeprecatedAPIs (v1beta2), not really sure what this template value is
 kind: DaemonSet
 metadata:
   labels:
@@ -64,14 +64,36 @@ spec:
       tolerations:
 {{ toYaml .Values.filebeat.tolerations | indent 6 }}
 {{- end }}
-      securityContext:
-        runAsUser: 0
+      securityContext: 
+        runAsUser: 0 #running as root user not allowed based on https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L731
       hostPID: true
+      #Also part of PodSecurityContext
+      # hostNetwork: false
+      # hostIPC: false
       serviceAccountName: "{{ template "filebeat.fullname" . }}"
+      #PodHasNodeBasedArchAffinity
+      # affinity:
+        # nodeAffinity:
+        #   requiredDuringSchedulingIgnoredDuringExecution:
+        #     nodeSelectorTerms:
+        #     - matchExpressions:
+        #       - key: kubernetes.io/arch
+        #         operator: In
+        #         values:
+        #           - amd64
+        #           - ppc64le
+        #           - s390x
       containers:
       - name: filebeat
-        securityContext:
+        securityContext: #Needs the commented values for PodSecurityContextDefined & ContainerHasDropAll
           readOnlyRootFilesystem: true
+          #allowPrivilegeEscalation: false
+          #capabilities:
+          #  drop:
+          #  - ALL
+          #privileged: false
+          #runAsUser: 1001
+          #runAsNonRoot: true
         image: {{ .Values.filebeat.image.repository }}:{{ .Values.filebeat.image.tag }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         resources:
@@ -139,6 +161,7 @@ spec:
           secretName: {{ template "fullname" . }}-certs
 {{- end }}
       - name: data
+      #NoHostPath https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L740
         hostPath:
           path: {{ tpl .Values.filebeat.registryHostPath . | quote }}
           type: DirectoryOrCreate

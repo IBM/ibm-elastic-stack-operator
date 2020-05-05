@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 {{ template "elk.settings.all.prepare" . -}}
-{{ template "apiVersionTryV1" .  }}
+{{ template "apiVersionTryV1" .  }} #tagged for NoDeprecatedAPIs (v1beta2), not really sure what this template value is
 kind: Deployment
 metadata:
   labels:
@@ -70,12 +70,35 @@ spec:
       # Required for multi-platform config
       securityContext:
         fsGroup: 1000
+      #Also part of PodSecurityContext
+      # hostNetwork: false
+      # hostPID: false
+      # hostIPC: false
       serviceAccountName: "{{ template "kibana.fullname" . }}"
+      #PodHasNodeBasedArchAffinity
+      # affinity:
+        # nodeAffinity:
+        #   requiredDuringSchedulingIgnoredDuringExecution:
+        #     nodeSelectorTerms:
+        #     - matchExpressions:
+        #       - key: kubernetes.io/arch
+        #         operator: In
+        #         values:
+        #           - amd64
+        #           - ppc64le
+        #           - s390x
       containers:
 {{- if .Values.kibana.routerEnabled }}
       - name: router
-        securityContext:
+        securityContext: #Needs the commented values for PodSecurityContextDefined & ContainerHasDropAll
           allowPrivilegeEscalation: false
+          #readOnlyRootFilesystem: true
+          #capabilities:
+          #  drop:
+          #  - ALL
+          #privileged: false
+          #runAsUser: 1001
+          #runAsNonRoot: true
         resources:
 {{ toYaml .Values.kibana.routerImage.resources | indent 12 }}
         image: {{ .Values.kibana.routerImage.repository }}:{{ .Values.kibana.routerImage.tag }}

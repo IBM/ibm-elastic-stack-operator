@@ -148,7 +148,7 @@ spec:
                         accessModes:
                           type: array #may be a list
                         persistent:
-                          type: string
+                          type: boolean
                         selector:
                           type: object
                           properties:

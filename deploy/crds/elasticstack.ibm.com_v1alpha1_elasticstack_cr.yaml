@@ -22,14 +22,14 @@ spec:
       count: 7
       unit: days
     name: log-curator
-    nodeSelector: null
+    nodeSelector: {}
     resources:
       limits:
         memory: 256Mi
       requests:
         memory: 64Mi
     schedule: 30 23 * * *
-    tolerations: null
+    tolerations: {}
     va:
       count: 90
       unit: days
@@ -42,16 +42,16 @@ spec:
       heapSize: 1024m
       memoryLimit: 1536Mi
       name: client
-      nodeSelector: null
+      nodeSelector: {}
       replicas: 1
       restPort: 9200
-      tolerations: null
+      tolerations: {}
     data:
       antiAffinity: hard
       heapSize: 4000m
       memoryLimit: 7000M
       name: data
-      nodeSelector: null
+      nodeSelector: {}
       replicas: 2
       storage:
         accessModes:
@@ -63,7 +63,7 @@ spec:
         size: 10Gi
         storageClass: ""
         useDynamicProvisioning: true
-      tolerations: null
+      tolerations: {}
     image:
       repository: quay.io/opencloudio/icp-elasticsearch-oss
       tag: 6.6.1-build.1
@@ -76,9 +76,9 @@ spec:
       heapSize: 1024m
       memoryLimit: 1536Mi
       name: master
-      nodeSelector: null
+      nodeSelector: {}
       replicas: 1
-      tolerations: null
+      tolerations: {}
     name: elasticsearch
     pkiInitImage:
       repository: quay.io/opencloudio/logging-pki-init
@@ -116,9 +116,9 @@ spec:
       requests:
         memory: 64Mi
     scope:
-      namespaces: null
-      nodes: null
-    tolerations: null
+      namespaces: ""
+      nodes: ""
+    tolerations: {}
   general:
     clusterDomain: cluster.local
     clusterName: mycluster
@@ -136,7 +136,7 @@ spec:
       repository: quay.io/opencloudio/icp-kibana-oss
       tag: 6.6.1-build.1
     ingress:
-      annotations: null
+      annotations: {}
       labels:
         inmenu: "true"
         target: logging-sampleA
@@ -155,7 +155,7 @@ spec:
     maxOldSpaceSize: "1536"
     memoryLimit: 2048Mi
     name: kibana
-    nodeSelector: null
+    nodeSelector: {}
     replicas: 1
     routerImage:
       repository: quay.io/opencloudio/icp-management-ingress
@@ -185,7 +185,7 @@ spec:
       labels:
         inmenu: "true"
         target: logging-sampleA
-    tolerations: null
+    tolerations: {}
   logstash:
     heapSize: 512m
     image:
@@ -193,7 +193,7 @@ spec:
       tag: 6.6.1-build.1
     memoryLimit: 1024Mi
     name: logstash
-    nodeSelector: null
+    nodeSelector: {}
     port: 5000
     probe:
       enabled: false
@@ -209,7 +209,7 @@ spec:
         requests:
           memory: 64Mi
     replicas: 1
-    tolerations: null
+    tolerations: {}
   security:
     app:
       keystore:

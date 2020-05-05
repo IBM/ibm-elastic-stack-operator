@@ -15,7 +15,7 @@ spec:
   validation:
     openAPIV3Schema:
       type: object
-      x-kubernetes-preserve-unknown-fields: true
+      x-kubernetes-preserve-unknown-fields: true #this would need to be fleshed out the way deploy/crds/elasticstack.ibm.com_elasticstacks_crd.yaml was for ResourceShcemaIsValid
   versions:
   - name: v1alpha1
     served: true

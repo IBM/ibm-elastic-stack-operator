@@ -59,3 +59,11 @@ spec:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
               value: "elastic-stack-operator"
+          #ContainerDefinesResources
+          # resources:
+          #   limits:
+          #     cpu:
+          #     memory:
+          #   requests:
+          #     cpu:
+          #     memory:

@@ -99,7 +99,7 @@ spec:
           #privileged: false
           #runAsUser: 1001
           #runAsNonRoot: true
-        resources:
+        resources: #cpu defined ContainerDefinesResources
 {{ toYaml .Values.kibana.routerImage.resources | indent 12 }}
         image: {{ .Values.kibana.routerImage.repository }}:{{ .Values.kibana.routerImage.tag }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
@@ -169,7 +169,7 @@ spec:
 {{- end }}
         resources:
           limits:
-            memory: {{ .Values.kibana.memoryLimit }}
+            memory: {{ .Values.kibana.memoryLimit }} #cpu defined ContainerDefinesResources, requests defined
         env:
         - name: "NODE_OPTIONS"
           value: "--max-old-space-size={{ .Values.kibana.maxOldSpaceSize }}"

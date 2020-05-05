@@ -85,7 +85,7 @@ spec:
           #   readOnlyRootFilesystem: true
         image: "{{ .Values.elasticsearch.pkiInitImage.repository }}:{{ .Values.elasticsearch.pkiInitImage.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        resources:
+        resources: #may need to defined cpu here for ContainerDefinesResources
 {{ toYaml .Values.elasticsearch.pkiInitImage.resources | indent 12 }}
         volumeMounts:
   {{- if eq .Values.security.ca.origin "external" }}

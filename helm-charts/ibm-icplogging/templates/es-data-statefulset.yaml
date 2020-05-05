@@ -115,8 +115,18 @@ spec:
         #   runAsNonRoot: true
         #   runAsUser: 1001
         securityContext: #see comment above
-          privileged: true
+          #NoPodPrivilegeConflicts, looks like if you don't explictly set allowPrivilegeEscalation it sets it to false: https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30721692#L517
+          #NoPrivilegedContainers, linting doesn't like privileged containers
+          privileged: true 
           readOnlyRootFilesystem: true
+        #ContainerDefinesResources
+          # resources:
+          #   limits:
+          #     cpu:
+          #     memory:
+          #   requests:
+          #     cpu:
+          #     memory:
         image: "{{ .Values.elasticsearch.initImage.repository }}:{{ .Values.elasticsearch.initImage.tag }}"
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["chmod", "777", "/data-dir"]          
@@ -124,8 +134,10 @@ spec:
         - name: data
           mountPath: /data-dir
     {{- end }}
-      - name: "sysctl"
-        securityContext: #see comment above
+      - name: "sysctl" #NoSysctl https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30721692#L484
+        securityContext: #see comments in container above
+          #NoPodPrivilegeConflicts, looks like if you don't explictly set allowPrivilegeEscalation it sets it to false: https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30721692#L517
+          #NoPrivilegedContainers, linting doesn't like privileged containers
           privileged: true
         image: "{{ .Values.elasticsearch.initImage.repository }}:{{ .Values.elasticsearch.initImage.tag }}"
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
@@ -147,6 +159,7 @@ spec:
       containers:
 {{- if .Values.elasticsearch.routerEnabled }}
       - name: router
+        #see comments in first initContainer, resources may need cpu defined
         securityContext:
           allowPrivilegeEscalation: false
         resources:
@@ -183,7 +196,7 @@ spec:
   {{- end }}
 {{- end }}
       - name: es-data
-        securityContext: #see comment above
+        securityContext: #see comments in first container above
           allowPrivilegeEscalation: false
         {{- if ne (.Values.general.environment | lower) "openshift" }}
           privileged: false

@@ -82,7 +82,7 @@ spec:
           runAsUser: 1000
           runAsNonRoot: true
         image: {{ .Values.kibana.initImage.repository }}:{{ .Values.kibana.initImage.tag }}
-        resources:
+        resources: #cpu defined ContainerDefinesResources
 {{ toYaml .Values.kibana.init.resources | indent 12 }}
         command: ["/opt/entry/entrypoint.sh"]
         env:

@@ -115,7 +115,7 @@ spec:
 {{- end }}
         image: {{ .Values.logstash.image.repository }}:{{ .Values.logstash.image.tag }}
         command: ["/bin/bash", "/scripts/entrypoint.sh"]
-        resources:
+        resources: #cpu defined ContainerDefinesResources, maybe requests as well
           limits:
             memory: {{ .Values.logstash.memoryLimit }}
         ports:

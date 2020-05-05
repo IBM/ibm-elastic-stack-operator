@@ -66,6 +66,14 @@ spec:
         #           - s390x
       containers:
       - name: kubectl
+        #ContainerDefinesResources
+        # resources:
+        #   limits:
+        #     cpu:
+        #     memory:
+        #   requests:
+        #     cpu:
+        #     memory:
         securityContext:
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false

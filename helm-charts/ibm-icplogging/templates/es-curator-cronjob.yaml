@@ -75,6 +75,14 @@ spec:
           #            - s390x
           containers:
           - name: curator
+            #ContainerDefinesResources
+            # resources:
+            #   limits:
+            #     cpu:
+            #     memory:
+            #   requests:
+            #     cpu:
+            #     memory:
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false

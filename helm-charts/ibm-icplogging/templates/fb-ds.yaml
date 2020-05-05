@@ -96,7 +96,7 @@ spec:
           #runAsNonRoot: true
         image: {{ .Values.filebeat.image.repository }}:{{ .Values.filebeat.image.tag }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-        resources:
+        resources: #cpu defined ContainerDefinesResources
 {{ toYaml .Values.filebeat.resources | indent 12 }}
         readinessProbe:
         livenessProbe:

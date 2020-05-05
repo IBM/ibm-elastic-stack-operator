@@ -57,20 +57,19 @@ logstash:
     tag: "6.6.1-build.1"
   nodeSelector:
   tolerations:
-  #these values are presently unused (DefinedParametersAreUsed)
-  # probe:
-  #   enabled: false
-  #   periodSeconds: 60
-  #   minEventsPerPeriod: 1
-  #   maxUnavailablePeriod: 5
-  #   resources:
-  #     limits:
-  #       memory: 256Mi
-  #     requests:
-  #       memory: 64Mi
-  #   image:
-  #     repository: "quay.io/opencloudio/logstash-liveness-probe"
-  #     tag: "1.0.2-build.2"
+  probe:
+    enabled: false
+    periodSeconds: 60
+    minEventsPerPeriod: 1
+    maxUnavailablePeriod: 5
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 64Mi
+    image:
+      repository: "quay.io/opencloudio/logstash-liveness-probe"
+      tag: "1.0.2-build.2"
 
 kibana:
   install: true
@@ -299,26 +298,25 @@ curator:
 
 xpack:
   monitoring: true
-  #these values are presently unused (DefinedParametersAreUsed)
-  # graph: false
-  # reporting: false
-  # ml: false
-  # watcher: false
-  # license:
-  #   # accepted values: secret, selfGenerated
-  #   # what it does: determines which xpack license will be used
-  #   source: selfGenerated
-  #   selfGenerated:
-  #     # accepted values: trial, basic
-  #     # what it does:
-  #     # see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/license-settings.html
-  #     type: basic
-  #   secret:
-  #     # the secret need to be in the same namespace as the chart release
-  #     secretName: es-license
-  #     # the Kubenetes field name (key) within the specified secret
-  #     # that stores license json file
-  #     fieldName: license.json
+  graph: false
+  reporting: false
+  ml: false
+  watcher: false
+  license:
+    # accepted values: secret, selfGenerated
+    # what it does: determines which xpack license will be used
+    source: selfGenerated
+    selfGenerated:
+      # accepted values: trial, basic
+      # what it does:
+      # see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/license-settings.html
+      type: basic
+    secret:
+      # the secret need to be in the same namespace as the chart release
+      secretName: es-license
+      # the Kubenetes field name (key) within the specified secret
+      # that stores license json file
+      fieldName: license.json
 upgrade:
   elasticsearch:
     # set to true if data from old version need to be imported

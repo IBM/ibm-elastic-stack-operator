@@ -154,6 +154,45 @@ metadata:
               }
             }
           }
+        }, 
+        {
+          "apiVersion": "operator.ibm.com/v1alpha1",
+          "kind": "OperandBindInfo",
+          "metadata": {
+            "name": "ibm-elastic-stack-bindinfo"
+          },
+          "spec": {
+            "operand": "ibm-elastic-stack-operator",
+            "registry": "common-service",
+            "description": "Certificates needed to access Elastic stack instances for whitelisted clients only",
+            "bindings": {
+              "public-certs": {
+                "secret": "logging-elk-certs"
+              },
+              "public-passphrases": {
+                "secret": "logging-elk-elasticsearch-pki-secret"
+              }
+            }
+          }
+        },
+        {
+          "apiVersion": "operator.ibm.com/v1alpha1",
+          "kind": "OperandRequest",
+          "metadata": {
+            "name": "ibm-elastic-stack-request"
+          },
+          "spec": {
+            "requests": [
+              {
+                "operands": [
+                  {
+                    "name": "ibm-iam-operator"
+                  }
+                ],
+                "registry": "common-service"
+              }
+            ]
+          }
         }
       ]
     capabilities: "Basic Install"

@@ -57,17 +57,17 @@ images:
       arch: "s390x"
 - image: icp-elasticsearch-oss:6.6.1-build.1
   references:
-  - repository: cp-elasticsearch-oss:6.6.1-build.1
+  - repository: icp-elasticsearch-oss:6.6.1-build.1
     pull-repository: "quay.io/opencloudio/cp-elasticsearch-oss:6.6.1-build.1"
     platform:
       os: "linux"
       arch: "amd64"
-  - repository: cp-elasticsearch-oss:6.6.1-build.1
+  - repository: icp-elasticsearch-oss:6.6.1-build.1
     pull-repository: "quay.io/opencloudio/cp-elasticsearch-oss:6.6.1-build.1"
     platform:
       os: "linux"
       arch: "ppc64le"
-  - repository: cp-elasticsearch-oss:6.6.1-build.1
+  - repository: icp-elasticsearch-oss:6.6.1-build.1
     pull-repository: "quay.io/opencloudio/cp-elasticsearch-oss:6.6.1-build.1"
     platform:
       os: "linux"

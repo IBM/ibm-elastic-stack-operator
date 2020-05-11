@@ -1,4 +1,4 @@
-
+#
 # ibm-elastic-stack-operator
 
 Operator that installs and manages Elastic Stack logging service instances. 

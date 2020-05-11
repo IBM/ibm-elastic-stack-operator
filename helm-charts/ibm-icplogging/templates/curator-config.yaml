@@ -20,7 +20,7 @@ metadata:
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: "{{ .Release.Service }}"
+    heritage: "{{ .Release.Service }}" #REquiredMetadataLabelsDefined, need to change keys to match with linter's expectations https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30733115#L1171
     release: "{{ .Release.Name }}"
     component: "{{ .Values.curator.name }}"
 data:

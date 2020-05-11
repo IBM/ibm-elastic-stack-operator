@@ -72,17 +72,17 @@ spec:
       # hostIPC: false
       serviceAccountName: "{{ template "filebeat.fullname" . }}"
       #PodHasNodeBasedArchAffinity
-      # affinity:
-        # nodeAffinity:
-        #   requiredDuringSchedulingIgnoredDuringExecution:
-        #     nodeSelectorTerms:
-        #     - matchExpressions:
-        #       - key: kubernetes.io/arch
-        #         operator: In
-        #         values:
-        #           - amd64
-        #           - ppc64le
-        #           - s390x
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+                  - ppc64le
+                  - s390x
       containers:
       - name: filebeat
         securityContext: #Needs the commented values for PodSecurityContextDefined & ContainerHasDropAll

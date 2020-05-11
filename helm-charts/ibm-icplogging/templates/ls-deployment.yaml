@@ -72,17 +72,17 @@ spec:
       # hostIPC: false
       serviceAccountName: "{{ template "logstash.fullname" . }}"
       #PodHasNodeBasedArchAffinity
-      # affinity:
-        # nodeAffinity:
-        #   requiredDuringSchedulingIgnoredDuringExecution:
-        #     nodeSelectorTerms:
-        #     - matchExpressions:
-        #       - key: kubernetes.io/arch
-        #         operator: In
-        #         values:
-        #           - amd64
-        #           - ppc64le
-        #           - s390x
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+                  - ppc64le
+                  - s390x
       containers:
       - name: logstash
         image: {{ .Values.logstash.image.repository }}:{{ .Values.logstash.image.tag }}

@@ -59,17 +59,17 @@ spec:
       # hostIPC: false
       serviceAccountName: "{{ template "job.fullname" . }}"
       #PodHasNodeBasedArchAffinity
-      # affinity:
-        # nodeAffinity:
-        #   requiredDuringSchedulingIgnoredDuringExecution:
-        #     nodeSelectorTerms:
-        #     - matchExpressions:
-        #       - key: kubernetes.io/arch
-        #         operator: In
-        #         values:
-        #           - amd64
-        #           - ppc64le
-        #           - s390x
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
+                  - ppc64le
+                  - s390x
       containers:
       - name: init
         securityContext: #Needs the commented values for PodSecurityContextDefined & ContainerHasDropAll

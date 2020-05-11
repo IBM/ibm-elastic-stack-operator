@@ -23,7 +23,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
   name: "{{ template "kibana.fullname" . }}"
-priority: 10
+priority: 1
 allowHostDirVolumePlugin: false
 allowHostIPC: false
 allowHostNetwork: false

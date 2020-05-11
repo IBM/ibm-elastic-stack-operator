@@ -24,7 +24,7 @@ metadata:
     release: "{{ .Release.Name }}"
   name: "{{ template "job.fullname" . }}"
   annotations:
-priority: 10
+priority: 1
 allowHostDirVolumePlugin: false
 allowHostIPC: false
 allowHostNetwork: false

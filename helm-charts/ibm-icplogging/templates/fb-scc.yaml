@@ -23,7 +23,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
   name: "{{ template "filebeat.fullname" . }}"
-priority: 10
+priority: 1
 allowHostDirVolumePlugin: true
 allowHostIPC: false
 allowHostNetwork: false

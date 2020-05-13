@@ -26,9 +26,6 @@ metadata:
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
   annotations:
-    "helm.sh/hook": "pre-install"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
-    "helm.sh/hook-weight": "-9"
 spec:
   template:
     metadata:

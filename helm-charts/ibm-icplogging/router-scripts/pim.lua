@@ -14,7 +14,7 @@ local http = require "lib.resty.http"
 
 function PIM:query_user_role(token, uid)
     local httpc = http.new()
-    local res, err = httpc:request_uri("https://platform-identity-management.ibm-common-services.svc."..self.cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getHighestRoleForCRN", { --NoPrivateIAMEndpoints, see https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L659
+    local res, err = httpc:request_uri("https://platform-identity-management.{{ .Release.Namespace }}.svc."..self.cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getHighestRoleForCRN", {
         method = "GET",
         ssl_verify = false,
         headers = {
@@ -45,7 +45,7 @@ end
 
 function PIM:query_user_namespaces(token, uid)
     local httpc = http.new()
-    res, err = httpc:request_uri("https://platform-identity-management.ibm-common-services.svc."..self.cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getTeamResources", { --NoPrivateIAMEndpoints, see above
+    res, err = httpc:request_uri("https://platform-identity-management.{{ .Release.Namespace }}.svc."..self.cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getTeamResources", {
         method = "GET",
         ssl_verify = false,
         headers = {

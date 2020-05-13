@@ -1,5 +1,3 @@
-{{ template "elk.settings.all.prepare" . -}}
-{{- if .Values.general.pkiInitEnabled }}
 #
 # Copyright 2020 IBM Corporation
 #
@@ -14,24 +12,35 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1 #tagged for NoDeprecatedAPIs
+{{- if ne (.Values.general.environment | lower) "openshift" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
 metadata:
+  name: "{{ template "fullname" . }}-sa-psp"
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "pki-init"
+    component: "{{ .Values.elasticsearch.data.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
-  name: "{{ template "elasticsearch.fullname" . }}-pki-init-binding"
-  annotations:
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ibm-privileged-clusterrole
 subjects:
 - kind: ServiceAccount
-  name: {{ template "job.fullname" . }}
+  name: "{{ template "elasticsearch.fullname" . }}"
   namespace: {{ .Release.Namespace }}
-roleRef:
-  kind: Role
-  name: {{ template "elasticsearch.fullname" . }}-pki-init
-  apiGroup: rbac.authorization.k8s.io
+- kind: ServiceAccount
+  name: "{{ template "kibana.fullname" . }}"
+  namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: "{{ template "filebeat.fullname" . }}"
+  namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: "{{ template "logstash.fullname" . }}"
+  namespace: {{ .Release.Namespace }}
+- kind: ServiceAccount
+  name: "{{ template "job.fullname" . }}"
+  namespace: {{ .Release.Namespace }}
 {{- end }}

@@ -9,7 +9,4 @@ metadata:
     chart: "{{ .Chart.Name }}"
     heritage: "{{ .Release.Service }}"
   annotations:
-    "helm.sh/hook": "pre-install, pre-upgrade, pre-rollback"
-    "helm.sh/hook-weight": "-28"
-    "helm.sh/hook-delete-policy": "before-hook-creation"
   name: "{{ template "job.fullname" . }}"

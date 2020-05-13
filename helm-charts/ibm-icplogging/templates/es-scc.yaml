@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+{{- if eq (.Values.general.environment | lower) "openshift" }}
 apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
@@ -22,7 +23,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
   name: "{{ template "elasticsearch.fullname" . }}"
-priority: 10
+priority: 1
 allowHostDirVolumePlugin: false
 allowHostIPC: false
 allowHostNetwork: false
@@ -53,3 +54,4 @@ volumes:
 - persistentVolumeClaim
 - projected
 - secret
+{{- end }}

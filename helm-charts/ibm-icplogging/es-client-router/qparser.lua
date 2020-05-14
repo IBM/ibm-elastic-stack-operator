@@ -155,6 +155,18 @@ local function add_namespace_filters(reqbody, auth_namespaces)
     return modified_reqbody
 end
 
+local function add_blank_filters(reqbody)
+
+    -- insert query string if none found
+    local modified_reqbody = reqbody:gsub("(\"match_all\"%s*:%s*{%s*})", "\"query_string\":{\"query\":\"*\"}")
+
+    -- add filters to query string
+    local k = "k" .. math.random(100000000000000, 999999999999999)
+    local v = math.random(100000000000000, 999999999999999)
+    modified_reqbody = modified_reqbody:gsub("(query_string.-\"query\"%s*:%s*\")", "%1 k:( "..v.." ) AND ")
+    return modified_reqbody
+end
+
 -- Expose interface.
 local _M = {}
 _M.get_req_namespaces = get_req_namespaces

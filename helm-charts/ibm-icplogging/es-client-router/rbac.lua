@@ -20,7 +20,27 @@ local cluster_name = os.getenv("CLUSTER_NAME")
 -- NOTE-2: non admin user has access to only search apis,
 -- which is enough for "discovering", visualizing,  dashboarding and managing in Kibana UI
 
-local non_admin_authorized_apis = { _msearch=true,  mget=true, _search=true }
+local unrestricted_api_uri_pattern_map = { 
+    _kibana = "^/.kibana[%d]*/",
+    _template = "^/(_template)",
+    _mapping = "^/(_mapping)",
+    _aliases = "^/(_aliases)"
+}
+
+local restricted_api_uri_pattern_map = { 
+    _msearch = "^/_msearch",
+    _search = "^/[^/]+/(_search)"
+}
+
+local api_group_map = { 
+    _kibana = "unrestricted",
+    _template = "unrestricted",
+    _mapping = "unrestricted",
+    _aliases = "unrestricted",
+    _msearch = "restricted",
+    _search = "restricted",
+    _unknown = "unauthorized"
+}
 local audit_index = "audit-"
 local role_clusteradmin = '"ClusterAdministrator"'
 local role_auditor = '"Auditor"'
@@ -77,15 +97,13 @@ end
 
 local function get_user_role(token, uid)
     local httpc = http.new()
-    local res, err = httpc:request_uri("https://platform-identity-management.{{ .Release.Namespace }}.svc."..cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getHighestRoleForCRN", {
+    -- curl -k --header "Authorization: Bearer ${ACCESS_TOKEN}" https://platform-identity-management.ibm-common-services.svc.cluster.local:4500/identity/api/v1/users/user2/getHighestRole    
+    local res, err = httpc:request_uri("https://platform-identity-management.{{ .Release.Namespace }}.svc."..cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getHighestRole", {
         method = "GET",
         ssl_verify = false,
         headers = {
           ["Content-Type"] = "application/json",
           ["Authorization"] = "Bearer ".. token
-        },
-        query = {
-            ["crn"] = "crn:v1:icp:private:k8:"..cluster_name..":n/{{ .Release.Namespace }}:::"
         },
         ssl_verify = false
     })
@@ -98,7 +116,7 @@ local function get_user_role(token, uid)
         return nil, exit_401()
     end
     local role_id = tostring(res.body)
-    ngx.log(ngx.DEBUG, "user role ", role_id)
+    ngx.log(ngx.DEBUG, "user role: ", role_id)
     return role_id
 end
 
@@ -213,23 +231,40 @@ local function get_user_app_namespaces(token, user_namespaces)
     return num_app_ns, app_ns
 end
 
--- given the req uri and req_body
--- categorize the request has unauthorized, authorized
--- or unrestricted (pass through with no further validation/filtering)
+-- sample URIs to extract
+-- A. static
+-- A1. /.kibana: /.kibana/doc/config%3A6.6.1/_update?refresh=wait_for
+--     /.kibana: /.kibana/_search?size=10000&from=0&rest_total_hits_as_int=true
+--     /.kibana: /.kibana/_mget
+-- A2. /_template?pretty
+-- A3. /_mapping?pretty
+-- A4. /_aliases?pretty
+-- B. dynamic
+-- B1. _msearch: /_msearch?rest_total_hits_as_int=true&ignore_throttled=true
+-- B2. _search: /index-name/_search: /logstash-*/_search
 local function get_api_type(req_uri,req_body)
-    local api_type = "unauthorized"
-    local _,_,trimmed_uri = string.find(req_uri,"/?([^/]*)")
-
-    -- kibana internal requests pass through unrestricted
-    if trimmed_uri:find("%.kibana") ~= nil then
-        api_type = "unrestricted"
-    elseif req_body and req_body:find("%.kibana") ~= nil then
-        api_type = "unrestricted"
-    elseif non_admin_authorized_apis[trimmed_uri] == true then
-        api_type = "authorized"
+    local api_type = "_unknown"
+    
+    for api, pattern in pairs(unrestricted_api_uri_pattern_map) do
+        local match = req_uri:match(pattern)
+        if match then
+            ngx.log(ngx.DEBUG, "*******************api=", api, ",uri=", req_uri)
+            api_type = api
+            break
+        end        
     end
 
-    ngx.log(ngx.DEBUG, "api_type ",api_type)
+    if api_type == "_unknown" then
+        for api, pattern in pairs(restricted_api_uri_pattern_map) do
+            local match = req_uri:match(pattern)
+            if match then
+                ngx.log(ngx.DEBUG, "*******************api=", api, ",uri=", req_uri)
+                api_type = api
+                break
+            end        
+        end
+    end
+    
     return api_type
 end
 
@@ -240,7 +275,7 @@ local function get_index_types(req_indices)
     local app_indices=0
 
     for i, indexpattern in ipairs(req_indices) do
-      if  indexpattern:find("^"..audit_index) ~= nil then
+      if indexpattern:find("^"..audit_index) ~= nil then
         audit_indices = audit_indices + 1
       else
         local mod_indexpattern = indexpattern:gsub("*",".*")
@@ -287,7 +322,6 @@ local function validate_and_rewrite_query()
 
         -- Cluster Admin has unrestricted access to all
         -- go through rbac process only if non-admin
-
         if (role_id ~= role_clusteradmin ) then
             -- validate access to requested api,indices,namespaces
 
@@ -301,12 +335,20 @@ local function validate_and_rewrite_query()
             -- validate if requested api is authorized
             -- some calls like kibana internal can go through unrestricted
             local api_type = get_api_type(req_uri, req_body)
-            if api_type == 'unrestricted' then
+            local api_group = api_group_map[api_type]
+            ngx.log(ngx.DEBUG, "api_type: ", api_type, ",api_group: ", api_group)
+
+            if api_group == 'unrestricted' then
                 return
             end
 
+            if api_group == 'unauthorized' then
+                return exit_401()
+            end
+    
             -- If search api, parse and validate access to indices and namespaces
-            if req_uri:find("search") ~= nil then
+            if api_type == "_msearch" or api_type == "_search" then
+            -- if req_uri:find("search") ~= nil then
 
                 -- get all user namespaces
                 local num_user_ns, user_ns, err = get_user_namespaces(token, uid)
@@ -319,7 +361,7 @@ local function validate_and_rewrite_query()
                 end
 
                 -- authorized namespaces for log index
-                local authorized_namespaces;
+                local authorized_namespaces = {}
                 local req_indices = qparser.get_req_indices(req_body)
                 local audit_indices_only, app_indices_only = get_index_types(req_indices)
 
@@ -327,40 +369,28 @@ local function validate_and_rewrite_query()
                     local num_audit_ns, audit_ns = get_user_audit_namespaces(token, user_ns)
                     if num_audit_ns > 0 then
                         authorized_namespaces = audit_ns
-                    else
-                        return exit_401("User not authorized to view audit logs of any namespace")
                     end
-
                 elseif app_indices_only == true then
                     -- auditors do not have access to app logs, filter out ns with audit access
                     local num_app_ns, app_ns = get_user_app_namespaces(token, user_ns)
                     if num_app_ns > 0 then
                         authorized_namespaces = app_ns
-                    else
-                        return exit_401("User not authorized to view app logs of any namespace")
                     end
                 else
                     -- current limitation is that search index has to match either  audit or app logs, not match both
                     -- i.e.  either 'audit-*' or 'logstash-*' are valid, while '*' is not
-                    return exit_401("Search index has to match either audit or app log, not both ")
+                    ngx.log(ngx.ERR, "Search index has to match either audit or app log, not both ")
                 end
 
-                -- if there are any namespace filters specified in the request
-                -- check if  user has access to those namespaces
-                local req_namespaces= qparser.get_req_namespaces(req_body)
-                if #req_namespaces > 0 then
-                    for i, name in ipairs(req_namespaces) do
-                        ngx.log(ngx.DEBUG,"namespace ", "'"..name.."'")
-                        if(authorized_namespaces[name] == nil ) then
-                            return exit_401("User not authorized for namespace : "..name)
-                        end
-                    end
-                end
                 -- rewrite query with a namespace filter that includes all authorized namespaces
-                ngx.log(ngx.NOTICE, "Rewriting query with namespace filters")
-                local modified_reqbody = qparser.add_namespace_filters(req_body,authorized_namespaces)
-                ngx.req.set_body_data(modified_reqbody)
-                ngx.log(ngx.DEBUG, "updated reqbody ", ngx.req.get_body_data())
+                if next(authorized_namespaces) then
+                    ngx.log(ngx.NOTICE, "Rewriting query with namespace filters")
+                    local modified_reqbody = qparser.add_namespace_filters(req_body, authorized_namespaces)
+                    ngx.req.set_body_data(modified_reqbody)
+                    ngx.log(ngx.DEBUG, "updated reqbody ", ngx.req.get_body_data())
+                else
+                    ngx.log(ngx.NOTICE, "Not rewriting query since authorized_namespaces is empty")
+                end                
             end
         end
     end

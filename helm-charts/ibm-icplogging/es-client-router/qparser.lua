@@ -64,11 +64,11 @@ local function get_req_indices(reqbody)
             local index_obj = cjson.decode(jsonstr).index
             if index_obj ~= nil then
                 if type(index_obj) == "string" then
-                   ngx.log(ngx.INFO,"index name:", index_obj)
+                   ngx.log(ngx.DEBUG,"index name:", index_obj)
                    table.insert(indices, index_obj)
                 else
                     for j,index_name in ipairs(index_obj) do
-                        ngx.log(ngx.INFO,"index name:", index_name)
+                        ngx.log(ngx.DEBUG,"index name:", index_name)
                         table.insert(indices, index_name)
                     end
                 end
@@ -80,10 +80,10 @@ end
 
 local function parse_query_string(query, namespaces)
     _,_,qstring = string.find(query, "\"query_string\":(%b{})")
-    ngx.log(ngx.INFO,"qstring", qstring)
+    ngx.log(ngx.DEBUG,"qstring", qstring)
     if qstring ~= nil then
         _,_,namespacelist = string.find(qstring, "kubernetes.namespace%s*:%s*(%b())")
-        ngx.log(ngx.INFO,"namespacelist", namespacelist)
+        ngx.log(ngx.DEBUG,"namespacelist", namespacelist)
         if namespacelist ~= nil then
             for namespace in string.gmatch(string.sub(namespacelist,2, -2), "(%S+)") do
                 if OPERANDS[namespace] == nil then
@@ -92,7 +92,7 @@ local function parse_query_string(query, namespaces)
             end
         else
             _,_,namespace = string.find(qstring, "kubernetes.namespace%s*:%s*(%S-)%s*\"")
-            ngx.log(ngx.INFO,"namespace", namespace)
+            ngx.log(ngx.DEBUG,"namespace", namespace)
             if(namespace ~= nil) then table.insert(namespaces, namespace) end
         end
     end
@@ -103,13 +103,13 @@ local function parse_match_phrase(query, namespaces)
     --before doing a full parse check if there are any namespaces filters set at all
     if string.find(query, "kubernetes.namespace") ~= nil then
         for mphrase in string.gmatch(query, "\"match_phrase\":(%b{})") do
-            ngx.log(ngx.INFO,"mphrase", mphrase)
+            ngx.log(ngx.DEBUG,"mphrase", mphrase)
             local namespace = cjson.decode(mphrase)["kubernetes.namespace"]
             if type(namespace)=='table' then
                 namespace = namespace.query
-                ngx.log(ngx.INFO,"namespaceq", namespace)
+                ngx.log(ngx.DEBUG,"namespaceq", namespace)
             end
-            ngx.log(ngx.INFO,"namespace", namespace)
+            ngx.log(ngx.DEBUG,"namespace", namespace)
             if(namespace ~= nil) then table.insert(namespaces, namespace) end
         end
     end
@@ -123,7 +123,7 @@ local function get_req_namespaces(reqbody)
             local query_obj = cjson.decode(jsonstr).query
             if query_obj ~= nil then
                 local query = cjson.encode(query_obj)
-                ngx.log(ngx.INFO,"query", query)
+                ngx.log(ngx.DEBUG,"query", query)
                 -- before doing a full parse, check if any namespaces specified at all
                 if string.find(query, "kubernetes.namespace") ~= nil then
                     -- in lucene querystring
@@ -148,10 +148,14 @@ local function add_namespace_filters(reqbody, auth_namespaces)
         authnamespaces_str = authnamespaces_str.." OR ".."\\\""..namespace.."\\\""
     end
     authnamespaces_str=authnamespaces_str:gsub("^%s*OR", "")
-    ngx.log(ngx.INFO, "auth namespace str ", authnamespaces_str)
+    ngx.log(ngx.DEBUG, "auth namespace str ", authnamespaces_str)
 
     -- add filters to query string
     modified_reqbody = modified_reqbody:gsub("(query_string.-\"query\"%s*:%s*\")", "%1 kubernetes.namespace:( "..authnamespaces_str.." ) AND ")
+    
+    ngx.log(ngx.DEBUG, "original search request: ", reqbody)
+    ngx.log(ngx.DEBUG, "modified search request: ", modified_reqbody)
+
     return modified_reqbody
 end
 
@@ -162,8 +166,9 @@ local function add_blank_filters(reqbody)
 
     -- add filters to query string
     local k = "k" .. math.random(100000000000000, 999999999999999)
-    local v = math.random(100000000000000, 999999999999999)
-    modified_reqbody = modified_reqbody:gsub("(query_string.-\"query\"%s*:%s*\")", "%1 k:( "..v.." ) AND ")
+    local v = "" .. math.random(100000000000000, 999999999999999)
+    modified_reqbody = modified_reqbody:gsub(
+        "(query_string.-\"query\"%s*:%s*\")", "%1 " .. k . ":( "..v.." ) AND ")
     return modified_reqbody
 end
 
@@ -172,4 +177,5 @@ local _M = {}
 _M.get_req_namespaces = get_req_namespaces
 _M.get_req_indices = get_req_indices
 _M.add_namespace_filters = add_namespace_filters
+_M.add_blank_filters = add_blank_filters
 return _M

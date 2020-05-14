@@ -248,7 +248,7 @@ local function get_api_type(req_uri,req_body)
     for api, pattern in pairs(unrestricted_api_uri_pattern_map) do
         local match = req_uri:match(pattern)
         if match then
-            ngx.log(ngx.DEBUG, "*******************api=", api, ",uri=", req_uri)
+            ngx.log(ngx.DEBUG, "unrestricted api=", api, ",uri=", req_uri)
             api_type = api
             break
         end        
@@ -258,7 +258,7 @@ local function get_api_type(req_uri,req_body)
         for api, pattern in pairs(restricted_api_uri_pattern_map) do
             local match = req_uri:match(pattern)
             if match then
-                ngx.log(ngx.DEBUG, "*******************api=", api, ",uri=", req_uri)
+                ngx.log(ngx.DEBUG, "restricted api=", api, ",uri=", req_uri)
                 api_type = api
                 break
             end        
@@ -308,13 +308,17 @@ local function validate_and_rewrite_query()
     -- cert logging is disabled to reduce log volume
     -- log_certs()
 
+    ngx.log(ngx.INFO, "1. looking for user auth token from request")
     local token, err = get_auth_token()
+
     if token ~= nil then
+        ngx.log(ngx.INFO, "2. load current user id")
         local uid, err = get_user_id(token)
         if err ~= nil then
             return err
         end
 
+        ngx.log(ngx.INFO, "3. query role for uid ", uid)
         local role_id, err = get_user_role(token, uid)
         if err ~= nil then
             return err
@@ -323,8 +327,6 @@ local function validate_and_rewrite_query()
         -- Cluster Admin has unrestricted access to all
         -- go through rbac process only if non-admin
         if (role_id ~= role_clusteradmin ) then
-            -- validate access to requested api,indices,namespaces
-
             local req_uri = ngx.var.request_uri
             ngx.log(ngx.DEBUG, " request_uri: ", req_uri)
 
@@ -332,11 +334,13 @@ local function validate_and_rewrite_query()
             local req_body = ngx.req.get_body_data()
             ngx.log(ngx.DEBUG,"request body",req_body)
 
+            ngx.log(ngx.INFO, "4. trim role access to role_id:", role_id)
             -- validate if requested api is authorized
             -- some calls like kibana internal can go through unrestricted
+            ngx.log(ngx.INFO, "4a. detecting api type and permission group for ", req_uri)
             local api_type = get_api_type(req_uri, req_body)
             local api_group = api_group_map[api_type]
-            ngx.log(ngx.DEBUG, "api_type: ", api_type, ",api_group: ", api_group)
+            ngx.log(ngx.INFO, "api_type: ", api_type, ",api_group: ", api_group)
 
             if api_group == 'unrestricted' then
                 return
@@ -345,25 +349,40 @@ local function validate_and_rewrite_query()
             if api_group == 'unauthorized' then
                 return exit_401()
             end
-    
+
+            ngx.log(ngx.INFO, 
+                "5. making sure auditor can only see audit logs, and other roles for non-audit logs")
+            local req_indices = qparser.get_req_indices(req_body)
+            local audit_indices_only, app_indices_only = get_index_types(req_indices)
+            ngx.log(ngx.INFO, "audit_indices_only: ", audit_indices_only,
+                ",app_indices_only: ", app_indices_only, ",role_id: ", role_id)
+            
+            if (role_id ~= role_auditor and true == audit_indices_only) then
+                ngx.log(ngx.INFO, "access to audit log denied for role_id: ", role_id, ",uid:", uid)
+                local modified_reqbody = qparser.add_blank_filters(req_body)
+                ngx.req.set_body_data(modified_reqbody)
+                ngx.log(ngx.INFO, "updated reqbody with blank filter ", ngx.req.get_body_data())
+            end
+
+            if (role_id == role_auditor and true == app_indices_only) then
+                ngx.log(ngx.INFO, "access to app log denied for role_id: ", role_id, ",uid:", uid)
+                local modified_reqbody = qparser.add_blank_filters(req_body)
+                ngx.req.set_body_data(modified_reqbody)
+                ngx.log(ngx.INFO, "updated reqbody with blank filter ", ngx.req.get_body_data())
+            end
+
+            ngx.log(ngx.INFO, "6. trim namespace access to uid:", uid)
             -- If search api, parse and validate access to indices and namespaces
             if api_type == "_msearch" or api_type == "_search" then
-            -- if req_uri:find("search") ~= nil then
-
+                ngx.log(ngx.INFO, "6a. querying entitled app and audit log namespaces for ", uid)
                 -- get all user namespaces
                 local num_user_ns, user_ns, err = get_user_namespaces(token, uid)
                 if err ~= nil then
                     return err
                 end
 
-                if num_user_ns == 0 then
-                    return exit_401("User not authorized to any namespaces")
-                end
-
                 -- authorized namespaces for log index
                 local authorized_namespaces = {}
-                local req_indices = qparser.get_req_indices(req_body)
-                local audit_indices_only, app_indices_only = get_index_types(req_indices)
 
                 if audit_indices_only == true then
                     local num_audit_ns, audit_ns = get_user_audit_namespaces(token, user_ns)
@@ -383,13 +402,13 @@ local function validate_and_rewrite_query()
                 end
 
                 -- rewrite query with a namespace filter that includes all authorized namespaces
+                ngx.log(ngx.INFO, "6b. rewriting query with namespace filters")
                 if next(authorized_namespaces) then
-                    ngx.log(ngx.NOTICE, "Rewriting query with namespace filters")
                     local modified_reqbody = qparser.add_namespace_filters(req_body, authorized_namespaces)
                     ngx.req.set_body_data(modified_reqbody)
-                    ngx.log(ngx.DEBUG, "updated reqbody ", ngx.req.get_body_data())
+                    ngx.log(ngx.INFO, "updated reqbody with namespace filter", ngx.req.get_body_data())
                 else
-                    ngx.log(ngx.NOTICE, "Not rewriting query since authorized_namespaces is empty")
+                    ngx.log(ngx.INFO, "Not rewriting query since authorized_namespaces is empty")
                 end                
             end
         end

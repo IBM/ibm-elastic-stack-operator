@@ -168,7 +168,7 @@ local function add_blank_filters(reqbody)
     local k = "k" .. math.random(100000000000000, 999999999999999)
     local v = "" .. math.random(100000000000000, 999999999999999)
     modified_reqbody = modified_reqbody:gsub(
-        "(query_string.-\"query\"%s*:%s*\")", "%1 " .. k . ":( "..v.." ) AND ")
+        "(query_string.-\"query\"%s*:%s*\")", "%1 " .. k .. ":( "..v.." ) AND ")
     return modified_reqbody
 end
 

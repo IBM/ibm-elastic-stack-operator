@@ -74,7 +74,7 @@ Parameter | Description | Default
 `filebeat.image.repository` | Full repository and path to image            | `quay.io/opencloudio/icp-filebeat-oss`
 `filebeat.resources.limits.memory` | The maximum memory allowed per pod    | `256Mi`
 `filebeat.resources.requests.memory` | The minimum memory required per pod | `64Mi`
-`filebeat.image.tag`        | The version of Filebeat to deploy            | `6.6.1-build.1`
+`filebeat.image.tag`        | The version of Filebeat to deploy            | `6.6.1-build.2`
 `filebeat.scope.nodes`      | One or more label key/value pairs that refine [node selection](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector) for Filebeat pods| `empty (nil)`
 `filebeat.scope.namespaces` | List of log namespaces to monitor upon. Logs from all namespaces will be collected if value is set to empty | `empty (nil)`
 `filebeat.tolerations`      | Kubernetes tolerations that can allow the pod to run on certain nodes | `empty (nil)`
@@ -86,7 +86,7 @@ Parameter | Description | Default
 ----------|-------------|--------
 `logstash.name`                | The internal name of the Logstash cluster    | `logstash`
 `logstash.image.repository`    | Full repository and path to image            | `quay.io/opencloudio/icp-logstash-oss`
-`logstash.image.tag`           | The version of Logstash to deploy            | `6.6.1-build.1`
+`logstash.image.tag`           | The version of Logstash to deploy            | `6.6.1-build.2`
 `logstash.replicas`            | The initial pod cluster size                 | `1`
 `logstash.heapSize`            | The JVM heap size to allocate to Logstash    | `512m`
 `logstash.memoryLimit`         | The maximum allowable memory for Logstash. This includes both JVM heap and file system cache    | `1024Mi`
@@ -108,16 +108,16 @@ Parameter | Description | Default
 ----------|-------------|--------
 `kibana.name`                   | The internal name of the Kibana cluster                                                     | `kibana`
 `kibana.image.repository`       | Full repository and path to image                                                           | `quay.io/opencloudio/icp-kibana-oss`
-`kibana.image.tag`              | The version of Kibana to deploy                                                             | `6.6.1-build.1`
+`kibana.image.tag`              | The version of Kibana to deploy                                                             | `6.6.1-build.2`
 `kibana.replicas`               | The initial pod cluster size                                                                | `1`
 `kibana.internal`               | The port for Kubernetes-internal networking                                                 | `5601`
 `kibana.external`               | The port used by external users                                                             | `31601`
 `kibana.maxOldSpaceSize`        | Maximum old space size (in MB) of the V8 Javascript engine                                  | `1536`
 `kibana.memoryLimit`            | The maximum allowable memory for Kibana                                                     | `2048Mi`
 `kibana.initImage.repository`   | Full repository and path to initialization image                                            | `quay.io/opencloudio/curl`
-`kibana.initImage.tag`          | The version of the initialization image to deploy                                           | `4.2.0-build.3`
+`kibana.initImage.tag`          | The version of the initialization image to deploy                                           | `4.2.0-build.4`
 `kibana.routerImage.repository` | Full repository and path to the image used as a secure proxy (only used when `kibana.access` is `ingress`) | `quay.io/opencloudio/icp-management-ingress`
-`kibana.routerImage.tag`        | The version of the secure proxy image to deploy                                             | `2.5.1`
+`kibana.routerImage.tag`        | The version of the secure proxy image to deploy                                             | `2.5.3`
 `kibana.init.resources.limits.memory` | The maximum memory allowed per pod    | `256Mi`
 `kibana.init.resources.requests.memory` | The minimum memory required per pod | `64Mi`
 `kibana.routerImage.resources.limits.memory` | The maximum memory allowed per pod    | `256Mi`
@@ -142,15 +142,15 @@ Parameter | Description | Default
 ----------|-------------|--------
 `elasticsearch.name`                        | A name to uniquely identify this Elasticsearch deployment                                | `elasticsearch`
 `elasticsearch.image.repository`            | Full repository and path to Elasticsearch image                                          | `quay.io/opencloudio/icp-elasticsearch-oss`
-`elasticsearch.image.tag`                   | The version of Elasticsearch to deploy                                                   | `6.6.1-build.1`
+`elasticsearch.image.tag`                   | The version of Elasticsearch to deploy                                                   | `6.6.1-build.2`
 `elasticsearch.initImage.repository`        | Full repository and path to the image used during bringup                                | `quay.io/opencloudio/icp-initcontainer`
-`elasticsearch.initImage.tag`               | The version of init-container image to use                                               | `1.0.0-build.3`
+`elasticsearch.initImage.tag`               | The version of init-container image to use                                               | `1.0.0-build.4`
 `elasticsearch.pkiInitImage.repository`     | Full repository and path to the image for public key infrastructure (PKI) initialization | `quay.io/opencloudio/logging-pki-init`
-`elasticsearch.pkiInitImage.tag`            | Version of the image for public key infrastructure (PKI) initialization                  | `2.3.0-build.2`
+`elasticsearch.pkiInitImage.tag`            | Version of the image for public key infrastructure (PKI) initialization                  | `2.3.0-build.3`
 `elasticsearch.pkiInitImage.resources.limits.memory` | The maximum memory allowed per pod    | `256Mi`
 `elasticsearch.pkiInitImage.resources.requests.memory` | The minimum memory required per pod | `64Mi`
 `elasticsearch.routerImage.repository`      | Full repository and path to the image providing proxy support for role-based access control (RBAC) | `quay.io/opencloudio/icp-management-ingress`
-`elasticsearch.routerImage.tag`             | Version of the image for providing role-based access control (RBAC) support                        | `2.5.1`
+`elasticsearch.routerImage.tag`             | Version of the image for providing role-based access control (RBAC) support                        | `2.5.3`
 `elasticsearch.routerImage.resources.limits.memory` | The maximum memory allowed per pod    | `256Mi`
 `elasticsearch.routerImage.resources.requests.memory` | The minimum memory required per pod | `64Mi`
 `elasticsearch.internalPort`                | The port on which the full Elasticsearch cluster will communicate                        | `9300`
@@ -193,7 +193,7 @@ Parameter | Description | Default
 ----------|-------------|--------
 `curator.name`              | A name to uniquely identify this curator deployment     | `curator`
 `curator.image.repository`  | Full repository and path to image                       | `quay.io/opencloudio/indices-cleaner`
-`curator.image.tag`         | The version of curator image to deploy                  | `1.2.0-build.2`
+`curator.image.tag`         | The version of curator image to deploy                  | `1.2.0-build.3`
 `curator.schedule`          | A [Linux cron schedule](https://en.wikipedia.org/wiki/Cron#CRON_expression), identifying when the curator process should be launched. The default schedule runs at midnight. | `59 23 * * *`
 `curator.log.unit`          | The [age unit type](https://www.elastic.co/guide/en/elasticsearch/client/curator/5.2/filtertype_age.html) to retain application logs | `days`
 `curator.log.count`         | The number of `curator.log.unit`s to retain application logs | `1`

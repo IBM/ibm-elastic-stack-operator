@@ -14,7 +14,7 @@ spec:
       unit: days
     image:
       repository: quay.io/opencloudio/indices-cleaner
-      tag: 1.2.0-build.2
+      tag: 1.2.0-build.3
     mapp:
       count: 2
       unit: days
@@ -66,10 +66,10 @@ spec:
       tolerations: null
     image:
       repository: quay.io/opencloudio/icp-elasticsearch-oss
-      tag: 6.6.1-build.1
+      tag: 6.6.1-build.2
     initImage:
       repository: quay.io/opencloudio/icp-initcontainer
-      tag: 1.0.0-build.3
+      tag: 1.0.0-build.4
     internalPort: 9300
     master:
       antiAffinity: soft
@@ -87,7 +87,7 @@ spec:
           memory: 256Mi
         requests:
           memory: 64Mi
-      tag: 2.3.0-build.2
+      tag: 2.3.0-build.3
     routerImage:
       repository: quay.io/opencloudio/icp-management-ingress
       resources:
@@ -95,7 +95,7 @@ spec:
           memory: 256Mi
         requests:
           memory: 64Mi
-      tag: 2.5.1
+      tag: 2.5.3
     security:
       authc:
         enabled: true
@@ -106,7 +106,7 @@ spec:
   filebeat:
     image:
       repository: quay.io/opencloudio/icp-filebeat-oss
-      tag: 6.6.1-build.1
+      tag: 6.6.1-build.2
     logFormat: text
     name: filebeat-ds
     registryHostPath: /var/lib/icp/logging/filebeat-registry/{{ .Release.Name }}
@@ -134,7 +134,7 @@ spec:
     external: 31601
     image:
       repository: quay.io/opencloudio/icp-kibana-oss
-      tag: 6.6.1-build.1
+      tag: 6.6.1-build.2
     ingress:
       annotations: null
       labels:
@@ -149,7 +149,7 @@ spec:
           memory: 64Mi
     initImage:
       repository: quay.io/opencloudio/curl
-      tag: 4.2.0-build.3
+      tag: 4.2.0-build.4
     install: true
     internal: 5601
     maxOldSpaceSize: "1536"
@@ -164,7 +164,7 @@ spec:
           memory: 256Mi
         requests:
           memory: 64Mi
-      tag: 2.5.1
+      tag: 2.5.3
     security:
       authc:
         enabled: false
@@ -190,7 +190,7 @@ spec:
     heapSize: 512m
     image:
       repository: quay.io/opencloudio/icp-logstash-oss
-      tag: 6.6.1-build.1
+      tag: 6.6.1-build.2
     memoryLimit: 1024Mi
     name: logstash
     nodeSelector: null

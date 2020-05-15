@@ -54,7 +54,7 @@ logstash:
   port: 5000
   image:
     repository: "quay.io/opencloudio/icp-logstash-oss"
-    tag: "6.6.1-build.1"
+    tag: "6.6.1-build.2"
   nodeSelector:
   tolerations:
   probe:
@@ -116,7 +116,7 @@ kibana:
   memoryLimit: "2048Mi"
   image:
     repository: quay.io/opencloudio/icp-kibana-oss
-    tag: 6.6.1-build.1
+    tag: 6.6.1-build.2
   init:
     resources:
       limits:
@@ -125,10 +125,10 @@ kibana:
         memory: 64Mi
   initImage:
     repository: "quay.io/opencloudio/curl"
-    tag: "4.2.0-build.3"
+    tag: "4.2.0-build.4"
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
-    tag: "2.5.1"
+    tag: "2.5.3"
     resources:
       limits:
         memory: 256Mi
@@ -167,7 +167,7 @@ filebeat:
       memory: 64Mi
   image:
     repository: "quay.io/opencloudio/icp-filebeat-oss"
-    tag: "6.6.1-build.1"
+    tag: "6.6.1-build.2"
   scope:
     nodes:
     namespaces:
@@ -181,10 +181,10 @@ elasticsearch:
   internalPort: 9300
   image:
     repository: "quay.io/opencloudio/icp-elasticsearch-oss"
-    tag: "6.6.1-build.1"
+    tag: "6.6.1-build.2"
   pkiInitImage:
     repository: "quay.io/opencloudio/logging-pki-init"
-    tag: "2.3.0-build.2"
+    tag: "2.3.0-build.3"
     resources:
       limits:
         memory: 256Mi
@@ -192,10 +192,10 @@ elasticsearch:
         memory: 64Mi
   initImage:
     repository: "quay.io/opencloudio/icp-initcontainer"
-    tag: "1.0.0-build.3"
+    tag: "1.0.0-build.4"
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
-    tag: "2.5.1"
+    tag: "2.5.3"
     resources:
        limits:
          memory: 256Mi
@@ -272,7 +272,7 @@ curator:
       memory: 64Mi
   image:
     repository: "quay.io/opencloudio/indices-cleaner"
-    tag: "1.2.0-build.2"
+    tag: "1.2.0-build.3"
   # runs at 23:30 UTC daily
   schedule: "30 23 * * *"
   nodeSelector:

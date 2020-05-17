@@ -55,7 +55,7 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 1000
           runAsNonRoot: true
-        image: "{{ .Values.elasticsearch.pkiInitImage.repository }}:{{ .Values.elasticsearch.pkiInitImage.tag }}"
+        image: {{ include "image.calculateImage" (list .Values.elasticsearch.pkiInitImage.repository .Values.elasticsearch.pkiInitImage.tag .Values.elasticsearch.pkiInitImage.digest) }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         resources:
 {{ toYaml .Values.elasticsearch.pkiInitImage.resources | indent 12 }}

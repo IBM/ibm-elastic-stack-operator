@@ -72,7 +72,7 @@ spec:
       - name: filebeat
         securityContext:
           readOnlyRootFilesystem: true
-        image: {{ .Values.filebeat.image.repository }}:{{ .Values.filebeat.image.tag }}
+        image: {{ include "image.calculateImage" (list .Values.filebeat.image.repository .Values.filebeat.image.tag .Values.filebeat.image.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         resources:
 {{ toYaml .Values.filebeat.resources | indent 12 }}

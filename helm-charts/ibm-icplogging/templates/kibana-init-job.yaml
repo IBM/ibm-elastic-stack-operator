@@ -61,7 +61,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsUser: 1000
           runAsNonRoot: true
-        image: {{ .Values.kibana.initImage.repository }}:{{ .Values.kibana.initImage.tag }}
+        image: {{ include "image.calculateImage" (list .Values.kibana.initImage.repository .Values.kibana.initImage.tag .Values.kibana.initImage.digest) }}
         resources:
 {{ toYaml .Values.kibana.init.resources | indent 12 }}
         command: ["/opt/entry/entrypoint.sh"]

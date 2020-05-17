@@ -55,6 +55,7 @@ logstash:
   image:
     repository: "quay.io/opencloudio/icp-logstash-oss"
     tag: "6.6.1-build.2"
+    digest: "sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda"
   nodeSelector:
   tolerations:
   probe:
@@ -70,7 +71,7 @@ logstash:
     image:
       repository: "quay.io/opencloudio/logstash-liveness-probe"
       tag: "1.0.2-build.2"
-
+      digest: "sha256:a53079d2126b95bda4c12ca50107f278a63d8a0154427753af42d488d065acb9"
 kibana:
   install: true
   replicas: 1
@@ -117,6 +118,7 @@ kibana:
   image:
     repository: quay.io/opencloudio/icp-kibana-oss
     tag: 6.6.1-build.2
+    digest: "sha256:2293c15ad33c473cf10a7449569b2a9d843b31c21fa7414f08dff189ed6e6c29"
   init:
     resources:
       limits:
@@ -126,9 +128,11 @@ kibana:
   initImage:
     repository: "quay.io/opencloudio/curl"
     tag: "4.2.0-build.4"
+    digest: "sha256:4d49a4170aa6550b899eaf6dc1a2c54c2bf40812fa3717ac4ea34c4aabb6d1db"
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
     tag: "2.5.3"
+    digest: "sha256:f6694ea8a461468989874b4b091f1d64366eacb9821cc9836d8100e34f333634"
     resources:
       limits:
         memory: 256Mi
@@ -168,6 +172,7 @@ filebeat:
   image:
     repository: "quay.io/opencloudio/icp-filebeat-oss"
     tag: "6.6.1-build.2"
+    digest: "sha256:eaa2204025d101ba834b7f20c684fbc54ced4b514188bf210aef29919fd74842"
   scope:
     nodes:
     namespaces:
@@ -182,9 +187,11 @@ elasticsearch:
   image:
     repository: "quay.io/opencloudio/icp-elasticsearch-oss"
     tag: "6.6.1-build.2"
+    digest: "sha256:173aae206a3fab5a5e6d37fcff14194dd1d17cf4ccf1e44bec914c75d66748e9"
   pkiInitImage:
     repository: "quay.io/opencloudio/logging-pki-init"
     tag: "2.3.0-build.3"
+    digest: "sha256:d73cbc2895486c425bde39497b10e00fd45b550e4953eb8d3e04c1ac3936b4a8"
     resources:
       limits:
         memory: 256Mi
@@ -193,8 +200,10 @@ elasticsearch:
   initImage:
     repository: "quay.io/opencloudio/icp-initcontainer"
     tag: "1.0.0-build.4"
+    digest: "sha256:9aad9fd724ec9308bec711d7738b5f0ae0c37a72ffb19a26dbcf622f1a603e89"
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
+    digest: "sha256:f6694ea8a461468989874b4b091f1d64366eacb9821cc9836d8100e34f333634"
     tag: "2.5.3"
     resources:
        limits:
@@ -273,6 +282,7 @@ curator:
   image:
     repository: "quay.io/opencloudio/indices-cleaner"
     tag: "1.2.0-build.3"
+    digest: "sha256:18f129c9cd1ac527a13a1a1d7bced33585f4be713dd2944fa00cb871989b5239"
   # runs at 23:30 UTC daily
   schedule: "30 23 * * *"
   nodeSelector:

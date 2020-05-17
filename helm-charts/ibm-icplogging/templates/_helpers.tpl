@@ -142,6 +142,19 @@ imagePullSecrets:
 {{- end }}
 {{- end }}
 
+{{- define "image.calculateImage" -}}
+    {{- $params := . -}}
+    {{- $repo := (index $params 0) -}}
+    {{- $tag := (index $params 1) -}}
+    {{- $hash := (index $params 2) -}}
+    {{- $repo -}}
+    {{- if $hash -}}
+      @{{- $hash -}}
+    {{- else }}
+      :{{- $tag -}}
+    {{- end -}}
+{{- end -}}
+
 {{/*
 The name of the cluster domain for ICP's OIDC.
 */}}

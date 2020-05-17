@@ -146,10 +146,10 @@ imagePullSecrets:
     {{- $params := . -}}
     {{- $repo := (index $params 0) -}}
     {{- $tag := (index $params 1) -}}
-    {{- $hash := (index $params 2) -}}
+    {{- $digest := (index $params 2) -}}
     {{- $repo -}}
-    {{- if $hash -}}
-      @{{- $hash -}}
+    {{- if $digest -}}
+      @{{- $digest -}}
     {{- else }}
       :{{- $tag -}}
     {{- end -}}

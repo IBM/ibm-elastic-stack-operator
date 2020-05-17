@@ -4,6 +4,7 @@ metadata:
   name: ibm-elastic-stack-operator.v3.1.1
   namespace: placeholder
   annotations:
+    olm.skipRange: '>=3.0.5 <3.1.1'
     alm-examples: |-
       [
         {
@@ -201,8 +202,9 @@ metadata:
     certified: "false"
     support: "IBM"
     repository: https://github.com/IBM/ibm-elastic-stack-operator
-    containerImage: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.1
-    createdAt: '2020-03-10T11:58:00Z'
+    # 3.1.1
+    containerImage: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:261b0bcb89051d05187a6fac4ddb4def6766ec30d88cbf72b9cdfb7e9db34526
+    createdAt: '2020-05-16T19:15:00Z'
     description: |-
       Operator that installs and manages Elastic Stack logging service instances. 
       Each Elastic Stack instance provides user-friendly visibility to system/application
@@ -484,7 +486,8 @@ spec:
                       fieldPath: metadata.name
                 - name: OPERATOR_NAME
                   value: ibm-elastic-stack-operator
-                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.1
+                # 3.1.1   
+                image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:261b0bcb89051d05187a6fac4ddb4def6766ec30d88cbf72b9cdfb7e9db34526
                 imagePullPolicy: Always
                 name: ibm-elastic-stack-operator
                 resources: {}

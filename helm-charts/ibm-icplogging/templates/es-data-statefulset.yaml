@@ -102,7 +102,7 @@ spec:
         securityContext:
           privileged: true
           readOnlyRootFilesystem: true
-          image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
+        image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["chmod", "777", "/data-dir"]          
         volumeMounts:

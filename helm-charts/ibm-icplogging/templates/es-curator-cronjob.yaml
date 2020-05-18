@@ -64,7 +64,7 @@ spec:
               allowPrivilegeEscalation: false
               runAsUser: 1000
               runAsNonRoot: true
-            image: "{{ .Values.curator.image.repository }}:{{ .Values.curator.image.tag }}"
+            image: {{ include "image.calculateImage" (list .Values.curator.image.repository .Values.curator.image.tag .Values.curator.image.digest) }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["/clean-indices.sh"]
             resources:

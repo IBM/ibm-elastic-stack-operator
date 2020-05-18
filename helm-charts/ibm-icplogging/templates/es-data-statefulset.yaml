@@ -102,7 +102,7 @@ spec:
         securityContext:
           privileged: true
           readOnlyRootFilesystem: true
-        image: "{{ .Values.elasticsearch.initImage.repository }}:{{ .Values.elasticsearch.initImage.tag }}"
+        image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["chmod", "777", "/data-dir"]          
         volumeMounts:
@@ -112,7 +112,7 @@ spec:
       - name: "sysctl"
         securityContext:
           privileged: true
-        image: "{{ .Values.elasticsearch.initImage.repository }}:{{ .Values.elasticsearch.initImage.tag }}"
+        image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["/bin/sh", "-c", "sysctl -w vm.max_map_count=262144 && touch /etc/sysctl.conf && sed -i '/^vm.max_map_count /d' /etc/sysctl.conf && echo 'vm.max_map_count = 262144' >> /etc/sysctl.conf"]
       - name: migrate-data
@@ -121,7 +121,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsUser: 1000
           runAsNonRoot: true
-        image: "{{ .Values.elasticsearch.initImage.repository }}:{{ .Values.elasticsearch.initImage.tag }}"
+        image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: ["/scripts/migrate-elk551-data.sh"]
         volumeMounts:
@@ -136,7 +136,7 @@ spec:
           allowPrivilegeEscalation: false
         resources:
 {{ toYaml .Values.elasticsearch.routerImage.resources | indent 12 }}
-        image: {{ .Values.elasticsearch.routerImage.repository }}:{{ .Values.elasticsearch.routerImage.tag }}
+        image: {{ include "image.calculateImage" (list .Values.elasticsearch.routerImage.repository .Values.elasticsearch.routerImage.tag .Values.elasticsearch.routerImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["nginx"]
         env:
@@ -177,7 +177,7 @@ spec:
               - IPC_LOCK
               - SYS_RESOURCE
         {{- end }}
-        image: {{ .Values.elasticsearch.image.repository }}:{{ .Values.elasticsearch.image.tag }}
+        image: {{ include "image.calculateImage" (list .Values.elasticsearch.image.repository .Values.elasticsearch.image.tag .Values.elasticsearch.image.digest) }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: ["/bin/bash", "/scripts/entrypoint.sh"]
         resources:

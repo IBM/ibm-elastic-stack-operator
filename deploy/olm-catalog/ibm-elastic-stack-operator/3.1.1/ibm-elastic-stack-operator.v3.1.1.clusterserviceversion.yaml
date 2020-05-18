@@ -203,8 +203,8 @@ metadata:
     support: "IBM"
     repository: https://github.com/IBM/ibm-elastic-stack-operator
     # 3.1.1
-    containerImage: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:261b0bcb89051d05187a6fac4ddb4def6766ec30d88cbf72b9cdfb7e9db34526
-    createdAt: '2020-05-16T19:15:00Z'
+    containerImage: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:266568361e5a6d9a66cb49f66dd3e0f38185fed04ece7b47522eef2c2bba6fcb
+    createdAt: '2020-05-17T19:56:00Z'
     description: |-
       Operator that installs and manages Elastic Stack logging service instances. 
       Each Elastic Stack instance provides user-friendly visibility to system/application

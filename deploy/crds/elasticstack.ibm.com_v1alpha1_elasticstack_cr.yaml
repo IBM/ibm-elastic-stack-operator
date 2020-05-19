@@ -116,7 +116,7 @@ spec:
       requests:
         memory: 64Mi
     scope:
-      namespaces: ""
+      namespaces: []
       nodes: {}
     tolerations: {}
   general:

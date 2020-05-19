@@ -8,7 +8,7 @@ metadata:
     role: "kibana"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     heritage: "{{ .Release.Service }}"
-    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
     app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
     app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"

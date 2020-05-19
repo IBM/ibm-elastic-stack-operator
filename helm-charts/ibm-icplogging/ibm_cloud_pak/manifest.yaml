@@ -82,7 +82,7 @@ images:
       os: "linux"
       arch: "amd64"
   - repository: icp-initcontainer@sha256:9aad9fd724ec9308bec711d7738b5f0ae0c37a72ffb19a26dbcf622f1a603e89
-    pull-repository: "quay.io/opencloudio/icp-initcontainer@sha256:9aad9fd724ec9308bec711d7738b5f0ae0c37a72ffb19a26dbcf622f1a603e89
+    pull-repository: "quay.io/opencloudio/icp-initcontainer@sha256:9aad9fd724ec9308bec711d7738b5f0ae0c37a72ffb19a26dbcf622f1a603e89"
     platform:
       os: "linux"
       arch: "ppc64le"
@@ -165,7 +165,7 @@ images:
 - image: icp-filebeat-oss@sha256:eaa2204025d101ba834b7f20c684fbc54ced4b514188bf210aef29919fd74842
   references:
   - repository: icp-filebeat-oss@sha256:eaa2204025d101ba834b7f20c684fbc54ced4b514188bf210aef29919fd74842
-    pull-repository: "quay.io/opencloudio/icp-filebeat-oss@sha256:eaa2204025d101ba834b7f20c684fbc54ced4b514188bf210aef29919fd74842
+    pull-repository: "quay.io/opencloudio/icp-filebeat-oss@sha256:eaa2204025d101ba834b7f20c684fbc54ced4b514188bf210aef29919fd74842"
     platform:
       os: "linux"
       arch: "amd64"
@@ -275,12 +275,12 @@ images:
       os: "linux"
       arch: "amd64"
   - repository: icp-logstash-oss@sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda
-    pull-repository: "quay.io/opencloudio/icp-logstash-oss@sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda
+    pull-repository: "quay.io/opencloudio/icp-logstash-oss@sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda"
     platform:
       os: "linux"
       arch: "ppc64le"
   - repository: icp-logstash-oss@sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda
-    pull-repository: "quay.io/opencloudio/icp-logstash-oss@sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda
+    pull-repository: "quay.io/opencloudio/icp-logstash-oss@sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda"
     platform:
       os: "linux"
       arch: "s390x"

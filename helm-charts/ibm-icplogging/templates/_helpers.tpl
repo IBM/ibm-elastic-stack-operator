@@ -142,6 +142,19 @@ imagePullSecrets:
 {{- end }}
 {{- end }}
 
+{{- define "image.calculateImage" -}}
+    {{- $params := . -}}
+    {{- $repo := (index $params 0) -}}
+    {{- $tag := (index $params 1) -}}
+    {{- $digest := (index $params 2) -}}
+    {{- $repo -}}
+    {{- if $digest -}}
+      @{{- $digest -}}
+    {{- else }}
+      :{{- $tag -}}
+    {{- end -}}
+{{- end -}}
+
 {{/*
 The name of the cluster domain for ICP's OIDC.
 cluster.local not allowed in source templates (NoClusterLocal) https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L604

@@ -58,7 +58,7 @@ spec:
         scheduler.alpha.kubernetes.io/critical-pod: ""
         productName: "IBM Cloud Platform Common Services"
         productID: "068a62892a1e4db39641342e592daa25"
-        productVersion: "3.3.0"
+        productVersion: "3.4.0"
         productMetric: "FREE"
     spec:
       terminationGracePeriodSeconds: 30
@@ -101,7 +101,7 @@ spec:
           #privileged: false
           #runAsUser: 1001
           #runAsNonRoot: true
-        image: {{ .Values.filebeat.image.repository }}:{{ .Values.filebeat.image.tag }}
+        image: {{ include "image.calculateImage" (list .Values.filebeat.image.repository .Values.filebeat.image.tag .Values.filebeat.image.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         resources: #cpu defined ContainerDefinesResources
 {{ toYaml .Values.filebeat.resources | indent 12 }}

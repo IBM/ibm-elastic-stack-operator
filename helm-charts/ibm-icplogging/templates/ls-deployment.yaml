@@ -61,7 +61,7 @@ spec:
         scheduler.alpha.kubernetes.io/critical-pod: ""        
         productName: "IBM Cloud Platform Common Services"
         productID: "068a62892a1e4db39641342e592daa25"
-        productVersion: "3.3.0"
+        productVersion: "3.4.0"
         productMetric: "FREE"
     spec:
 {{- if .Values.logstash.tolerations }}
@@ -92,7 +92,7 @@ spec:
                   - s390x
       containers:
       - name: logstash
-        image: {{ .Values.logstash.image.repository }}:{{ .Values.logstash.image.tag }}
+        image: {{ include "image.calculateImage" (list .Values.logstash.image.repository .Values.logstash.image.tag .Values.logstash.image.digest) }} 
         securityContext: #Needs the commented values for PodSecurityContextDefined & ContainerHasDropAll
           allowPrivilegeEscalation: false
           # capabilities:
@@ -120,7 +120,7 @@ spec:
               name: {{ template "elasticsearch.fullname" . }}-pki-secret
               key: appKeystorePassword
 {{- end }}
-        image: {{ .Values.logstash.image.repository }}:{{ .Values.logstash.image.tag }}
+        image: {{ include "image.calculateImage" (list .Values.logstash.image.repository .Values.logstash.image.tag .Values.logstash.image.digest) }}        
         command: ["/bin/bash", "/scripts/entrypoint.sh"]
         resources: #cpu defined ContainerDefinesResources, maybe requests as well
           limits:

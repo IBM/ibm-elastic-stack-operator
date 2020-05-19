@@ -22,7 +22,7 @@ spec:
          "openshift.io/scc": "restricted"
          productName: IBM Cloud Platform Common Services
          productID: "068a62892a1e4db39641342e592daa25"
-         productVersion: "3.3.0"
+         productVersion: "3.4.0"
          productMetric: FREE
     spec:
       serviceAccountName: ibm-elastic-stack-operator
@@ -44,8 +44,9 @@ spec:
                   - s390x
       containers:
         - name: ibm-elastic-stack-operator
-          # Replace this with the built image name
-          image: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.1
+          # 3.1.2
+          # image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:replace
+          image: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.2
           imagePullPolicy: Always
           #PodSecurityContextDefined & ContainerHasDropAll
           # securityContext:

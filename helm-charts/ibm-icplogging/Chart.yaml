@@ -16,7 +16,7 @@
 #will need appversion defined (RequiredChartKeysDefined) https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L599
 
 name: ibm-icplogging
-version: 3.1.1
+version: 3.1.2
 description: Log storage and search management solution
 kubeVersion: ">=1.9.0"
 home: https://elastic.co

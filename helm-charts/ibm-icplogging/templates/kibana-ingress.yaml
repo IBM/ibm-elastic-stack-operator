@@ -25,6 +25,10 @@ metadata:
     component: "{{ .Values.kibana.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
+    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 {{- if .Values.kibana.ingress.labels }}
 {{ toYaml .Values.kibana.ingress.labels | indent 4 }}
 {{- end }}

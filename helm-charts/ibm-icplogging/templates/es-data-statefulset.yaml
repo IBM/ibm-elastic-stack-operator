@@ -23,6 +23,10 @@ metadata:
     release: "{{ .Release.Name }}"
     chart: "{{ .Chart.Name }}"
     heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/instance: "common-logging"
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
   name: {{ template "data.fullname" . }}
 spec:
   selector:
@@ -49,6 +53,9 @@ spec:
         chart: "{{ .Chart.Name }}"
         heritage: "{{ .Release.Service }}"
         app.kubernetes.io/instance: "common-logging"
+        app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+        app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ""
         productName: "IBM Cloud Platform Common Services"
@@ -341,6 +348,10 @@ spec:
         component: "{{ .Values.elasticsearch.data.name }}"
         heritage: "{{ .Release.Service }}"
         release: "{{ .Release.Name }}"
+        app.kubernetes.io/instance: "common-logging"
+        app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+        app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
       {{- if .Values.elasticsearch.data.storage.useDynamicProvisioning }}
       storageClassName: {{ default nil .Values.elasticsearch.data.storage.storageClass | quote }}

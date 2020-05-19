@@ -12,6 +12,10 @@ metadata:
     component: "{{ .Values.filebeat.name }}"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
+    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
   name: "{{ template "filebeat.fullname" . }}-input-config"
 data:
   k8s.yml: |-

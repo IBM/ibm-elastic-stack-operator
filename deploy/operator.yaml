@@ -2,6 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ibm-elastic-stack-operator
+  labels:
+    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/managed-by: ibm-elastic-stack-operator
+    app.kubernetes.io/name: ibm-elastic-stack-operator
 spec:
   replicas: 1
   selector:
@@ -11,6 +15,9 @@ spec:
     metadata:
       labels:
         name: ibm-elastic-stack-operator
+        app.kubernetes.io/instance: common-logging
+        app.kubernetes.io/managed-by: ibm-elastic-stack-operator
+        app.kubernetes.io/name: ibm-elastic-stack-operator
       annotations:
          "openshift.io/scc": "restricted"
          productName: IBM Cloud Platform Common Services

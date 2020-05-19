@@ -25,6 +25,10 @@ metadata:
     component: "secret-init"
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
+    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
   annotations:
 spec:
   template:
@@ -37,6 +41,9 @@ spec:
         chart: "{{ .Chart.Name }}"
         heritage: "{{ .Release.Service }}"
         app.kubernetes.io/instance: "common-logging"
+        app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+        app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
       annotations:
         productName: "IBM Cloud Platform Common Services"
         productID: "068a62892a1e4db39641342e592daa25"

@@ -23,6 +23,10 @@ metadata:
     heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
     role: "filebeat"
+    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
   name: "{{ template "filebeat.fullname" . }}"
 spec:
   selector:
@@ -47,6 +51,9 @@ spec:
         heritage: "{{ .Release.Service }}"
         release: "{{ .Release.Name }}"
         app.kubernetes.io/instance: "common-logging"
+        app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+        app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ""
         productName: "IBM Cloud Platform Common Services"

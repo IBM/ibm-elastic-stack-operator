@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: ibm-elastic-stack-operator
   labels:
-    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/instance: logging
     app.kubernetes.io/managed-by: ibm-elastic-stack-operator
     app.kubernetes.io/name: ibm-elastic-stack-operator
 subjects:

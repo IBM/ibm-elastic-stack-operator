@@ -42,7 +42,7 @@ images:
 - image: indices-cleaner@sha256:18f129c9cd1ac527a13a1a1d7bced33585f4be713dd2944fa00cb871989b5239
   references:
   - repository: indices-cleaner@sha256:18f129c9cd1ac527a13a1a1d7bced33585f4be713dd2944fa00cb871989b5239
-    pull-repository: "quay.io/opencloudio/indices-cleaner@sha256:18f129c9cd1ac527a13a1a1d7bced33585f4be713dd2944fa00cb871989b5239
+    pull-repository: "quay.io/opencloudio/indices-cleaner@sha256:18f129c9cd1ac527a13a1a1d7bced33585f4be713dd2944fa00cb871989b5239"
     platform:
       os: "linux"
       arch: "amd64"

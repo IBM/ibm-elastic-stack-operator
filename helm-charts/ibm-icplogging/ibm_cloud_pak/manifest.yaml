@@ -21,6 +21,23 @@ images:
     platform:
       os: "linux"
       arch: "s390x"
+- image: ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+  references:
+  - repository: ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+    platform:
+      os: "linux"
+      arch: "amd64"
+  - repository: ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+    platform:
+      os: "linux"
+      arch: "ppc64le"
+  - repository: ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+    platform:
+      os: "linux"
+      arch: "s390x"
 
 - image: indices-cleaner:1.2.0-build.2
   references:

@@ -54,7 +54,7 @@ spec:
         scheduler.alpha.kubernetes.io/critical-pod: ""
         productName: "IBM Cloud Platform Common Services"
         productID: "068a62892a1e4db39641342e592daa25"
-        productVersion: "3.3.0"
+        productVersion: "3.4.0"
         productMetric: "FREE"
         clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
     spec:
@@ -101,7 +101,7 @@ spec:
           #runAsNonRoot: true
         resources: #cpu defined ContainerDefinesResources
 {{ toYaml .Values.kibana.routerImage.resources | indent 12 }}
-        image: {{ .Values.kibana.routerImage.repository }}:{{ .Values.kibana.routerImage.tag }}
+        image: {{ include "image.calculateImage" (list .Values.kibana.routerImage.repository .Values.kibana.routerImage.tag .Values.kibana.routerImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["nginx"]
         env:
@@ -147,7 +147,7 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 1000
           runAsNonRoot: true
-        image: {{ .Values.kibana.image.repository }}:{{ .Values.kibana.image.tag }}
+        image: {{ include "image.calculateImage" (list .Values.kibana.image.repository .Values.kibana.image.tag .Values.kibana.image.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["/bin/bash", "/scripts/entrypoint.sh"]
 {{- if not .Values.kibana.routerEnabled }}

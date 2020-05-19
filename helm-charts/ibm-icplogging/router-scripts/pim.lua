@@ -14,15 +14,13 @@ local http = require "lib.resty.http"
 
 function PIM:query_user_role(token, uid)
     local httpc = http.new()
-    local res, err = httpc:request_uri("https://platform-identity-management.{{ .Release.Namespace }}.svc."..self.cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getHighestRoleForCRN", {
+    -- curl -k --header "Authorization: Bearer ${ACCESS_TOKEN}" https://platform-identity-management.ibm-common-services.svc.cluster.local:4500/identity/api/v1/users/user2/getHighestRole
+    local res, err = httpc:request_uri("https://platform-identity-management.{{ .Release.Namespace }}.svc."..self.cluster_domain..":4500/identity/api/v1/users/" .. uid .. "/getHighestRole", {
         method = "GET",
         ssl_verify = false,
         headers = {
           ["Content-Type"] = "application/json",
           ["Authorization"] = "Bearer ".. token
-        },
-        query = {
-            ["crn"] = "crn:v1:icp:private:k8:"..self.cluster_name..":n/{{ .Release.Namespace }}:::"
         },
         ssl_verify = false
     })

@@ -43,7 +43,7 @@ spec:
           annotations:
             productName: "IBM Cloud Platform Common Services"
             productID: "068a62892a1e4db39641342e592daa25"
-            productVersion: "3.3.0"
+            productVersion: "3.4.0"
             productMetric: "FREE"
         spec:
           restartPolicy: "OnFailure"
@@ -93,7 +93,7 @@ spec:
               #   drop:
               #   - ALL
               # privileged: false
-            image: "{{ .Values.curator.image.repository }}:{{ .Values.curator.image.tag }}"
+            image: {{ include "image.calculateImage" (list .Values.curator.image.repository .Values.curator.image.tag .Values.curator.image.digest) }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["/clean-indices.sh"]
             resources:

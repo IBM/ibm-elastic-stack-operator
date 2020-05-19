@@ -117,7 +117,7 @@ spec:
         memory: 64Mi
     scope:
       namespaces: ""
-      nodes: ""
+      nodes: {}
     tolerations: {}
   general:
     clusterDomain: cluster.local

@@ -112,17 +112,34 @@ images:
 - image: icp-elasticsearch-oss:6.6.1-build.1
   references:
   - repository: icp-elasticsearch-oss:6.6.1-build.1
-    pull-repository: "quay.io/opencloudio/cp-elasticsearch-oss:6.6.1-build.1"
+    pull-repository: "quay.io/opencloudio/icp-elasticsearch-oss:6.6.1-build.1"
     platform:
       os: "linux"
       arch: "amd64"
   - repository: icp-elasticsearch-oss:6.6.1-build.1
-    pull-repository: "quay.io/opencloudio/cp-elasticsearch-oss:6.6.1-build.1"
+    pull-repository: "quay.io/opencloudio/icp-elasticsearch-oss:6.6.1-build.1"
     platform:
       os: "linux"
       arch: "ppc64le"
   - repository: icp-elasticsearch-oss:6.6.1-build.1
-    pull-repository: "quay.io/opencloudio/cp-elasticsearch-oss:6.6.1-build.1"
+    pull-repository: "quay.io/opencloudio/icp-elasticsearch-oss:6.6.1-build.1"
+    platform:
+      os: "linux"
+      arch: "s390x"
+- image: icp-elasticsearch-oss@sha256:173aae206a3fab5a5e6d37fcff14194dd1d17cf4ccf1e44bec914c75d66748e9
+  references:
+  - repository: icp-elasticsearch-oss@sha256:173aae206a3fab5a5e6d37fcff14194dd1d17cf4ccf1e44bec914c75d66748e9
+    pull-repository: "quay.io/opencloudio/icp-elasticsearch-oss@sha256:173aae206a3fab5a5e6d37fcff14194dd1d17cf4ccf1e44bec914c75d66748e9"
+    platform:
+      os: "linux"
+      arch: "amd64"
+  - repository: icp-elasticsearch-oss@sha256:173aae206a3fab5a5e6d37fcff14194dd1d17cf4ccf1e44bec914c75d66748e9
+    pull-repository: "quay.io/opencloudio/icp-elasticsearch-oss@sha256:173aae206a3fab5a5e6d37fcff14194dd1d17cf4ccf1e44bec914c75d66748e9"
+    platform:
+      os: "linux"
+      arch: "ppc64le"
+  - repository: icp-elasticsearch-oss@sha256:173aae206a3fab5a5e6d37fcff14194dd1d17cf4ccf1e44bec914c75d66748e9
+    pull-repository: "quay.io/opencloudio/icp-elasticsearch-oss@sha256:173aae206a3fab5a5e6d37fcff14194dd1d17cf4ccf1e44bec914c75d66748e9"
     platform:
       os: "linux"
       arch: "s390x"

@@ -351,7 +351,7 @@ spec:
         app.kubernetes.io/instance: "common-logging"
         app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
         app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
-        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        helm.sh/chart: "{{ .Chart.Name }}"
     spec:
       {{- if .Values.elasticsearch.data.storage.useDynamicProvisioning }}
       storageClassName: {{ default nil .Values.elasticsearch.data.storage.storageClass | quote }}

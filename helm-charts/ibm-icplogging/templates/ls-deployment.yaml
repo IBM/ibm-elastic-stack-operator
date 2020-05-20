@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 {{ template "elk.settings.all.prepare" . -}}
-{{ template "apiVersionTryV1" .  }} #tagged for NoDeprecatedAPIs (v1beta2), not really sure what this template value is
+{{ template "apiVersionTryV1" .  }} 
 kind: Deployment
 metadata:
   labels:
@@ -73,12 +73,7 @@ spec:
 {{ toYaml .Values.logstash.nodeSelector | indent 8 }}
 {{- end }}
 {{ include "image.pullSecret" . | indent 6 }}
-      #Also part of PodSecurityContext
-      # hostNetwork: false
-      # hostPID: false
-      # hostIPC: false
       serviceAccountName: "{{ template "logstash.fullname" . }}"
-      #PodHasNodeBasedArchAffinity
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -93,13 +88,8 @@ spec:
       containers:
       - name: logstash
         image: {{ include "image.calculateImage" (list .Values.logstash.image.repository .Values.logstash.image.tag .Values.logstash.image.digest) }} 
-        securityContext: #Needs the commented values for PodSecurityContextDefined & ContainerHasDropAll
+        securityContext:
           allowPrivilegeEscalation: false
-          # capabilities:
-          #   drop:
-          #   - ALL
-          # privileged: false
-          # readOnlyRootFilesystem: true
           runAsUser: 1000
           runAsNonRoot: true
         command: ["/bin/bash", "/scripts/entrypoint.sh"]
@@ -122,7 +112,7 @@ spec:
 {{- end }}
         image: {{ include "image.calculateImage" (list .Values.logstash.image.repository .Values.logstash.image.tag .Values.logstash.image.digest) }}        
         command: ["/bin/bash", "/scripts/entrypoint.sh"]
-        resources: #cpu defined ContainerDefinesResources, maybe requests as well
+        resources:
           limits:
             memory: {{ .Values.logstash.memoryLimit }}
         ports:

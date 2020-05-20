@@ -59,12 +59,7 @@ spec:
       nodeSelector:
 {{ toYaml .Values.elasticsearch.client.nodeSelector | indent 8 }}
 {{- end }}
-      #Also part of PodSecurityContext
-      # hostNetwork: false
-      # hostPID: false
-      # hostIPC: false
       serviceAccountName: "{{ template "job.fullname" . }}"
-      #PodHasNodeBasedArchAffinity
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -82,14 +77,9 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 1000
           runAsNonRoot: true
-          #   capabilities: Need these values for PodSecurityContextDefined & ContainerHasDropAll
-          #     drop:
-          #     - ALL
-          #   privileged: false
-          #   readOnlyRootFilesystem: true
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.pkiInitImage.repository .Values.elasticsearch.pkiInitImage.tag .Values.elasticsearch.pkiInitImage.digest) }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        resources: #may need to defined cpu here for ContainerDefinesResources
+        resources:
 {{ toYaml .Values.elasticsearch.pkiInitImage.resources | indent 12 }}
         volumeMounts:
   {{- if eq .Values.security.ca.origin "external" }}

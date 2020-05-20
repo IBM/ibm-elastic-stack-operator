@@ -157,7 +157,6 @@ imagePullSecrets:
 
 {{/*
 The name of the cluster domain for ICP's OIDC.
-cluster.local not allowed in source templates (NoClusterLocal) https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30644319#L604
 */}}
 {{- define "clusterDomain" -}}
 {{- default "cluster.local" .Values.general.clusterDomain -}}

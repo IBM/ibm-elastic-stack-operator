@@ -26,11 +26,6 @@ spec:
          productMetric: FREE
     spec:
       serviceAccountName: ibm-elastic-stack-operator
-      #Also part of PodSecurityContext
-      # hostNetwork: false
-      # hostPID: false
-      # hostIPC: false
-      #PodHasNodeBasedArchAffinity
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -48,16 +43,6 @@ spec:
           # image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:replace
           image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
           imagePullPolicy: Always
-          #PodSecurityContextDefined & ContainerHasDropAll
-          # securityContext:
-          #   allowPrivilegeEscalation: false
-          #   capabilities:
-          #     drop:
-          #     - ALL
-          #   privileged: false
-          #   readOnlyRootFilesystem: true
-          #   runAsNonRoot: true
-          #   runAsUser: 1001
           env:
             - name: WATCH_NAMESPACE
               value: ""
@@ -67,11 +52,3 @@ spec:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
               value: "elastic-stack-operator"
-          #ContainerDefinesResources
-          # resources:
-          #   limits:
-          #     cpu:
-          #     memory:
-          #   requests:
-          #     cpu:
-          #     memory:

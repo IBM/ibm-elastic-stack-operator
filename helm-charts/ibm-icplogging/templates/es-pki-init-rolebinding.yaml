@@ -16,7 +16,7 @@
 # limitations under the License.
 
 kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1 #tagged for NoDeprecatedAPIs
+apiVersion: rbac.authorization.k8s.io/v1beta1 
 metadata:
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"

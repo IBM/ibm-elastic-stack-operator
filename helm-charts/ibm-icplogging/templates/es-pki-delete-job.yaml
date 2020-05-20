@@ -54,12 +54,7 @@ spec:
         productMetric: "FREE"
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
-      #Also part of PodSecurityContext
-      # hostNetwork: false
-      # hostPID: false
-      # hostIPC: false
       serviceAccountName: "{{ template "job.fullname" . }}"
-      #PodHasNodeBasedArchAffinity
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -73,23 +68,11 @@ spec:
                   - s390x
       containers:
       - name: kubectl
-        #ContainerDefinesResources
-        # resources:
-        #   limits:
-        #     cpu:
-        #     memory:
-        #   requests:
-        #     cpu:
-        #     memory:
         securityContext:
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
           runAsUser: 1000
           runAsNonRoot: true
-          #   capabilities: Need these values for PodSecurityContextDefined & ContainerHasDropAll
-          #     drop:
-          #     - ALL
-          #   privileged: false
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.pkiInitImage.repository .Values.elasticsearch.pkiInitImage.tag .Values.elasticsearch.pkiInitImage.digest) }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         resources:

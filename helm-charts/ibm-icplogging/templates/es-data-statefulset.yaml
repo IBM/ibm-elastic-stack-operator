@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 {{ template "elk.settings.all.prepare" . -}}
-{{ template "apiVersionTryV1" . }} #tagged for NoDeprecatedAPIs (v1beta2), not really sure what this template value is
+{{ template "apiVersionTryV1" . }}
 kind: StatefulSet
 metadata:
   labels:
@@ -73,7 +73,6 @@ spec:
       nodeSelector:
 {{ toYaml .Values.elasticsearch.data.nodeSelector | indent 8 }}
 {{- end }}
-#PodHasNodeBasedArchAffinity see addition to operator.yaml, need kubernetes.io/arch for error
     {{- if eq .Values.elasticsearch.data.antiAffinity "hard" }}
       affinity:
         podAntiAffinity:
@@ -123,37 +122,13 @@ spec:
     {{- end }}
       securityContext:
         fsGroup: 1000
-      #Also part of PodSecurityContext
-      # hostNetwork: false
-      # hostPID: false
-      # hostIPC: false
       serviceAccountName: "{{ template "elasticsearch.fullname" . }}"
       initContainers:
     {{- if ne (.Values.general.environment | lower) "openshift" }}
       - name: "chmod"
-        #PodSecurityContextDefined & ContainerHasDropAll
-        # securityContext:
-        #   allowPrivilegeEscalation: false
-        #   capabilities:
-        #     drop:
-        #     - ALL
-        #   privileged: false
-        #   readOnlyRootFilesystem: true
-        #   runAsNonRoot: true
-        #   runAsUser: 1001
-        securityContext: #see comment above
-          #NoPodPrivilegeConflicts, looks like if you don't explictly set allowPrivilegeEscalation it sets it to false: https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30721692#L517
-          #NoPrivilegedContainers, linting doesn't like privileged containers
+        securityContext:
           privileged: true 
           readOnlyRootFilesystem: true
-        #ContainerDefinesResources
-          # resources:
-          #   limits:
-          #     cpu:
-          #     memory:
-          #   requests:
-          #     cpu:
-          #     memory:
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["chmod", "777", "/data-dir"]          
@@ -161,10 +136,8 @@ spec:
         - name: data
           mountPath: /data-dir
     {{- end }}
-      - name: "sysctl" #NoSysctl https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30721692#L484
-        securityContext: #see comments in container above
-          #NoPodPrivilegeConflicts, looks like if you don't explictly set allowPrivilegeEscalation it sets it to false: https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30721692#L517
-          #NoPrivilegedContainers, linting doesn't like privileged containers
+      - name: "sysctl"
+        securityContext:
           privileged: true
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
@@ -186,7 +159,6 @@ spec:
       containers:
 {{- if .Values.elasticsearch.routerEnabled }}
       - name: router
-        #see comments in first initContainer, resources may need cpu defined
         securityContext:
           allowPrivilegeEscalation: false
         resources:
@@ -223,7 +195,7 @@ spec:
   {{- end }}
 {{- end }}
       - name: es-data
-        securityContext: #see comments in first container above
+        securityContext:
           allowPrivilegeEscalation: false
         {{- if ne (.Values.general.environment | lower) "openshift" }}
           privileged: false

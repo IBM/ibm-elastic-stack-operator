@@ -19,7 +19,7 @@ metadata:
   name: "{{ template "elasticsearch.fullname" . }}-curator-config"
   labels:
     app: "{{ template "elasticsearch.fullname" . }}"
-    heritage: "{{ .Release.Service }}" #REquiredMetadataLabelsDefined, need to change keys to match with linter's expectations https://travis.ibm.com/IBMPrivateCloud/ibm-cs-logging-bundle/builds/30733115#L1171
+    heritage: "{{ .Release.Service }}"
     release: "{{ .Release.Name }}"
     component: "{{ .Values.curator.name }}"
     app.kubernetes.io/instance: "{{ .Release.Name }}"

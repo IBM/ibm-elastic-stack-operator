@@ -1,8 +1,3 @@
-
-# USER ACTION REQUIRED:
-#   This is a scaffold file intended for the user to modify with their own CASE information.
-#   Please delete this comment after the proper modifications have been done.
-
 images:
 - image: ibm-elastic-stack-operator:3.1.1
   references:

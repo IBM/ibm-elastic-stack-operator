@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 {{ template "elk.settings.all.prepare" . -}}
-{{ template "apiVersionTryV1" .  }} #tagged for NoDeprecatedAPIs (v1beta2), not really sure what this template value is
+{{ template "apiVersionTryV1" .  }} 
 kind: Deployment
 metadata:
   labels:
@@ -53,7 +53,10 @@ spec:
         release: "{{ .Release.Name }}"
         chart: "{{ .Chart.Name }}"
         heritage: "{{ .Release.Service }}"
-        app.kubernetes.io/instance: "common-logging"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+        app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+        app.kubernetes.io/name: "{{ template "elasticsearch.fullname" . }}"
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ""
         productName: "IBM Cloud Platform Common Services"
@@ -74,12 +77,7 @@ spec:
       # Required for multi-platform config
       securityContext:
         fsGroup: 1000
-      #Also part of PodSecurityContext
-      # hostNetwork: false
-      # hostPID: false
-      # hostIPC: false
       serviceAccountName: "{{ template "kibana.fullname" . }}"
-      #PodHasNodeBasedArchAffinity
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -94,16 +92,9 @@ spec:
       containers:
 {{- if .Values.kibana.routerEnabled }}
       - name: router
-        securityContext: #Needs the commented values for PodSecurityContextDefined & ContainerHasDropAll
+        securityContext:
           allowPrivilegeEscalation: false
-          #readOnlyRootFilesystem: true
-          #capabilities:
-          #  drop:
-          #  - ALL
-          #privileged: false
-          #runAsUser: 1001
-          #runAsNonRoot: true
-        resources: #cpu defined ContainerDefinesResources
+        resources:
 {{ toYaml .Values.kibana.routerImage.resources | indent 12 }}
         image: {{ include "image.calculateImage" (list .Values.kibana.routerImage.repository .Values.kibana.routerImage.tag .Values.kibana.routerImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"

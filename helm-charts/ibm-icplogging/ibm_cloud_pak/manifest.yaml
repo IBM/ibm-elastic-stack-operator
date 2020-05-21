@@ -1,35 +1,35 @@
 images:
-- image: ibm-elastic-stack-operator:3.1.1
+- image: ibm-elastic-stack-operator:3.1.2
   references:
-  - repository: ibm-elastic-stack-operator:3.1.1
-    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.1
+  - repository: ibm-elastic-stack-operator:3.1.2
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.2
     platform:
       os: "linux"
       arch: "amd64"
-  - repository: ibm-elastic-stack-operator:3.1.1
-    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.1
+  - repository: ibm-elastic-stack-operator:3.1.2
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.2
     platform:
       os: "linux"
       arch: "ppc64le"
-  - repository: ibm-elastic-stack-operator:3.1.1
-    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.1
+  - repository: ibm-elastic-stack-operator:3.1.2
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.2
     platform:
       os: "linux"
       arch: "s390x"
-- image: ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+- image: ibm-elastic-stack-operator@sha256:eba778950151e8a69070c8a5eefe7bfd73ff74d6400e4036f231141116639948
   references:
-  - repository: ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
-    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+  - repository: ibm-elastic-stack-operator@sha256:eba778950151e8a69070c8a5eefe7bfd73ff74d6400e4036f231141116639948
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:eba778950151e8a69070c8a5eefe7bfd73ff74d6400e4036f231141116639948
     platform:
       os: "linux"
       arch: "amd64"
-  - repository: ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
-    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+  - repository: ibm-elastic-stack-operator@sha256:eba778950151e8a69070c8a5eefe7bfd73ff74d6400e4036f231141116639948
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:eba778950151e8a69070c8a5eefe7bfd73ff74d6400e4036f231141116639948
     platform:
       os: "linux"
       arch: "ppc64le"
-  - repository: ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
-    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:b4112a25ab1bf34842f4c599044b3196d684cb992db976c0b15102446b1dbf2d
+  - repository: ibm-elastic-stack-operator@sha256:eba778950151e8a69070c8a5eefe7bfd73ff74d6400e4036f231141116639948
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:eba778950151e8a69070c8a5eefe7bfd73ff74d6400e4036f231141116639948
     platform:
       os: "linux"
       arch: "s390x"

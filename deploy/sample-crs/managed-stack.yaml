@@ -1,6 +1,6 @@
 {
-  "apiVersion": "elasticstack1.ibm.com/v1alpha1",
-  "kind": "ElasticStack1",
+  "apiVersion": "elasticstack.ibm.com/v1alpha1",
+  "kind": "ElasticStack",
   "metadata": {
     "name": "logging"
   },

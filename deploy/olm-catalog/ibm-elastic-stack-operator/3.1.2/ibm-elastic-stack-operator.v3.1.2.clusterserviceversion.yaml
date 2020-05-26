@@ -16,7 +16,7 @@ metadata:
           "spec": {
             "image": {
               "pullSecret": {
-                "enabled": "false",
+                "enabled": false,
                 "name": "infra-registry-key"
               }
             },
@@ -71,8 +71,8 @@ metadata:
             },
             "filebeat": {
               "scope": {
-                "namespaces": null,
-                "nodes": null
+                "namespaces": [],
+                "nodes": {}
               },
               "tolerations": [
                 {
@@ -84,7 +84,7 @@ metadata:
             },
             "general": {
               "environment": "Openshift",
-              "ingressPort": "443"
+              "ingressPort": 443
             },
             "kibana": {
               "access": "ingress",
@@ -104,7 +104,7 @@ metadata:
                 "authz": {
                   "enabled": false,
                   "icp": {
-                    "authorizedNamespaces": null
+                    "authorizedNamespaces": []
                   },
                   "provider": "icp"
                 }

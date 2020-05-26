@@ -90,7 +90,7 @@ spec:
                 schedule:
                   type: string
                 tolerations:
-                  type: object #also null in the cr
+                  type: array #also null in the cr
                 va:
                   type: object
                   properties:
@@ -126,7 +126,7 @@ spec:
                     restPort:
                       type: integer
                     tolerations:
-                      type: object #null
+                      type: array #null
                 data:
                   type: object
                   properties:
@@ -163,7 +163,7 @@ spec:
                         useDynamicProvisioning:
                           type: boolean
                     tolerations:
-                      type: object #null
+                      type: array #null
                 image:
                   type: object
                   properties:
@@ -198,7 +198,7 @@ spec:
                     restPort:
                       type: integer
                     tolerations:
-                      type: object #null
+                      type: array #null
                 name:
                   type: string
                 pkiInitImage:
@@ -295,7 +295,7 @@ spec:
                     nodes:
                       type: object
                 tolerations:
-                  type: object #null
+                  type: array #null
             general:
               type: object
               properties:
@@ -446,7 +446,7 @@ spec:
                         target:
                           type: string
                 tolerations:
-                  type: object #null
+                  type: array #null
             logstash:
               type: object
               properties:
@@ -501,7 +501,7 @@ spec:
                 replicas:
                   type: integer
                 tolerations:
-                  type: object
+                  type: array
             security:
               type: object
               properties:

@@ -57,7 +57,7 @@ logstash:
     tag: "6.6.1-build.2"
     digest: "sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda"
   nodeSelector:
-  tolerations:
+  tolerations: []
   probe:
     enabled: false
     periodSeconds: 60
@@ -77,7 +77,7 @@ kibana:
   replicas: 1
   name: kibana
   nodeSelector:
-  tolerations:
+  tolerations: []
   # accepted values:
   # ingress or loadBalancer, defaults to loadBalancer
   access: loadBalancer
@@ -174,9 +174,9 @@ filebeat:
     tag: "6.6.1-build.2"
     digest: "sha256:eaa2204025d101ba834b7f20c684fbc54ced4b514188bf210aef29919fd74842"
   scope:
-    nodes:
-    namespaces:
-  tolerations:
+    nodes: {}
+    namespaces: []
+  tolerations: []
   registryHostPath: "/var/lib/icp/logging/filebeat-registry/{{ .Release.Name }}"
   # accepted values: text, json
   # what it does: parses the log data as json or text
@@ -231,7 +231,7 @@ elasticsearch:
     memoryLimit: "1536Mi"
     restPort: 9200
     antiAffinity: soft
-    tolerations:
+    tolerations: []
     nodeSelector:
 
   master:
@@ -241,7 +241,7 @@ elasticsearch:
     heapSize: "1024m"
     memoryLimit: "1536Mi"
     antiAffinity: soft
-    tolerations:
+    tolerations: []
     nodeSelector:
 
   data:
@@ -251,7 +251,7 @@ elasticsearch:
     heapSize: 4000m
     memoryLimit: 7000M
     antiAffinity: hard
-    tolerations:
+    tolerations: []
     nodeSelector:
     storage:
       # When true will expect a PersistentVolume
@@ -286,7 +286,7 @@ curator:
   # runs at 23:30 UTC daily
   schedule: "30 23 * * *"
   nodeSelector:
-  tolerations:
+  tolerations: []
   app:
     unit: days
     count: 1

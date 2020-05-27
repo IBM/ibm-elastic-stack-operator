@@ -11,7 +11,10 @@ metadata:
           "apiVersion": "elasticstack.ibm.com/v1alpha1",
           "kind": "ElasticStack",
           "metadata": {
-            "name": "logging"
+            "name": "logging",
+            "annotations": {
+              "helm.operator-sdk/upgrade-force": "True"
+            }
           },
           "spec": {
             "image": {

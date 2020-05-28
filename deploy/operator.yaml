@@ -34,3 +34,7 @@ spec:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
               value: "elastic-stack-operator"
+          resources:
+            limits:
+              cpu: 150m
+              memory: 512Mi

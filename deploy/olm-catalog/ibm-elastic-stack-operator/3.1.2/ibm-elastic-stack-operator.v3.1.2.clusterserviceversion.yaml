@@ -495,7 +495,10 @@ spec:
                 image: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.2
                 imagePullPolicy: Always
                 name: ibm-elastic-stack-operator
-                resources: {}
+                resources:
+                limits:
+                  cpu: 150m
+                  memory: 512Mi
               serviceAccountName: ibm-elastic-stack-operator
     strategy: deployment
   installModes:
@@ -503,7 +506,7 @@ spec:
     type: OwnNamespace
   - supported: true
     type: SingleNamespace
-  - supported: false
+  - supported: true
     type: MultiNamespace
   - supported: true
     type: AllNamespaces

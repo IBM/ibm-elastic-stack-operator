@@ -205,8 +205,6 @@ metadata:
     certified: "false"
     support: "IBM"
     repository: https://github.com/IBM/ibm-elastic-stack-operator
-    # 3.1.2
-    # image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:replace
     image: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.2
     createdAt: '2020-05-16T19:15:00Z'
     description: |-
@@ -491,8 +489,7 @@ spec:
                 - name: OPERATOR_NAME
                   value: ibm-elastic-stack-operator
                 # 3.1.2
-                # image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:replace
-                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.2
+                image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:b38b8199e833b963a698c2eeb8221979c427a92a0b4f6488078202d884ca0a04
                 imagePullPolicy: Always
                 name: ibm-elastic-stack-operator
                 resources:
@@ -530,5 +527,5 @@ spec:
     url: https://www.elastic.co/
   - name: Elastic Stack Operator
     url: https://github.com/IBM/ibm-elastic-stack-operator
-  replaces: ibm-elastic-stack-operator.v3.0.5
+  replaces: ibm-elastic-stack-operator.v3.1.1
   version: 3.1.2

@@ -60,7 +60,7 @@ spec:
         selector:
           label: ""
           value: ""
-        size: 10Gi
+        size: 30Gi
         storageClass: ""
         useDynamicProvisioning: true
       tolerations: {}

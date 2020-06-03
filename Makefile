@@ -198,6 +198,7 @@ uninstall: ## Uninstall all that all performed in the $ make install
 ############################################################
 operatorsource: ## Create opencloud-operators operator source
 	- kubectl delete -f commonUtil/resources/opencloud-operators.yaml
+	- kubectl delete catalogsource/opencloud-operators -n openshift-marketplace
 	- kubectl apply -f commonUtil/resources/opencloud-operators.yaml
 
 ############################################################

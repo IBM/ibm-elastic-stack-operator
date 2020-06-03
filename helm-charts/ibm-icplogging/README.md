@@ -162,7 +162,7 @@ Parameter | Description | Default
 `elasticsearch.data.heapSize`             | The JVM heap size to allocate to each Elasticsearch data pod     | `4000m`
 `elasticsearch.data.memoryLimit`          | The maximum memory (including JVM heap and file system cache) to allocate to each Elasticsearch data pod | `7000Mi`
 `elasticsearch.data.antiAffinity`         | Whether Kubernetes "may" (`soft`) or "must not" (`hard`) [deploy data pods onto the same node](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) | `hard`
-`elasticsearch.data.storage.size`         | The minimum [size of the persistent volume](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/scheduling/resources.md#resource-quantities)    | `10Gi`
+`elasticsearch.data.storage.size`         | The minimum [size of the persistent volume](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/scheduling/resources.md#resource-quantities)    | `30Gi`
 `elasticsearch.data.storage.accessModes`  | [See official documentation](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes)   | `ReadWriteOnce`
 `elasticsearch.data.storage.storageClass` | [See official documentation](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#storageclasses) | `""`
 `elasticsearch.data.storage.persistent`   | Set to `false` for non-production or trial-only deployment                                                   | `true`

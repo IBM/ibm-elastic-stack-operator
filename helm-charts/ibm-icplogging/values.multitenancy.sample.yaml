@@ -225,9 +225,9 @@ elasticsearch:
       selector:
         label: ""
         value: ""
-      # 10Gi is not the recommended size, but rather a small default.
+      # 30Gi is not the recommended size, but rather a small default.
       # It will match much larger drives as well.
-      size: 10Gi
+      size: 30Gi
       accessModes:
         - ReadWriteOnce
       ## Specify the storageClass name you want to use

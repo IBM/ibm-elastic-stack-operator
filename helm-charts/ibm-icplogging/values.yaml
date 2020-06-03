@@ -194,7 +194,7 @@ elasticsearch:
     digest: "sha256:d73cbc2895486c425bde39497b10e00fd45b550e4953eb8d3e04c1ac3936b4a8"
     resources:
       limits:
-        memory: 256Mi
+        memory: 512Mi
       requests:
         memory: 64Mi
   initImage:
@@ -263,9 +263,9 @@ elasticsearch:
       selector:
         label: ""
         value: ""
-      # 10Gi is not the recommended size, but rather a small default.
+      # 30Gi is not the recommended size, but rather a small default.
       # It will match much larger drives as well.
-      size: 10Gi
+      size: 30Gi
       accessModes:
         - ReadWriteOnce
       ## Specify the storageClass name you want to use

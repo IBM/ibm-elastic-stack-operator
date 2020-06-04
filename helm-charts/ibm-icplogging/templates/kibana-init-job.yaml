@@ -25,7 +25,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  backoffLimit: 30
+  backoffLimit: 90
   template:
     metadata:
       labels:

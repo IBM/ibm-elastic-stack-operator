@@ -157,3 +157,5 @@ rules:
   - get
   - use
   - patch
+  - update
+  - watch

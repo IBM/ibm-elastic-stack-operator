@@ -13,7 +13,7 @@ metadata:
           "metadata": {
             "name": "logging",
             "annotations": {
-              "helm.operator-sdk/upgrade-force": "True"
+              "helm.operator-sdk/upgrade-force": "False"
             }
           },
           "spec": {
@@ -456,6 +456,8 @@ spec:
           - get
           - use
           - patch
+          - update
+          - watch
         serviceAccountName: ibm-elastic-stack-operator
       deployments:
       - name: ibm-elastic-stack-operator

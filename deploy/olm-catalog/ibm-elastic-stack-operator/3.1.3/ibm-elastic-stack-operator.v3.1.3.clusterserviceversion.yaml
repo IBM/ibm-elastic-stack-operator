@@ -13,7 +13,6 @@ metadata:
           "metadata": {
             "name": "logging",
             "annotations": {
-              "helm.operator-sdk/upgrade-force": "False"
             }
           },
           "spec": {

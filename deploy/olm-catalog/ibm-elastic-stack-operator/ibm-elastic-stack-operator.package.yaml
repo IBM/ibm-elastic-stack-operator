@@ -3,7 +3,7 @@ channels:
   name: dev
 - currentCSV: ibm-elastic-stack-operator.v3.1.3
   name: beta
-- currentCSV: ibm-elastic-stack-operator.v3.0.5
+- currentCSV: ibm-elastic-stack-operator.v3.1.3
   name: stable-v1
 defaultChannel: stable-v1
 packageName: ibm-elastic-stack-operator-app

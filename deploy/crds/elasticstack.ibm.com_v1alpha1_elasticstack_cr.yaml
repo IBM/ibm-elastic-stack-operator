@@ -29,7 +29,7 @@ spec:
       requests:
         memory: 64Mi
     schedule: 30 23 * * *
-    tolerations: {}
+    tolerations: []
     va:
       count: 90
       unit: days
@@ -45,7 +45,7 @@ spec:
       nodeSelector: {}
       replicas: 1
       restPort: 9200
-      tolerations: {}
+      tolerations: []
     data:
       antiAffinity: hard
       heapSize: 4000m
@@ -63,7 +63,7 @@ spec:
         size: 30Gi
         storageClass: ""
         useDynamicProvisioning: true
-      tolerations: {}
+      tolerations: []
     image:
       repository: quay.io/opencloudio/icp-elasticsearch-oss
       tag: 6.6.1-build.2
@@ -78,7 +78,7 @@ spec:
       name: master
       nodeSelector: {}
       replicas: 1
-      tolerations: {}
+      tolerations: []
     name: elasticsearch
     pkiInitImage:
       repository: quay.io/opencloudio/logging-pki-init
@@ -118,7 +118,7 @@ spec:
     scope:
       namespaces: []
       nodes: {}
-    tolerations: {}
+    tolerations: []
   general:
     clusterDomain: cluster.local
     clusterName: mycluster
@@ -185,7 +185,7 @@ spec:
       labels:
         inmenu: "true"
         target: logging-sampleA
-    tolerations: {}
+    tolerations: []
   logstash:
     heapSize: 512m
     image:
@@ -209,7 +209,7 @@ spec:
         requests:
           memory: 64Mi
     replicas: 1
-    tolerations: {}
+    tolerations: []
   security:
     app:
       keystore:

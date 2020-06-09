@@ -21,7 +21,7 @@ spec:
       serviceAccountName: ibm-elastic-stack-operator
       containers:
         - name: ibm-elastic-stack-operator
-          image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:ba545f18fc25180a5d84083b903eafa5aaa068c9fbea7289d7028701a893b1b8
+          image: quay.io/opencloudio/ibm-elastic-stack-operator:latest
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE

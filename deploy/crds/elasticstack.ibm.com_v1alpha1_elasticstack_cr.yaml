@@ -1,7 +1,7 @@
 apiVersion: elasticstack.ibm.com/v1alpha1
 kind: ElasticStack
 metadata:
-  name: example-elasticstack
+  name: elasticstack
 spec:
   # Default values copied from <project_dir>/helm-charts/ibm-icplogging/values.yaml
   

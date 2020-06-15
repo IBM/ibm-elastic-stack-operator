@@ -14,7 +14,7 @@
 # limitations under the License.
 
 name: ibm-icplogging
-version: 3.1.3
+version: 3.1.4
 description: Log storage and search management solution
 kubeVersion: ">=1.9.0"
 home: https://elastic.co

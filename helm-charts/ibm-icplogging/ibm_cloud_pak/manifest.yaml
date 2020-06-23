@@ -1,18 +1,18 @@
 images:
-- image: ibm-elastic-stack-operator:3.1.4
+- image: ibm-elastic-stack-operator:3.2.0
   references:
-  - repository: ibm-elastic-stack-operator:3.1.4
-    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.4
+  - repository: ibm-elastic-stack-operator:3.2.0
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.0
     platform:
       os: "linux"
       arch: "amd64"
-  - repository: ibm-elastic-stack-operator:3.1.4
-    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.4
+  - repository: ibm-elastic-stack-operator:3.2.0
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.0
     platform:
       os: "linux"
       arch: "ppc64le"
-  - repository: ibm-elastic-stack-operator:3.1.4
-    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.4
+  - repository: ibm-elastic-stack-operator:3.2.0
+    pull-repository: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.0
     platform:
       os: "linux"
       arch: "s390x"

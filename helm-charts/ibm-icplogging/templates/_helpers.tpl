@@ -150,7 +150,7 @@ imagePullSecrets:
     {{- $repo -}}
     {{- if $digest -}}
       @{{- $digest -}}
-    {{- else }}
+    {{- else -}}
       :{{- $tag -}}
     {{- end -}}
 {{- end -}}

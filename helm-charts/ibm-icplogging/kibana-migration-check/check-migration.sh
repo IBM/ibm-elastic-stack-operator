@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Copyright 2020 IBM Corporation
 
@@ -15,7 +16,6 @@
 
 {{ template "elk.settings.all.prepare" . -}}
 
-#!/bin/sh
 set -uo pipefail
 
 # Prepare es client api url

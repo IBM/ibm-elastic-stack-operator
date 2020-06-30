@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Copyright 2020 IBM Corporation
 
@@ -15,7 +16,6 @@
 
 {{ template "elk.settings.all.prepare" . -}}
 
-#!/bin/sh
 # if the kibana server returns a non-successful status,
 # exit the job with this exit code. A retry will be triggered by k8s
 set -uo pipefail

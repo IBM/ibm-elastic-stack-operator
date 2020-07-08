@@ -26,6 +26,8 @@ metadata:
 data:
   logstash.yml: |-
 {{ tpl (.Files.Get "logstash/logstash.yml") . | indent 4 }}
+  pipelines.yml: |-
+{{ tpl (.Files.Get "logstash/pipelines.yml") . | indent 4 }}
   jvm.options: |-
 {{ tpl (.Files.Get "logstash/jvm.options") . | indent 4 }}
   log4j2.properties: |-

@@ -51,6 +51,7 @@ data:
     cd /scripts
     echo "Launching Logstash"
     # to debug: --log.level debug
+    /usr/share/logstash/bin/logstash-plugin update logstash-input-beats
     /usr/local/bin/docker-entrypoint
   kibana-entrypoint.sh: |-
     #!/bin/sh

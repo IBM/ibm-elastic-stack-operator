@@ -17,7 +17,7 @@
 # general settings
 config.reload.automatic: true
 http.host: "0.0.0.0"
-path.config: /usr/share/logstash/pipeline
+#path.config: /usr/share/logstash/pipeline
 
 # queue settings
 queue.type: persisted

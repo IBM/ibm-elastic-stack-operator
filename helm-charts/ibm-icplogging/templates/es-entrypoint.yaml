@@ -18,10 +18,8 @@ kind: ConfigMap
 metadata:
   name: "{{ template "elasticsearch.fullname" . }}-entrypoint"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "init") | indent 4 }}
 data:
   entrypoint.sh: |-
     #!/bin/bash

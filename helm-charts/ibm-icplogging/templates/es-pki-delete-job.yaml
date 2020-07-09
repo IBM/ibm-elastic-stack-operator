@@ -20,11 +20,8 @@ kind: Job
 metadata:
   name: "{{ template "elasticsearch.fullname" . }}-pki-delete"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "secret-delete"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app "secret-delete" "cleanup") | indent 4 }}
   annotations:
     "helm.sh/hook": pre-delete
     "helm.sh/hook-delete-policy": hook-succeeded
@@ -33,18 +30,9 @@ spec:
   template:
     metadata:
       labels:
-        app: "{{ template "elasticsearch.fullname" . }}"
-        component: "secret-delete"
-        role: "cleanup"
-        release: "{{ .Release.Name }}"
-        chart: "{{ .Chart.Name }}"
-        heritage: "{{ .Release.Service }}"
-        app.kubernetes.io/instance: "common-logging"
+{{ include "metadata.calculateLabels" (list . $app "secret-delete" "cleanup") | indent 8 }}
       annotations:
-        productName: "IBM Cloud Platform Common Services"
-        productID: "068a62892a1e4db39641342e592daa25"
-        productVersion: "3.4.0"
-        productMetric: "FREE"
+{{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
       serviceAccountName: "{{ template "job.fullname" . }}"

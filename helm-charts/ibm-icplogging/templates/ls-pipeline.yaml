@@ -18,11 +18,8 @@ kind: ConfigMap
 metadata:
   name: "{{ template "logstash.fullname" . }}-pipeline-config"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.logstash.name }}"
-    release: "{{ .Release.Name }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: "{{ .Release.Service }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.logstash.name "logstash") | indent 4 }}
 data:
   k8s.conf: |-
 {{ tpl (.Files.Get "logstash/k8s.conf") . | indent 4 }}

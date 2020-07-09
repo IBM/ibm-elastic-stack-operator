@@ -20,11 +20,8 @@ kind: Ingress
 metadata:
   name: "{{ template "kibana.fullname" . }}-ingress"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "{{ .Values.kibana.name }}"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "network") | indent 4 }}
 {{- if .Values.kibana.ingress.labels }}
 {{ toYaml .Values.kibana.ingress.labels | indent 4 }}
 {{- end }}

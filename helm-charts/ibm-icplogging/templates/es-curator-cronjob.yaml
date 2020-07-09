@@ -18,11 +18,8 @@ kind: CronJob
 metadata:
   name: "{{ template "elasticsearch.fullname" . }}-curator"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "curator"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.curator.name .Values.curator.name) | indent 4 }}
 spec:
   schedule: "{{ .Values.curator.schedule }}"
   concurrencyPolicy: Replace
@@ -33,18 +30,9 @@ spec:
       template:
         metadata:
           labels:
-            app: "{{ template "elasticsearch.fullname" . }}"
-            component: "curator"
-            role: "curator"
-            release: "{{ .Release.Name }}"
-            chart: "{{ .Chart.Name }}"
-            heritage: "{{ .Release.Service }}"
-            app.kubernetes.io/instance: "common-logging"
+{{ include "metadata.calculateLabels" (list . $app "curator" "curator") | indent 12 }}
           annotations:
-            productName: "IBM Cloud Platform Common Services"
-            productID: "068a62892a1e4db39641342e592daa25"
-            productVersion: "3.4.0"
-            productMetric: "FREE"
+{{ include "metadata.calculateAnnotations" (list . ) | indent 12 }}
         spec:
           restartPolicy: "OnFailure"
 {{- if .Values.curator.tolerations }}

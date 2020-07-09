@@ -18,11 +18,8 @@ kind: ConfigMap
 metadata:
   name: "{{ template "logstash.fullname" . }}-probe-config"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.logstash.name }}"
-    release: "{{ .Release.Name }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: "{{ .Release.Service }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.logstash.name "probe") | indent 4 }}
 data:
   app.json: |-
 {{ tpl (.Files.Get "logstash/app.json") . | indent 4 }}

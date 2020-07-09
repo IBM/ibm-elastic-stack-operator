@@ -17,11 +17,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app: "{{ template "job.fullname" . }}"
-    component: "job"
-    role: "data"
-    release: "{{ .Release.Name }}"
-    chart: "{{ .Chart.Name }}"
-    heritage: "{{ .Release.Service }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app "jobs" "init") | indent 4 }}
   annotations:
   name: "{{ template "job.fullname" . }}"

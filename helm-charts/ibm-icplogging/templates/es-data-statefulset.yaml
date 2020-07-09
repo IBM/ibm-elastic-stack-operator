@@ -17,22 +17,13 @@
 kind: StatefulSet
 metadata:
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.elasticsearch.data.name }}"
-    role: "data"
-    release: "{{ .Release.Name }}"
-    chart: "{{ .Chart.Name }}"
-    heritage: "{{ .Release.Service }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 4 }}
   name: {{ template "data.fullname" . }}
 spec:
   selector:
     matchLabels:
-      app: "{{ template "elasticsearch.fullname" . }}"
-      component: "{{ .Values.elasticsearch.data.name }}"
-      role: "data"
-      release: "{{ .Release.Name }}"
-      chart: "{{ .Chart.Name }}"
-      heritage: "{{ .Release.Service }}"
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 6 }}
   updateStrategy:
     type: RollingUpdate
   revisionHistoryLimit: 3
@@ -42,20 +33,9 @@ spec:
   template:
     metadata:
       labels:
-        app: "{{ template "elasticsearch.fullname" . }}"
-        component: "{{ .Values.elasticsearch.data.name }}"
-        role: "data"
-        release: "{{ .Release.Name }}"
-        chart: "{{ .Chart.Name }}"
-        heritage: "{{ .Release.Service }}"
-        app.kubernetes.io/instance: "common-logging"
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 8 }}
       annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ""
-        productName: "IBM Cloud Platform Common Services"
-        productID: "068a62892a1e4db39641342e592daa25"
-        productVersion: "3.4.0"
-        productMetric: "FREE"
-        clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
+{{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
 {{- if .Values.elasticsearch.data.tolerations }}

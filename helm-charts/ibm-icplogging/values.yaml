@@ -58,20 +58,6 @@ logstash:
     digest: "sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda"
   nodeSelector:
   tolerations: []
-  probe:
-    enabled: false
-    periodSeconds: 60
-    minEventsPerPeriod: 1
-    maxUnavailablePeriod: 5
-    resources:
-      limits:
-        memory: 256Mi
-      requests:
-        memory: 64Mi
-    image:
-      repository: "quay.io/opencloudio/logstash-liveness-probe"
-      tag: "1.0.2-build.2"
-      digest: "sha256:a53079d2126b95bda4c12ca50107f278a63d8a0154427753af42d488d065acb9"
 kibana:
   install: true
   replicas: 1
@@ -306,27 +292,6 @@ curator:
     unit: days
     count: 1
 
-xpack:
-  monitoring: true
-  graph: false
-  reporting: false
-  ml: false
-  watcher: false
-  license:
-    # accepted values: secret, selfGenerated
-    # what it does: determines which xpack license will be used
-    source: selfGenerated
-    selfGenerated:
-      # accepted values: trial, basic
-      # what it does:
-      # see https://www.elastic.co/guide/en/elasticsearch/reference/6.8/license-settings.html
-      type: basic
-    secret:
-      # the secret need to be in the same namespace as the chart release
-      secretName: es-license
-      # the Kubenetes field name (key) within the specified secret
-      # that stores license json file
-      fieldName: license.json
 upgrade:
   elasticsearch:
     # set to true if data from old version need to be imported

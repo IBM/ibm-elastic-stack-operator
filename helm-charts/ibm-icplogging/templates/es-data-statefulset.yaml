@@ -198,20 +198,10 @@ spec:
         - name: entrypoint
           mountPath: /scripts
       {{- if .Values.elasticsearch.security.authc.enabled }}
-        {{- if eq .Values.elasticsearch.security.authc.provider "xpack" }}
-        - name: config
-          mountPath: /usr/share/elasticsearch/config/roles.yml
-          subPath: roles.yml
-        - name: config
-          mountPath: /usr/share/elasticsearch/config/role_mapping.yml
-          subPath: role_mapping.yml
-        {{- end }}
         - name: certs
           mountPath: "/usr/share/elasticsearch/config/tls"
           readOnly: true
       {{- end }}
-        - name: plugin-bundle
-          mountPath: /usr/share/elasticsearch/plugin-bundles
       volumes:
         - name: config
           configMap:
@@ -232,8 +222,6 @@ spec:
             items:
               - key: entrypoint.sh
                 path: entrypoint.sh
-              - key: install-plugin.sh
-                path: install-plugin.sh
               - key: map-config.sh
                 path: map-config.sh
               - key: migrate-elk551-data.sh
@@ -254,9 +242,6 @@ spec:
           configMap:
             name: {{ template "client.fullname" . }}-rbac-config
 {{- end }}
-        - name: plugin-bundle
-          emptyDir:
-            medium: ""
         {{- if not .Values.elasticsearch.data.storage.persistent }}
         - name: data
           emptyDir:

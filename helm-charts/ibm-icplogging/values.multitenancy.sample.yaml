@@ -53,16 +53,6 @@ logstash:
   port: 5000
   nodeSelector:
   tolerations:
-  probe:
-    enabled: false
-    periodSeconds: 60
-    minEventsPerPeriod: 1
-    maxUnavailablePeriod: 5
-    resources:
-      limits:
-        memory: 256Mi
-      requests:
-        memory: 64Mi
 
 kibana:
   install: true
@@ -175,10 +165,11 @@ elasticsearch:
          memory: 64Mi
   security:
     authc:
+      # accepted values: true
       enabled: true
-      # accepted values: searchguard-tls, xpack
+      # accepted values: nginx
       # what it does: mtls authz with account rbac
-      provider: searchguard-tls
+      provider: nginx
     authz:
       enabled: true
       # accepted values: icp
@@ -263,20 +254,3 @@ curator:
   auditLog:
     unit: days
     count: 1
-
-xpack:
-  monitoring: true
-  graph: false
-  reporting: false
-  ml: false
-  watcher: false
-  license:
-    # accepted values: secret, selfGenerated
-    # what it does: determines which xpack license will be used
-    source: selfGenerated
-    secret:
-      # the secret need to be in the same namespace as the chart release
-      secretName: es-license
-      # the Kubenetes field name (key) within the specified secret
-      # that stores license json file
-      fieldName: license.json

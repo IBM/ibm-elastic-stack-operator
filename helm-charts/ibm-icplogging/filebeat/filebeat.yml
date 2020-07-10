@@ -33,24 +33,3 @@ output.logstash:
   ssl.key_passphrase: ${APP_KEYSTORE_PASSWORD}
 {{- end }}
 logging.level: info
-
-# Monitoring settings
-{{- if .Values.xpack.monitoring }}
-xpack.monitoring:
-  enabled: true
-  {{- if .Values.elasticsearch.security.authc.enabled }}
-  elasticsearch:
-    hosts: ["https://{{ .Values.elasticsearch.name }}:{{ .Values.elasticsearch.client.restPort }}"]
-    username:
-    password:
-    ssl:
-      certificate_authorities: ["/usr/share/elasticsearch/config/tls/ca.crt"]
-      certificate: "/usr/share/elasticsearch/config/tls/curator.crt"
-      key: "/usr/share/elasticsearch/config/tls/curator.key"
-      key_passphrase: ${APP_KEYSTORE_PASSWORD}
-  {{- else }}
-  elasticsearch.hosts: ["http://{{ .Values.elasticsearch.name }}:{{ .Values.elasticsearch.client.restPort }}"]
-  {{- end }}
-{{- end }}
-
-

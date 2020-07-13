@@ -164,6 +164,40 @@ imagePullSecrets:
     {{- end -}}
 {{- end -}}
 
+{{- define "metadata.calculateLabels" -}}
+    {{- $params := . -}}
+    {{- $scope := (index $params 0) -}}
+    {{- $app := (index $params 1) -}}
+    {{- $component := (index $params 2) -}}
+    {{- $role := (index $params 3) -}}
+app: "{{ $app }}"
+component: "{{ $component }}"
+role: "{{ $role }}"
+release: "{{ $scope.Release.Name }}"
+chart: "{{ $scope.Chart.Name }}-{{ $scope.Chart.Version }}"
+heritage: "{{ $scope.Release.Service }}"
+  {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
+app.kubernetes.io/instance: "common-logging"
+  {{- end }}
+{{- end -}}
+
+{{- define "metadata.calculateAnnotations" -}}
+    {{- $params := . -}}
+    {{- $scope := (index $params 0) -}}
+scheduler.alpha.kubernetes.io/critical-pod: ""
+  {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
+productName: "IBM Cloud Platform Common Services"
+productID: "068a62892a1e4db39641342e592daa25"
+productVersion: "3.4.0"
+productMetric: "FREE"
+clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
+  {{- else }}
+productName: Elasticsearch
+productVersion: 6.8.10
+productID: none
+  {{- end }}
+{{- end -}}
+
 {{/*
 The name of the cluster domain for ICP's OIDC.
 */}}

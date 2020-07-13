@@ -17,12 +17,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.elasticsearch.data.name }}"
-    release: "{{ .Release.Name }}"
-    role: "data"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: "{{ .Release.Service }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "network") | indent 4 }}
   name: "{{ .Values.elasticsearch.master.name }}-discovery"
 spec:
   type: ClusterIP

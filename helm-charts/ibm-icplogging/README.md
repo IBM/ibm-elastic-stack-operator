@@ -91,14 +91,6 @@ Parameter | Description | Default
 `logstash.heapSize`            | The JVM heap size to allocate to Logstash    | `512m`
 `logstash.memoryLimit`         | The maximum allowable memory for Logstash. This includes both JVM heap and file system cache    | `1024Mi`
 `logstash.port`                | The port on which Logstash listens for beats | `5000`
-`logstash.probe.enabled`       | Enables the [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/) for Logstash. Logstash instance is considered not alive when: <ul><li>logstash endpoint is not available for  `logstash.probe.periodSeconds` * `logstash.probe.maxUnavailablePeriod`, or</li><li> processed event count is smaller than `logstash.probe.minEventsPerPeriod` within `logstash.probe.periodSeconds`</li></ul> | `false`
-`logstash.probe.periodSeconds` | Seconds probe will wait before calling Logstash endpoint for status again | `60`
-`logstash.probe.minEventsPerPeriod`   | Logstash instance is considered healthy if number of log events processed is greater than `logstash.probe.minEventsPerPeriod` within `logstash.probe.periodSeconds` | `1`
-`logstash.probe.maxUnavailablePeriod` | Logstash instance is considered unhealthy after API endpoint is unavailable for `logstash.probe.periodSeconds` * `logstash.probe.maxUnavailablePeriod` seconds | `5`
-`logstash.probe.image.repository`     | Full repository and path to image | `quay.io/opencloudio/logstash-liveness-probe`
-`logstash.probe.image.tag`            | Image version                     | `1.0.2-build.2`
-`logstash.probe.resources.limits.memory` | The maximum memory allowed per pod    | `256Mi`
-`logstash.probe.resources.requests.memory` | The minimum memory required per pod | `64Mi`
 `logstash.tolerations`      | Kubernetes tolerations that can allow the pod to run on certain nodes | `empty (nil)`
 `logstash.nodeSelector`      | Kubernetes selector that can restrict the pod to run on certain nodes | `empty (nil)`
 

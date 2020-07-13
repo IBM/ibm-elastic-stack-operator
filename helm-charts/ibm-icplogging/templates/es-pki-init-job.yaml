@@ -20,28 +20,15 @@ kind: Job
 metadata:
   name: "{{ template "elasticsearch.fullname" . }}-pki-init"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "secret-init"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
-  annotations:
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app "pki-init" "init") | indent 4 }}
 spec:
   template:
     metadata:
       labels:
-        app: "{{ template "elasticsearch.fullname" . }}"
-        component: "secret-init"
-        role: "initialization"
-        release: "{{ .Release.Name }}"
-        chart: "{{ .Chart.Name }}"
-        heritage: "{{ .Release.Service }}"
-        app.kubernetes.io/instance: "common-logging"
+{{ include "metadata.calculateLabels" (list . $app "secret-init" "init") | indent 8 }}
       annotations:
-        productName: "IBM Cloud Platform Common Services"
-        productID: "068a62892a1e4db39641342e592daa25"
-        productVersion: "3.4.0"
-        productMetric: "FREE"
+{{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
 {{- if .Values.elasticsearch.client.tolerations }}

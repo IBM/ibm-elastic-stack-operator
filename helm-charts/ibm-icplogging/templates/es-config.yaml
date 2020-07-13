@@ -18,18 +18,11 @@ kind: ConfigMap
 metadata:
   name: "{{ template "elasticsearch.fullname" . }}-config"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
-    component: "{{ .Values.elasticsearch.name }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "config") | indent 4 }}
 data:
   data.yml: |-
 {{ tpl (.Files.Get "elasticsearch/general.config") . | indent 4 }}
     node.master: true
     node.data: true
     path.data: /usr/share/elasticsearch/data/6.x
-  roles.yml: |-
-{{ .Files.Get "xpack/roles.yml" | indent 4 }}
-  role_mapping.yml: |-
-{{ .Files.Get "xpack/role_mapping.yml" | indent 4 }}

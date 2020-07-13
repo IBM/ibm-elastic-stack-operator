@@ -18,21 +18,13 @@
 kind: Deployment
 metadata:
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.kibana.name }}"
-    release: "{{ .Release.Name }}"
-    role: "kibana"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: "{{ .Release.Service }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 4 }}
   name: "{{ template "kibana.fullname" . }}"
 spec:
   selector:
     matchLabels:
-      app: "{{ template "elasticsearch.fullname" . }}"
-      component: "{{ .Values.kibana.name }}"
-      release: "{{ .Release.Name }}"
-      role: "kibana"
-      heritage: "{{ .Release.Service }}"
+{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 6 }}
   replicas: {{ .Values.kibana.replicas }}
   strategy:
     type: RollingUpdate
@@ -43,20 +35,9 @@ spec:
   template:
     metadata:
       labels:
-        app: "{{ template "elasticsearch.fullname" . }}"
-        component: "{{ .Values.kibana.name }}"
-        role: "kibana"
-        release: "{{ .Release.Name }}"
-        chart: "{{ .Chart.Name }}"
-        heritage: "{{ .Release.Service }}"
-        app.kubernetes.io/instance: "common-logging"
+{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 8 }}
       annotations:
-        scheduler.alpha.kubernetes.io/critical-pod: ""
-        productName: "IBM Cloud Platform Common Services"
-        productID: "068a62892a1e4db39641342e592daa25"
-        productVersion: "3.4.0"
-        productMetric: "FREE"
-        clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
+{{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
 {{- if .Values.kibana.tolerations }}

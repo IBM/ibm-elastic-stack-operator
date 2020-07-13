@@ -20,11 +20,8 @@ kind: ConfigMap
 metadata:
   name: "{{ template "fullname" . }}-values"
   labels:
-    app: "{{ template "fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "{{ .Values.kibana.name }}"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "health") | indent 4 }}
   annotations:
 data:
   calculated-values.yml: |-

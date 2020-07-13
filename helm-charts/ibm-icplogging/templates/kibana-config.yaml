@@ -19,11 +19,8 @@ kind: ConfigMap
 metadata:
   name: "{{ template "kibana.fullname" . }}-config"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "{{ .Values.kibana.name }}"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 4 }}
 data:
   kibana.yml: |-
 {{ tpl (.Files.Get "kibana/kibana.yml") . | indent 4 }}

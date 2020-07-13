@@ -18,39 +18,24 @@ kind: ConfigMap
 metadata:
   name: "{{ template "elasticsearch.fullname" . }}-entrypoint"
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "init") | indent 4 }}
 data:
   entrypoint.sh: |-
     #!/bin/bash
 
     cd /scripts
-    ./install-plugin.sh
     ./map-config.sh
 
     echo "launching elasticsearch"
     cd /usr/share/elasticsearch
     /usr/local/bin/docker-entrypoint.sh
-  install-plugin.sh: |-
-    #!/bin/bash
-    echo "searching for plugin"
-    plugin_path=/usr/share/elasticsearch/plugin-bundles/searchguard.zip
-    ls -l $plugin_path
-
-    if [ -f $plugin_path ]; then
-      echo "Searchguard plugin found."
-      elasticsearch-plugin install -b file://$plugin_path
-      echo "install done. exit code=$?"
-    else
-      echo "No searchguard plugin found. No need to install"
-    fi
   logstash-entrypoint.sh: |-
     #!/bin/sh
     cd /scripts
     echo "Launching Logstash"
     # to debug: --log.level debug
+    /usr/share/logstash/bin/logstash-plugin update logstash-input-beats
     /usr/local/bin/docker-entrypoint
   kibana-entrypoint.sh: |-
     #!/bin/sh

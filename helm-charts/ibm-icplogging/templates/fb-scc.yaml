@@ -17,11 +17,8 @@ apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "{{ .Values.filebeat.name }}"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
+{{ $app := include "filebeat.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 4 }}
   name: "{{ template "filebeat.fullname" . }}"
 priority: 1
 allowHostDirVolumePlugin: true

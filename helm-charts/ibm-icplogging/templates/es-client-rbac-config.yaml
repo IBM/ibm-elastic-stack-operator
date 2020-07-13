@@ -20,11 +20,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.elasticsearch.client.name }}"
-    release: "{{ .Release.Name }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: "{{ .Release.Service }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.client.name "proxy") | indent 4 }}
   name: "{{ template "client.fullname" . }}-rbac-config"
 data:
   rbac.lua: |-

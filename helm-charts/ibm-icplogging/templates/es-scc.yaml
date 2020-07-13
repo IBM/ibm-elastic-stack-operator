@@ -17,11 +17,8 @@ apiVersion: security.openshift.io/v1
 kind: SecurityContextConstraints
 metadata:
   labels:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    component: "{{ .Values.elasticsearch.data.name }}"
-    heritage: "{{ .Release.Service }}"
-    release: "{{ .Release.Name }}"
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 4 }}
   name: "{{ template "elasticsearch.fullname" . }}"
 priority: 1
 allowHostDirVolumePlugin: false

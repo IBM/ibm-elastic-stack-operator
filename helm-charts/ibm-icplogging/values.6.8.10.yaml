@@ -27,6 +27,10 @@ kibana:
     repository: docker.elastic.co/kibana/kibana-oss
     tag: 6.8.10
     digest:
+  # initImage:
+  #   repository: "quay.io/opencloudio/curl"
+  #   tag: "4.2.0-build.6"
+  #   digest:
 filebeat:
   image:
     # repository: "quay.io/opencloudio/icp-filebeat-oss"
@@ -41,8 +45,9 @@ elasticsearch:
     repository: docker.elastic.co/elasticsearch/elasticsearch-oss
     tag: 6.8.10
     digest:
-# curator:
-#   image:
-#     repository: "quay.io/opencloudio/indices-cleaner"
-#     tag: "1.2.0-build.3"
-#     digest:
+curator:
+  image:
+    repository: "quay.io/opencloudio/indices-cleaner"
+    tag: "1.3.0-build.1"
+    digest:
+

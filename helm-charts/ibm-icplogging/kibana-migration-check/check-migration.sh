@@ -18,6 +18,7 @@
 
 set -uo pipefail
 
+echo "`date` - 1. preparing to check .kibana index migration"
 # Prepare es client api url
 {{- if .Values.elasticsearch.security.authc.enabled }}
 # Use https protcol if security enabled
@@ -33,44 +34,44 @@ port={{ .Values.elasticsearch.client.restPort }}
 url="$protocol://$endpoint:$port"
 
 # Check if the .kibana index migration is done
-while :
+# Check and wait until elasticsearch is up and sends back good json response
+exit_code="-1"
+while [ "$exit_code" != "0" ]
 do
-    # Check and wait until elasticsearch is up and sends back good json response
-    json_exit="1"
-    while [ "$json_exit" != "0" -a "$json_exit" != "" ]
-    do
-        set -x
-        {{- if .Values.elasticsearch.security.authc.enabled }}  
-        status=$(curl -E $CERT_DIR/curator.crt --key $CERT_DIR/curator.key --cacert $CERT_DIR/ca.crt -o /tmp/deprecations.json -w '%{http_code}' $url/_xpack/migration/deprecations)
-        {{ else }}
-        status=$(curl -o /tmp/deprecations.json -w '%{http_code}' $url/_xpack/migration/deprecations)
-        {{- end }}
-        set +x
+    echo "`date` - 2. looking for current .kibana index version"
+    set -x
+    resp_settings=$(curl -E $CERT_DIR/curator.crt --key $CERT_DIR/curator.key --cacert $CERT_DIR/ca.crt --fail $url/.kibana/_settings)
+    exit_code=$?    
+    set +x
 
-        if [ "$status" == "200" ]; then
-            echo "got 200 http status code, checking json."
-            # check if we got good json back
-            json_exit=$(cat /tmp/deprecations.json | jq empty)
-            echo "josn exit code $json_exit"
-            if [ "$json_exit" != "0" -a "$json_exit" != "" ]; then
-                echo "`date` possible bad json $json_exit. retry ..."
-                sleep 10
-            fi
+    echo "exit_code=$exit_code, resp_settings=$resp_settings"
+
+    if [ "$exit_code" == "0" ]; then
+        echo "got 2xx http status code, checking response json..."
+
+        echo "`date` - 3. identifying kibana version"
+        created_by=$(echo $resp_settings| jq -r 'first(.[]).settings.index.version.created')
+        if [[ -z "$created_by" ]]; then
+            echo "no .kibana index found. use this as an indicator of a fresh install"
+            created_by='6081099'
+        fi
+
+        echo "index version=$created_by"
+
+        major_version="${created_by:0:1}"
+        echo "major_version=$major_version"
+
+        if [ "6" = "$major_version" ]; then
+            echo "index version up-to-date"
+            break
         else
-            echo "got bad http response code $status. retry ..."
+            echo "upgrade still in progress from $created_by... sleep 10s"
             sleep 10
         fi
-    done
-
-    kibanaIndex=$(cat /tmp/deprecations.json | jq '.index_settings[".kibana"][0].message' | tr -d '"')
-    echo "`date` status of .kibana index: ${kibanaIndex}"
-    if [ "${kibanaIndex}" == "Index created before 6.0" ]; then
-        echo "`date` still migrating... sleep "
-        sleep 10
     else
-        break
-    fi
+        echo "got bad http response code $exit_code. retrying in 10s..."
+        sleep 10
+    fi     
 done
 
-echo "`date` Migration is DONE!"
-exit 0
+echo "`date` - 4. Migration is DONE!"

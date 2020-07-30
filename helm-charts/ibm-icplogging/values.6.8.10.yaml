@@ -27,10 +27,10 @@ kibana:
     repository: docker.elastic.co/kibana/kibana-oss
     tag: 6.8.10
     digest:
-  # initImage:
-  #   repository: "quay.io/opencloudio/curl"
-  #   tag: "4.2.0-build.6"
-  #   digest:
+    initImage:
+      repository: "quay.io/opencloudio/curl"
+      tag: "4.2.0-build.6"
+      digest:
 filebeat:
   image:
     # repository: "quay.io/opencloudio/icp-filebeat-oss"

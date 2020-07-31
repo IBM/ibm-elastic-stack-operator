@@ -21,8 +21,8 @@ metadata:
   labels:
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "init") | indent 4 }}
-  name: {{ template "kibana.fullname" . }}-migration-check-entrypoint
+  name: {{ template "kibana.fullname" . }}-migrate-entrypoint
 data:
-  check-migration.sh: |-
-{{ tpl (.Files.Get "kibana-migration-check/check-migration.sh") . | indent 4 }}
+  migrate.sh: |-
+{{ tpl (.Files.Get "kibana-migration/migrate.sh") . | indent 4 }}
 {{ end }}

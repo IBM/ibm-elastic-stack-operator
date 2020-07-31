@@ -52,6 +52,23 @@ spec:
       securityContext:
         fsGroup: 1000
       serviceAccountName: "{{ template "kibana.fullname" . }}"
+      initContainers:
+      # wait until .kibana index is migrated to avoid crashes
+      - name: migration-check
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsNonRoot: true
+        image: {{ .Values.kibana.initImage.repository }}:{{ .Values.kibana.initImage.tag }}          
+        command: ["/opt/entry/check-migration.sh"]
+        volumeMounts:
+        - mountPath: "/opt/entry"
+          name: migration-check-entrypoint
+{{- if .Values.elasticsearch.security.authc.enabled }}
+        - name: certs
+          mountPath: "/usr/share/elasticsearch/config/tls"
+          readOnly: true
+{{- end }}
       containers:
 {{- if .Values.kibana.routerEnabled }}
       - name: router

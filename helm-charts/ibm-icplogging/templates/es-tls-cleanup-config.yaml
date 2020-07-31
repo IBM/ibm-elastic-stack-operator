@@ -1,5 +1,3 @@
-{{- if .Values.kibana.install -}}
-
 #
 # Copyright 2020 IBM Corporation
 #
@@ -20,9 +18,8 @@ kind: ConfigMap
 metadata:
   labels:
 {{ $app := include "elasticsearch.fullname" . -}}
-{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "init") | indent 4 }}
-  name: {{ template "kibana.fullname" . }}-migration-check-entrypoint
+{{ include "metadata.calculateLabels" (list . $app "tls-delete" "cleanup") | indent 8 }}
+  name: {{ template "elasticsearch.fullname" . }}-tls-cleanup
 data:
-  check-migration.sh: |-
-{{ tpl (.Files.Get "kibana-migration-check/check-migration.sh") . | indent 4 }}
-{{ end }}
+  cleanup.sh: |-
+{{ tpl (.Files.Get "es-tls-cleanup/cleanup.sh") . | indent 4 }}

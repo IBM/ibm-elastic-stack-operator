@@ -24,7 +24,7 @@ metadata:
 {{ include "metadata.calculateLabels" (list . $app "secret-delete" "cleanup") | indent 4 }}
   annotations:
     "helm.sh/hook": pre-delete
-    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": "hook-succeeded, before-hook-creation"
     "helm.sh/hook-weight": "-9"
 spec:
   template:

@@ -20,7 +20,7 @@ general:
   ingressPort: 8443
 
 image:
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   pullSecret:
     enabled: true
     name: regcred
@@ -146,6 +146,7 @@ filebeat:
     namespaces:
   tolerations:
   registryHostPath: "/var/lib/icp/logging/filebeat-registry/{{ .Release.Name }}"
+  logFormat: json
 elasticsearch:
   name: "elasticsearch"
   internalPort: 9300

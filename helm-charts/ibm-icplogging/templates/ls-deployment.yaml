@@ -52,6 +52,7 @@ spec:
       containers:
       - name: logstash
         image: {{ include "image.calculateImage" (list .Values.logstash.image.repository .Values.logstash.image.tag .Values.logstash.image.digest) }}        
+        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 1000
@@ -74,8 +75,6 @@ spec:
               name: {{ template "elasticsearch.fullname" . }}-pki-secret
               key: appKeystorePassword
 {{- end }}
-        image: {{ include "image.calculateImage" (list .Values.logstash.image.repository .Values.logstash.image.tag .Values.logstash.image.digest) }}        
-        command: ["/bin/bash", "/scripts/entrypoint.sh"]
         resources:
           limits:
             memory: {{ .Values.logstash.memoryLimit }}

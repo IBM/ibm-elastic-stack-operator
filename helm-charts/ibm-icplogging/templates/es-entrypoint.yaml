@@ -35,7 +35,6 @@ data:
     cd /scripts
     echo "Launching Logstash"
     # to debug: --log.level debug
-    /usr/share/logstash/bin/logstash-plugin update logstash-input-beats
     /usr/local/bin/docker-entrypoint
   kibana-entrypoint.sh: |-
     #!/bin/sh
@@ -56,9 +55,5 @@ data:
     rm -f $TARGET
     cp $SRC $TARGET
 
-    if [ "$MACTYPE" == "s390x" ]; then
-      echo $'\r' >> $TARGET
-      echo "bootstrap.system_call_filter: false" >> $TARGET
-    fi
   migrate-elk551-data.sh: |-
 {{ tpl (.Files.Get "es-migration/migrate-elk551-data.sh") . | indent 4 }}

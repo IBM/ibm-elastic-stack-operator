@@ -13,9 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM quay.io/operator-framework/helm-operator:v0.17.1
-
-RUN microdnf update -y && microdnf clean all -y
+FROM quay.io/operator-framework/helm-operator:v0.19.2
 
 LABEL org.label-schema.vendor="IBM" \
     org.label-schema.name="ibm-elastic-stack-operator" \

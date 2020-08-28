@@ -15,6 +15,8 @@
 #
 FROM quay.io/operator-framework/helm-operator:v0.17.1
 
+RUN microdnf update -y && microdnf clean all -y
+
 LABEL org.label-schema.vendor="IBM" \
     org.label-schema.name="ibm-elastic-stack-operator" \
     org.label-schema.description="IBM Elastic Stack Operator" \

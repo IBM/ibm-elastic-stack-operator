@@ -470,6 +470,10 @@ spec:
             metadata:
               labels:
                 name: ibm-elastic-stack-operator
+                operatorframework.io/arch.s390x: supported
+                operatorframework.io/os.linux: supported 
+                operatorframework.io/arch.amd64: supported
+                operatorframework.io/arch.ppc64le: supported 
               annotations:
                 productName: IBM Cloud Platform Common Services
                 productID: "068a62892a1e4db39641342e592daa25"

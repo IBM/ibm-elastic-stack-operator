@@ -582,6 +582,7 @@ spec:
                   type: boolean
                 watcher:
                   type: boolean
+  version: v1alpha1
   versions:
   - name: v1alpha1
     served: true

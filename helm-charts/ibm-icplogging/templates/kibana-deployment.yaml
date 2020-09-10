@@ -24,7 +24,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 6 }}
+      app: ibm-icplogging
+      name: kibana
+#{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 6 }}
   replicas: {{ .Values.kibana.replicas }}
   strategy:
     type: RollingUpdate

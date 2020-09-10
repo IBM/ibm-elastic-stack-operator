@@ -23,7 +23,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 6 }}
+      app: ibm-icplogging
+      name: filebeat
+#{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 6 }}
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:

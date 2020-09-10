@@ -23,7 +23,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.logstash.name "logstash") | indent 6 }}
+      app: ibm-icplogging
+      name: logstash
+#{{ include "metadata.calculateLabels" (list . $app .Values.logstash.name "logstash") | indent 6 }}
   replicas: {{ .Values.logstash.replicas }}
   strategy:
     type: RollingUpdate

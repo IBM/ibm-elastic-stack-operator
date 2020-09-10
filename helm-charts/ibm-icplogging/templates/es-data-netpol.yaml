@@ -27,7 +27,6 @@ spec:
       component: "{{ .Values.elasticsearch.data.name }}"
       release: "{{ .Release.Name }}"
       role: "data"
-      release: "{{ .Release.Name }}"
       chart: "{{ .Chart.Name }}"
       heritage: "{{ .Release.Service }}"      
   ingress:
@@ -40,7 +39,6 @@ spec:
           component: "{{ .Values.elasticsearch.data.name }}"
           release: "{{ .Release.Name }}"
           role: data
-          release: "{{ .Release.Name }}"
           chart: "{{ .Chart.Name }}"
           heritage: "{{ .Release.Service }}"
   - ports:

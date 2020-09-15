@@ -22,6 +22,10 @@ metadata:
   labels:
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app "secret-delete" "cleanup") | indent 4 }}
+    name: ibm-elastic-stack-operator
+      app.kubernetes.io/instance: elk-logging #may be something else
+      app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+      app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
   annotations:
     "helm.sh/hook": pre-delete
     "helm.sh/hook-delete-policy": "hook-succeeded, before-hook-creation"

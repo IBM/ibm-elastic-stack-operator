@@ -4,9 +4,9 @@ metadata:
   name: ibm-elastic-stack-operator.v3.2.1
   labels:
     name: ibm-elastic-stack-operator
-      app.kubernetes.io/instance: elk-logging #may be something else
-      app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
-      app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/instance: elk-logging #may be something else
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
   namespace: placeholder
   annotations:
     olm.skipRange: '>=3.0.5 <3.2.1'

@@ -19,9 +19,9 @@ metadata:
   name: ibm-elastic-stack-operator
   labels:
     name: ibm-elastic-stack-operator
-      app.kubernetes.io/instance: elk-logging #may be something else
-      app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
-      app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/instance: elk-logging #may be something else
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 subjects:
 - kind: ServiceAccount
   name: ibm-elastic-stack-operator

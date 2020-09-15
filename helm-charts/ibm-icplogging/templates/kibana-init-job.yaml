@@ -21,9 +21,9 @@ metadata:
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "init") | indent 4 }}
     name: ibm-elastic-stack-operator
-      app.kubernetes.io/instance: elk-logging #may be something else
-      app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
-      app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/instance: elk-logging #may be something else
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 spec:
   backoffLimit: 90
   template:

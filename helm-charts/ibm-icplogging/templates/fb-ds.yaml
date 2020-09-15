@@ -21,11 +21,11 @@ metadata:
 {{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 4 }}
   name: "{{ template "filebeat.fullname" . }}"
 spec:
-  selector:
-    matchLabels:
-      app: ibm-icplogging
-      name: filebeat
-#{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 6 }}
+#   selector:
+#     matchLabels:
+#       app: ibm-icplogging
+#       name: filebeat
+# #{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 6 }}
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:

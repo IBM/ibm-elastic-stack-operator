@@ -23,6 +23,7 @@ metadata:
     app.kubernetes.io/instance: elk-logging #may be something else
     app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
     app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
   name: "{{ .Values.elasticsearch.master.name }}-discovery"
 spec:
   type: ClusterIP

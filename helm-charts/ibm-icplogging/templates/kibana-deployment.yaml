@@ -22,11 +22,11 @@ metadata:
 {{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 4 }}
   name: "{{ template "kibana.fullname" . }}"
 spec:
-#   selector:
-#     matchLabels:
-#       app: ibm-icplogging
-#       name: kibana
-# #{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 6 }}
+  selector:
+    matchLabels:
+      app: ibm-icplogging
+      name: kibana
+#{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 6 }}
   replicas: {{ .Values.kibana.replicas }}
   strategy:
     type: RollingUpdate

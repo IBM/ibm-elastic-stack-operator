@@ -59,6 +59,9 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 1000
           runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
         command: ["/bin/bash", "/scripts/entrypoint.sh"]
         env:
         - name: LS_JAVA_OPTS

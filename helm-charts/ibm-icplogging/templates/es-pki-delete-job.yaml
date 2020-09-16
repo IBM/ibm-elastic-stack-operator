@@ -46,6 +46,9 @@ spec:
         securityContext:
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           runAsUser: 1000
           runAsNonRoot: true
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.pkiInitImage.repository .Values.elasticsearch.pkiInitImage.tag .Values.elasticsearch.pkiInitImage.digest) }}

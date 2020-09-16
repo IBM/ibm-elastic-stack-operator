@@ -55,6 +55,9 @@ spec:
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
+              capabilities: #may or may not be necessary
+                drop:
+                - ALL
               runAsUser: 1000
               runAsNonRoot: true
             image: {{ include "image.calculateImage" (list .Values.curator.image.repository .Values.curator.image.tag .Values.curator.image.digest) }}

@@ -1,7 +1,7 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: ibm-elastic-stack-operator.v3.2.0
+  name: ibm-elastic-stack-operator.v3.2.1
   labels:
     name: ibm-elastic-stack-operator
     app.kubernetes.io/instance: elk-logging #may be something else
@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
   namespace: placeholder
   annotations:
-    olm.skipRange: '>=3.0.5 <3.2.0'
+    olm.skipRange: '>=3.0.5 <3.2.1'
     alm-examples: |-
       [
         {
@@ -209,7 +209,7 @@ metadata:
     certified: "false"
     support: "IBM"
     repository: https://github.com/IBM/ibm-elastic-stack-operator
-    image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.0
+    image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.1
     createdAt: '2020-05-16T19:15:00Z'
     description: |-
       Operator that installs and manages Elastic Stack logging service instances. 
@@ -539,4 +539,4 @@ spec:
   - name: Elastic Stack Operator
     url: https://github.com/IBM/ibm-elastic-stack-operator
   replaces: ibm-elastic-stack-operator.v3.1.2
-  version: 3.2.0
+  version: 3.2.1

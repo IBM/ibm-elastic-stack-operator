@@ -23,7 +23,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 6 }}
+      app: ibm-icplogging
+      name: filebeat
+#{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 6 }}
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
@@ -48,12 +50,18 @@ spec:
 {{- end }}
       securityContext:
         runAsUser: 0
+        capabilities:
+          drop:
+          - ALL
       hostPID: true
       serviceAccountName: "{{ template "filebeat.fullname" . }}"
       containers:
       - name: filebeat
         securityContext:
           readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
         image: {{ include "image.calculateImage" (list .Values.filebeat.image.repository .Values.filebeat.image.tag .Values.filebeat.image.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         resources:

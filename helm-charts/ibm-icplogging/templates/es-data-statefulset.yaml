@@ -23,7 +23,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 6 }}
+      app: ibm-icplogging
+      name: data
+#{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 6 }}
   updateStrategy:
     type: RollingUpdate
   revisionHistoryLimit: 3
@@ -75,6 +77,9 @@ spec:
     {{- end }}
       securityContext:
         fsGroup: 1000
+        capabilities:
+          drop:
+          - ALL
       serviceAccountName: "{{ template "elasticsearch.fullname" . }}"
       initContainers:
     {{- if ne (.Values.general.environment | lower) "openshift" }}
@@ -82,6 +87,9 @@ spec:
         securityContext:
           privileged: true
           readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["chmod", "777", "/data-dir"]          
@@ -92,12 +100,18 @@ spec:
       - name: "sysctl"
         securityContext:
           privileged: true
+          capabilities:
+            drop:
+            - ALL
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
         command: ["/bin/sh", "-c", "sysctl -w vm.max_map_count=262144 && touch /etc/sysctl.conf && sed -i '/^vm.max_map_count /d' /etc/sysctl.conf && echo 'vm.max_map_count = 262144' >> /etc/sysctl.conf"]
       - name: migrate-data
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           readOnlyRootFilesystem: true
           runAsUser: 1000
           runAsNonRoot: true
@@ -114,6 +128,9 @@ spec:
       - name: router
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
         resources:
 {{ toYaml .Values.elasticsearch.routerImage.resources | indent 12 }}
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.routerImage.repository .Values.elasticsearch.routerImage.tag .Values.elasticsearch.routerImage.digest) }}
@@ -156,6 +173,8 @@ spec:
             add:
               - IPC_LOCK
               - SYS_RESOURCE
+            drop:
+            - ALL
         {{- end }}
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.image.repository .Values.elasticsearch.image.tag .Values.elasticsearch.image.digest) }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}

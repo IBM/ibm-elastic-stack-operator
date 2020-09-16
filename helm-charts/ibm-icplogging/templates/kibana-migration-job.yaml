@@ -20,6 +20,11 @@ metadata:
   labels:
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "migration") | indent 4 }}
+    name: ibm-elastic-stack-operator
+    app.kubernetes.io/instance: elk-logging #may be something else
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
   backoffLimit: 30
   template:
@@ -44,6 +49,9 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 1000
           runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
         image: {{ .Values.kibana.initImage.repository }}:{{ .Values.kibana.initImage.tag }}
         command: ["/opt/entry/migrate.sh"]
         volumeMounts:

@@ -20,6 +20,11 @@ metadata:
   labels:
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app .Values.curator.name .Values.curator.name) | indent 4 }}
+    name: ibm-elastic-stack-operator
+    app.kubernetes.io/instance: elk-logging #may be something else
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
 spec:
   schedule: "{{ .Values.curator.schedule }}"
   concurrencyPolicy: Replace
@@ -50,6 +55,9 @@ spec:
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
+              capabilities: #may or may not be necessary
+                drop:
+                - ALL
               runAsUser: 1000
               runAsNonRoot: true
             image: {{ include "image.calculateImage" (list .Values.curator.image.repository .Values.curator.image.tag .Values.curator.image.digest) }}

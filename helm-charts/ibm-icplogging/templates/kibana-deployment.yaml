@@ -24,7 +24,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 6 }}
+      app: ibm-icplogging
+      name: kibana
+#{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 6 }}
   replicas: {{ .Values.kibana.replicas }}
   strategy:
     type: RollingUpdate
@@ -51,6 +53,9 @@ spec:
       # Required for multi-platform config
       securityContext:
         fsGroup: 1000
+        capabilities:
+          drop:
+          - ALL
       serviceAccountName: "{{ template "kibana.fullname" . }}"
       initContainers:
       # wait until .kibana index is migrated to avoid crashes
@@ -59,6 +64,9 @@ spec:
           allowPrivilegeEscalation: false
           runAsUser: 1000
           runAsNonRoot: true
+          capabilities:
+            drop:
+            - ALL
         image: {{ .Values.kibana.initImage.repository }}:{{ .Values.kibana.initImage.tag }}          
         command: ["/opt/entry/check-migration.sh"]
         volumeMounts:
@@ -74,6 +82,9 @@ spec:
       - name: router
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
         resources:
 {{ toYaml .Values.kibana.routerImage.resources | indent 12 }}
         image: {{ include "image.calculateImage" (list .Values.kibana.routerImage.repository .Values.kibana.routerImage.tag .Values.kibana.routerImage.digest) }}
@@ -120,6 +131,9 @@ spec:
       - name: kibana
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
           runAsUser: 1000
           runAsNonRoot: true
         image: {{ include "image.calculateImage" (list .Values.kibana.image.repository .Values.kibana.image.tag .Values.kibana.image.digest) }}

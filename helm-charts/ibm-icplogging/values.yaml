@@ -1,17 +1,7 @@
-#
-# Copyright 2020 IBM Corporation
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http:#www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Licensed Materials - Property of IBM
+# 5737-E67
+# @ Copyright IBM Corporation 2016, 2020. All Rights Reserved.
+# US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
 
 general:
   environment: IBMCloudPrivate
@@ -53,9 +43,9 @@ logstash:
   memoryLimit: "1024Mi"
   port: 5000
   image:
-    repository: "quay.io/opencloudio/icp-logstash-oss"
-    tag: "6.6.1-build.2"
-    digest: "sha256:0d896ae1a89e2e01cebc25a53199da3ae9a9431e11fad68babebaafd46c52cda"
+    repository: "ibmcom/icp-logstash-oss"
+    tag: "6.8.10-build.1"
+    digest:
   nodeSelector:
   tolerations: []
 kibana:
@@ -102,9 +92,9 @@ kibana:
   maxOldSpaceSize: "1536"
   memoryLimit: "2048Mi"
   image:
-    repository: quay.io/opencloudio/icp-kibana-oss
-    tag: 6.6.1-build.2
-    digest: "sha256:2293c15ad33c473cf10a7449569b2a9d843b31c21fa7414f08dff189ed6e6c29"
+    repository: ibmcom/icp-kibana-oss
+    tag: 6.8.10-build.1
+    digest:
   init:
     resources:
       limits:
@@ -112,13 +102,13 @@ kibana:
       requests:
         memory: 64Mi
   initImage:
-    repository: "quay.io/opencloudio/curl"
-    tag: "4.2.0-build.5"
-    digest: "sha256:149af26f9f16183a6e4ff78f00b43e64b7ca6f1da57615a4471639f80f982e4d"
+    repository: "ibmcom/curl"
+    tag: "4.2.0-build.6"
+    digest:
   routerImage:
-    repository: "quay.io/opencloudio/icp-management-ingress"
-    tag: "2.5.3"
-    digest: "sha256:f6694ea8a461468989874b4b091f1d64366eacb9821cc9836d8100e34f333634"
+    repository: "ibmcom/icp-management-ingress"
+    tag: "2.5.5"
+    digest:
     resources:
       limits:
         memory: 256Mi
@@ -156,9 +146,9 @@ filebeat:
     requests:
       memory: 64Mi
   image:
-    repository: "quay.io/opencloudio/icp-filebeat-oss"
-    tag: "6.6.1-build.2"
-    digest: "sha256:eaa2204025d101ba834b7f20c684fbc54ced4b514188bf210aef29919fd74842"
+    repository: "ibmcom/icp-filebeat-oss"
+    tag: "6.8.10-build.1"
+    digest:
   scope:
     nodes: {}
     namespaces: []
@@ -171,26 +161,26 @@ elasticsearch:
   name: "elasticsearch"
   internalPort: 9300
   image:
-    repository: "quay.io/opencloudio/icp-elasticsearch-oss"
-    tag: "6.6.1-build.2"
-    digest: "sha256:173aae206a3fab5a5e6d37fcff14194dd1d17cf4ccf1e44bec914c75d66748e9"
+    repository: "ibmcom/icp-elasticsearch-oss"
+    tag: "6.8.10-build.1"
+    digest:
   pkiInitImage:
-    repository: "quay.io/opencloudio/logging-pki-init"
+    repository: "ibmcom/logging-pki-init"    
     tag: "2.3.0-build.3"
-    digest: "sha256:d73cbc2895486c425bde39497b10e00fd45b550e4953eb8d3e04c1ac3936b4a8"
+    digest:
     resources:
       limits:
         memory: 512Mi
       requests:
         memory: 64Mi
   initImage:
-    repository: "quay.io/opencloudio/icp-initcontainer"
-    tag: "1.0.0-build.4"
-    digest: "sha256:9aad9fd724ec9308bec711d7738b5f0ae0c37a72ffb19a26dbcf622f1a603e89"
+    repository: "ibmcom/icp-initcontainer"
+    tag: "1.0.0-build.6"
+    digest:
   routerImage:
-    repository: "quay.io/opencloudio/icp-management-ingress"
-    digest: "sha256:f6694ea8a461468989874b4b091f1d64366eacb9821cc9836d8100e34f333634"
-    tag: "2.5.3"
+    repository: "ibmcom/icp-management-ingress"
+    digest:
+    tag: "2.5.5"
     resources:
        limits:
          memory: 256Mi
@@ -211,24 +201,7 @@ elasticsearch:
       provider: icp
 
   client:
-    name: client
-    replicas: 1
-    heapSize: "1024m"
-    memoryLimit: "1536Mi"
     restPort: 9200
-    antiAffinity: soft
-    tolerations: []
-    nodeSelector:
-
-  master:
-    name: master
-    # Set to the # of management (or master, if no mgmt) nodes
-    replicas: 1
-    heapSize: "1024m"
-    memoryLimit: "1536Mi"
-    antiAffinity: soft
-    tolerations: []
-    nodeSelector:
 
   data:
     name: data
@@ -266,9 +239,9 @@ curator:
     requests:
       memory: 64Mi
   image:
-    repository: "quay.io/opencloudio/indices-cleaner"
-    tag: "1.2.0-build.3"
-    digest: "sha256:18f129c9cd1ac527a13a1a1d7bced33585f4be713dd2944fa00cb871989b5239"
+    repository: "ibmcom/indices-cleaner"
+    tag: "1.3.0-build.1"
+    digest:
   # runs at 23:30 UTC daily
   schedule: "30 23 * * *"
   nodeSelector:

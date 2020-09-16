@@ -1,17 +1,8 @@
 {{/*
-  Copyright 2020 IBM Corporation
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-  http:#www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+Licensed Materials - Property of IBM
+  5737-E67
+  @ Copyright IBM Corporation 2016, 2020. All Rights Reserved.
+  US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
 */}}
 
 {{/* vim: set filetype=mustache: */}}
@@ -38,15 +29,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- define "filebeat.fullname" -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.filebeat.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified client node name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "client.fullname" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- printf "%s-%s-%s" .Release.Name $name .Values.elasticsearch.client.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -86,15 +68,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified master node name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "master.fullname" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- printf "%s-%s-%s" .Release.Name $name .Values.elasticsearch.master.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Create a default fully qualified kibana name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
@@ -122,7 +95,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-To avoid split-brain we need to set the minimum number of master pods to (elasticsearch.master.replicas / 2) + 1.
+To avoid split-brain we need to set the minimum number of data pods to (elasticsearch.data.replicas / 2) + 1.
 Expected input -> output:
   - 0 -> 0
   - 1 -> 1
@@ -131,7 +104,7 @@ Expected input -> output:
   - 9 -> 5, etc
 If the calculated value is higher than the # of replicas, use the replica value.
 */}}
-{{- define "elasticsearch.master.minimumNodes" -}}
+{{- define "elasticsearch.data.minimumNodes" -}}
 {{- $replicas := int (default 1 .Values.elasticsearch.data.replicas) -}}
 {{- $min := add1 (div $replicas 2) -}}
 {{- if gt $min $replicas -}}
@@ -188,7 +161,7 @@ scheduler.alpha.kubernetes.io/critical-pod: ""
   {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
 productName: "IBM Cloud Platform Common Services"
 productID: "068a62892a1e4db39641342e592daa25"
-productVersion: "3.4.0"
+productVersion: "3.5.1"
 productMetric: "FREE"
 clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
   {{- else }}

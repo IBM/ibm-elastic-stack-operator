@@ -25,8 +25,9 @@ NAMESPACE=ibm-common-services
 # Image URL to use all building/pushing image targets;
 # Use your own docker registry and image name for dev/test by overridding the IMG and REGISTRY environment variable.
 IMG ?= ibm-elastic-stack-operator
-REGISTRY ?= "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom"
-CSV_VERSION ?= 3.2.0
+#REGISTRY ?= "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom"
+REGISTRY ?= "quay.io/opencloudio"
+CSV_VERSION ?= 3.2.2
 
 QUAY_USERNAME ?=
 QUAY_PASSWORD ?=
@@ -133,7 +134,8 @@ build-s390x:
 
 images: clean build push ## Release multi-arch operator image
 
-push: push-amd64 push-ppc64le push-s390x push-multi-arch
+#push: push-amd64 push-ppc64le push-s390x push-multi-arch
+push: push-amd64
 
 push-amd64:
 	docker push $(REGISTRY)/$(IMG)-amd64:$(VERSION)

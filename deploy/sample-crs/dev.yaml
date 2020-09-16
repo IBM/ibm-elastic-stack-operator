@@ -1,0 +1,131 @@
+apiVersion: elasticstack.ibm.com/v1alpha1
+kind: ElasticStack
+metadata:
+  name: logging
+spec:
+  image:
+    pullPolicy: Always
+    pullSecret:
+      enabled: true
+      name: regcred
+  curator:
+    image:
+      repository: "hyc-cloud-private-scratch-docker-local.artifactory.swg-devops.com/ibmcom/indices-cleaner"
+      digest:
+    tolerations:
+    - effect: NoSchedule
+      key: dedicated
+      operator: Exists
+  elasticsearch:
+    image:
+      repository: hyc-cloud-private-scratch-docker-local.artifactory.swg-devops.com/ibmcom/icp-elasticsearch-oss
+      digest:
+    initImage:
+      repository: "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom/icp-initcontainer"
+      #tag: "1.0.0-build.6"
+      digest: ""
+    pkiInitImage:
+      repository: "hyc-cloud-private-scratch-docker-local.artifactory.swg-devops.com/ibmcom/logging-pki-init"
+      #tag: "2.3.0-build.4"
+      digest:
+    routerImage:
+      repository: "quay.io/opencloudio/icp-management-ingress"
+      tag: "2.5.5"
+      #digest:
+    client:
+      tolerations:
+      - effect: NoSchedule
+        key: dedicated
+        operator: Exists
+    data:
+      replicas: 1
+      storage:
+        persistent: true
+        useDynamicProvisioning: true
+      tolerations:
+      - effect: NoSchedule
+        key: dedicated
+        operator: Exists
+    master:
+      tolerations:
+      - effect: NoSchedule
+        key: dedicated
+        operator: Exists
+    security:
+      authz:
+        enabled: true
+        provider: icp
+  filebeat:
+    image:
+      repository: hyc-cloud-private-scratch-docker-local.artifactory.swg-devops.com/ibmcom/icp-filebeat-oss
+      digest:
+    scope:
+      namespaces: []
+      nodes: {}
+    tolerations:
+    - effect: NoSchedule
+      key: dedicated
+      operator: Exists
+  general:
+    environment: Openshift
+    ingressPort: 443
+  kibana:
+    image:   
+      repository: hyc-cloud-private-scratch-docker-local.artifactory.swg-devops.com/ibmcom/icp-kibana-oss
+      digest:
+    initImage:
+      repository: hyc-cloud-private-scratch-docker-local.artifactory.swg-devops.com/ibmcom/curl
+      digest:
+    routerImage:
+      repository: "quay.io/opencloudio/icp-management-ingress"
+      tag: "2.5.5"
+      digest:
+    access: ingress
+    ingress:
+      labels:
+        inmenu: "false"
+        target: platform-logging
+      path: /kibana
+    replicas: 1
+    security:
+      authc:
+        enabled: true
+        provider: icp
+      authz:
+        enabled: false
+        icp:
+          authorizedNamespaces: []
+        provider: icp
+    service:
+      annotations:
+        id: add-ons
+        name: Logging
+        roles: ClusterAdministrator,Administrator,Operator,Viewer,Auditor,Editor
+      labels:
+        inmenu: "false"
+        target: platform-logging
+      path: /kibana
+    tolerations:
+    - effect: NoSchedule
+      key: dedicated
+      operator: Exists
+  logstash:
+    image:
+      repository: hyc-cloud-private-scratch-docker-local.artifactory.swg-devops.com/ibmcom/icp-logstash-oss
+      digest:
+    port: 5044
+    replicas: 1
+    tolerations:
+    - effect: NoSchedule
+      key: dedicated
+      operator: Exists
+  nameOverride: elk
+  security:
+    ca:
+      external:
+        certFieldName: tls.crt
+        keyFieldName: tls.key
+        secretName: cs-ca-certificate-secret
+      origin: internal
+    tls:
+      version: TLSv1.2

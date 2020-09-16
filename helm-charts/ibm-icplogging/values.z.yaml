@@ -2,6 +2,12 @@
 # 5737-E67
 # @ Copyright IBM Corporation 2016, 2020. All Rights Reserved.
 # US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
-
-{{ template "elk.settings.all.prepare" . -}}
-{{ include "elk.settings.all.redact" . -}}
+curator:
+  app:
+    unit: days
+    count: 14
+elasticsearch:
+  data:
+    replicas: 1
+    storage:
+      "persistent": false

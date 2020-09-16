@@ -14,7 +14,7 @@
 # limitations under the License.
 
 channels:
-- currentCSV: ibm-elastic-stack-operator.v3.2.0
+- currentCSV: ibm-elastic-stack-operator.v3.2.2
   name: dev
 - currentCSV: ibm-elastic-stack-operator.v3.1.4
   name: beta

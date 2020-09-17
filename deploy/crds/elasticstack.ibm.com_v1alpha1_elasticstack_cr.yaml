@@ -16,246 +16,87 @@
 apiVersion: elasticstack.ibm.com/v1alpha1
 kind: ElasticStack
 metadata:
-  name: elasticstack
+  name: logging
+  annotations: {}
 spec:
-  # Default values copied from <project_dir>/helm-charts/ibm-icplogging/values.yaml
-  
+  image:
+    pullSecret:
+      enabled: false
+      name: infra-registry-key
   curator:
-    app:
-      count: 1
-      unit: days
-    auditLog:
-      count: 1
-      unit: days
-    image:
-      repository: quay.io/opencloudio/indices-cleaner
-      tag: 1.2.0-build.3
-    mapp:
-      count: 2
-      unit: days
-    monitoring:
-      count: 7
-      unit: days
-    name: log-curator
-    nodeSelector: {}
-    resources:
-      limits:
-        memory: 256Mi
-      requests:
-        memory: 64Mi
-    schedule: 30 23 * * *
-    tolerations: []
-    va:
-      count: 90
-      unit: days
-    watcher:
-      count: 1
-      unit: days
+    tolerations:
+    - effect: NoSchedule
+      key: dedicated
+      operator: Exists
   elasticsearch:
-    client:
-      antiAffinity: soft
-      heapSize: 1024m
-      memoryLimit: 1536Mi
-      name: client
-      nodeSelector: {}
-      replicas: 1
-      restPort: 9200
-      tolerations: []
     data:
-      antiAffinity: hard
-      heapSize: 4000m
-      memoryLimit: 7000M
-      name: data
-      nodeSelector: {}
-      replicas: 2
-      storage:
-        accessModes:
-        - ReadWriteOnce
-        persistent: true
-        selector:
-          label: ""
-          value: ""
-        size: 30Gi
-        storageClass: ""
-        useDynamicProvisioning: true
-      tolerations: []
-    image:
-      repository: quay.io/opencloudio/icp-elasticsearch-oss
-      tag: 6.6.1-build.2
-    initImage:
-      repository: quay.io/opencloudio/icp-initcontainer
-      tag: 1.0.0-build.4
-    internalPort: 9300
-    master:
-      antiAffinity: soft
-      heapSize: 1024m
-      memoryLimit: 1536Mi
-      name: master
-      nodeSelector: {}
       replicas: 1
-      tolerations: []
-    name: elasticsearch
-    pkiInitImage:
-      repository: quay.io/opencloudio/logging-pki-init
-      resources:
-        limits:
-          memory: 256Mi
-        requests:
-          memory: 64Mi
-      tag: 2.3.0-build.3
-    routerImage:
-      repository: quay.io/opencloudio/icp-management-ingress
-      resources:
-        limits:
-          memory: 256Mi
-        requests:
-          memory: 64Mi
-      tag: 2.5.3
+      storage:
+        persistent: true
+        useDynamicProvisioning: true
+      tolerations:
+      - effect: NoSchedule
+        key: dedicated
+        operator: Exists
     security:
-      authc:
-        enabled: true
-        provider: nginx
       authz:
-        enabled: false
+        enabled: true
         provider: icp
   filebeat:
-    image:
-      repository: quay.io/opencloudio/icp-filebeat-oss
-      tag: 6.6.1-build.2
-    logFormat: text
-    name: filebeat-ds
-    registryHostPath: /var/lib/icp/logging/filebeat-registry/{{ .Release.Name }}
-    resources:
-      limits:
-        memory: 256Mi
-      requests:
-        memory: 64Mi
     scope:
       namespaces: []
       nodes: {}
-    tolerations: []
+    tolerations:
+    - effect: NoSchedule
+      key: dedicated
+      operator: Exists
   general:
-    clusterDomain: cluster.local
-    clusterName: mycluster
-    environment: IBMCloudPrivate
-    ingressPort: 8443
-  image:
-    pullPolicy: IfNotPresent
-    pullSecret:
-      enabled: false
-      name: regcred
+    environment: Openshift
+    ingressPort: 443
   kibana:
-    access: loadBalancer
-    external: 31601
-    image:
-      repository: quay.io/opencloudio/icp-kibana-oss
-      tag: 6.6.1-build.2
+    access: ingress
     ingress:
-      annotations: {}
       labels:
-        inmenu: "true"
-        target: logging-sampleA
-      path: /tenantA/kibana
-    init:
-      resources:
-        limits:
-          memory: 256Mi
-        requests:
-          memory: 64Mi
-    initImage:
-      repository: quay.io/opencloudio/curl
-      tag: 4.2.0-build.4
-    install: true
-    internal: 5601
-    maxOldSpaceSize: "1536"
-    memoryLimit: 2048Mi
-    name: kibana
-    nodeSelector: {}
+        inmenu: 'false'
+        target: platform-logging
+      path: "/kibana"
     replicas: 1
-    routerImage:
-      repository: quay.io/opencloudio/icp-management-ingress
-      resources:
-        limits:
-          memory: 256Mi
-        requests:
-          memory: 64Mi
-      tag: 2.5.3
     security:
       authc:
-        enabled: false
+        enabled: true
         provider: icp
       authz:
         enabled: false
         icp:
-          authorizedNamespaces:
-          - tenantadev
-          - tenantatest
-          - tenantaprod
+          authorizedNamespaces: []
         provider: icp
     service:
       annotations:
         id: add-ons
-        name: Logging - Sample A
-        roles: ClusterAdministrator,Administrator,Operator,Viewer
+        name: Logging
+        roles: ClusterAdministrator,Administrator,Operator,Viewer,Auditor,Editor
       labels:
-        inmenu: "true"
-        target: logging-sampleA
-    tolerations: []
+        inmenu: 'false'
+        target: platform-logging
+      path: "/kibana"
+    tolerations:
+    - effect: NoSchedule
+      key: dedicated
+      operator: Exists
   logstash:
-    heapSize: 512m
-    image:
-      repository: quay.io/opencloudio/icp-logstash-oss
-      tag: 6.6.1-build.2
-    memoryLimit: 1024Mi
-    name: logstash
-    nodeSelector: {}
-    port: 5000
-    probe:
-      enabled: false
-      image:
-        repository: quay.io/opencloudio/logstash-liveness-probe
-        tag: 1.0.2-build.2
-      maxUnavailablePeriod: 5
-      minEventsPerPeriod: 1
-      periodSeconds: 60
-      resources:
-        limits:
-          memory: 256Mi
-        requests:
-          memory: 64Mi
+    port: 5044
     replicas: 1
-    tolerations: []
+    tolerations:
+    - effect: NoSchedule
+      key: dedicated
+      operator: Exists
+  nameOverride: elk
   security:
-    app:
-      keystore:
-        password: changeme
     ca:
       external:
         certFieldName: tls.crt
         keyFieldName: tls.key
-        secretName: cluster-ca-cert
-      keystore:
-        password: changeme
+        secretName: cs-ca-certificate-secret
       origin: internal
-      truststore:
-        password: changeme
     tls:
       version: TLSv1.2
-  upgrade:
-    elasticsearch:
-      importData: true
-      retainOldData: true
-  xpack:
-    graph: false
-    license:
-      secret:
-        fieldName: license.json
-        secretName: es-license
-      selfGenerated:
-        type: basic
-      source: selfGenerated
-    ml: false
-    monitoring: true
-    reporting: false
-    watcher: false
-  

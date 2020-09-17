@@ -32,30 +32,12 @@ metadata:
               ]
             },
             "elasticsearch": {
-              "client": {
-                "tolerations": [
-                  {
-                    "effect": "NoSchedule",
-                    "key": "dedicated",
-                    "operator": "Exists"
-                  }
-                ]
-              },
               "data": {
                 "replicas": 1,
                 "storage": {
                   "persistent": true,
                   "useDynamicProvisioning": true
                 },
-                "tolerations": [
-                  {
-                    "effect": "NoSchedule",
-                    "key": "dedicated",
-                    "operator": "Exists"
-                  }
-                ]
-              },
-              "master": {
                 "tolerations": [
                   {
                     "effect": "NoSchedule",
@@ -205,7 +187,7 @@ metadata:
     support: "IBM"
     repository: https://github.com/IBM/ibm-elastic-stack-operator
     image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.2
-    createdAt: '2020-09-12T20:12:00Z'
+    createdAt: '2020-09-6T20:12:00Z'
     description: |-
       Operator that installs and manages Elastic Stack logging service instances. 
       Each Elastic Stack instance provides user-friendly visibility to system/application
@@ -491,7 +473,7 @@ spec:
                   value: ibm-elastic-stack-operator
                 # 3.2.2
                 # image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:9b21af3f4e3cbc4342921297197f331dd3dba839db914af1697ccf5c5e70dd43
-                image: quay.io/opencloudio/ibm-elastic-stack-operator:latest
+                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.2
                 imagePullPolicy: Always
                 name: ibm-elastic-stack-operator
                 resources:

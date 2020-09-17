@@ -149,14 +149,14 @@ imagePullSecrets:
     {{- $app := (index $params 1) -}}
     {{- $component := (index $params 2) -}}
     {{- $role := (index $params 3) -}}
-app: "{{ $app }}"
-component: "{{ $component }}"
+app.kubernetes.io/name: "{{ $app }}"
+app.kubernetes.io/instance: "{{ $scope.Release.Name }}"
+app.kubernetes.io/managed-by: "{{ $scope.Release.Service }}"
+helm.sh/chart: "{{ $scope.Chart.Name }}-{{ $scope.Chart.Version }}"
+app.kubernetes.io/component: "{{ $component }}"
 role: "{{ $role }}"
-release: "{{ $scope.Release.Name }}"
-chart: "{{ $scope.Chart.Name }}-{{ $scope.Chart.Version }}"
-heritage: "{{ $scope.Release.Service }}"
   {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
-app.kubernetes.io/instance: "common-logging"
+name: ibm-elastic-stack-operator
   {{- end }}
 {{- end -}}
 

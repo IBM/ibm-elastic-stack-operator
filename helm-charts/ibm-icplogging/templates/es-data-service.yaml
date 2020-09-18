@@ -23,7 +23,5 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.elasticsearch.data.name }}"
-    role: "data"
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 4 }}
   clusterIP: None

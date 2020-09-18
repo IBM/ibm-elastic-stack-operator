@@ -30,9 +30,7 @@ metadata:
   name: {{ .Values.kibana.name }}
 spec:
   selector:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.kibana.name }}"
-    role: "kibana"
+{{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "kibana") | indent 4 }}
   ports:
   - port: {{ .Values.kibana.internal }}
     targetPort: {{ if .Values.kibana.routerEnabled }}router{{ else }}ui{{ end }}

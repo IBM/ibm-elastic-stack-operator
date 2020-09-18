@@ -26,6 +26,4 @@ spec:
     port: {{ .Values.logstash.port }}
     targetPort: {{ .Values.logstash.port }}
   selector:
-    app: "{{ template "elasticsearch.fullname" . }}"
-    component: "{{ .Values.logstash.name }}"
-    role: "logstash"
+{{ include "metadata.calculateLabels" (list . $app .Values.logstash.name "logstash") | indent 4 }}

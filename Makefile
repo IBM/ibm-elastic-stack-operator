@@ -26,7 +26,8 @@ NAMESPACE=ibm-common-services
 # Use your own docker registry and image name for dev/test by overridding the IMG and REGISTRY environment variable.
 IMG ?= ibm-elastic-stack-operator
 REGISTRY ?= "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom"
-CSV_VERSION ?= 3.2.0
+QUAY_REGISTRY ?= "quay.io/opencloudio"
+CSV_VERSION ?= 3.2.2
 
 QUAY_USERNAME ?=
 QUAY_PASSWORD ?=
@@ -143,6 +144,14 @@ push-ppc64le:
 
 push-s390x:
 	docker push $(REGISTRY)/$(IMG)-s390x:$(VERSION)
+
+build-amd64-quay:
+	$(eval ARCH := $(shell uname -m|sed 's/x86_64/amd64/'))
+	@echo "Building the ${IMG} amd64 binary..."
+	@operator-sdk build --image-build-args "-f build/Dockerfile" $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)
+
+push-amd64-quay:
+	docker push $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)
 
 push-multi-arch:
 ifeq ($(TARGET_OS),$(filter $(TARGET_OS),linux darwin))

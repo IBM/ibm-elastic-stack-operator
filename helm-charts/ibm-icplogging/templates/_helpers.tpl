@@ -1,12 +1,9 @@
 {{/*
   Copyright 2020 IBM Corporation
-
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
   http:#www.apache.org/licenses/LICENSE-2.0
-
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,15 +35,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- define "filebeat.fullname" -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- printf "%s-%s-%s" .Release.Name $name .Values.filebeat.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create a default fully qualified client node name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "client.fullname" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- printf "%s-%s-%s" .Release.Name $name .Values.elasticsearch.client.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -86,15 +74,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-Create a default fully qualified master node name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "master.fullname" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- printf "%s-%s-%s" .Release.Name $name .Values.elasticsearch.master.name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
 Create a default fully qualified kibana name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
@@ -122,7 +101,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
-To avoid split-brain we need to set the minimum number of master pods to (elasticsearch.master.replicas / 2) + 1.
+To avoid split-brain we need to set the minimum number of data pods to (elasticsearch.data.replicas / 2) + 1.
 Expected input -> output:
   - 0 -> 0
   - 1 -> 1
@@ -131,7 +110,7 @@ Expected input -> output:
   - 9 -> 5, etc
 If the calculated value is higher than the # of replicas, use the replica value.
 */}}
-{{- define "elasticsearch.master.minimumNodes" -}}
+{{- define "elasticsearch.data.minimumNodes" -}}
 {{- $replicas := int (default 1 .Values.elasticsearch.data.replicas) -}}
 {{- $min := add1 (div $replicas 2) -}}
 {{- if gt $min $replicas -}}
@@ -170,14 +149,14 @@ imagePullSecrets:
     {{- $app := (index $params 1) -}}
     {{- $component := (index $params 2) -}}
     {{- $role := (index $params 3) -}}
-app: "{{ $app }}"
-component: "{{ $component }}"
+app.kubernetes.io/name: "{{ $app }}"
+app.kubernetes.io/instance: "{{ $scope.Release.Name }}"
+app.kubernetes.io/managed-by: "{{ $scope.Release.Service }}"
+helm.sh/chart: "{{ $scope.Chart.Name }}-{{ $scope.Chart.Version }}"
+app.kubernetes.io/component: "{{ $component }}"
 role: "{{ $role }}"
-release: "{{ $scope.Release.Name }}"
-chart: "{{ $scope.Chart.Name }}-{{ $scope.Chart.Version }}"
-heritage: "{{ $scope.Release.Service }}"
   {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
-app.kubernetes.io/instance: "common-logging"
+name: ibm-elastic-stack-operator
   {{- end }}
 {{- end -}}
 
@@ -188,7 +167,7 @@ scheduler.alpha.kubernetes.io/critical-pod: ""
   {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
 productName: "IBM Cloud Platform Common Services"
 productID: "068a62892a1e4db39641342e592daa25"
-productVersion: "3.4.0"
+productVersion: "3.5.1"
 productMetric: "FREE"
 clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
   {{- else }}

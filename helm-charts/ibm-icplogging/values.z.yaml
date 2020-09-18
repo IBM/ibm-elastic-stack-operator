@@ -12,29 +12,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Set deploy parameters:
-# elasticsearch:
-#   data:
-#     storage:
-#       persistent: true
-#       useDynamicProvisioning: false
-#       selector:
-#         label: type
-#         value: logging-pv
-
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: logging-pv-1
-  labels:
-    type: logging-pv
-spec:
-  capacity:
-    storage: "30Gi"
-  accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  hostPath:
-    path: "/var/lib/icp/logging/elk-data"
+curator:
+  app:
+    unit: days
+    count: 14
+elasticsearch:
+  data:
+    replicas: 1
+    storage:
+      "persistent": false

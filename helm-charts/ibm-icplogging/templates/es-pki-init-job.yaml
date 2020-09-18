@@ -7,7 +7,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http:#www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,13 +31,13 @@ spec:
 {{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
     spec:
 {{ include "image.pullSecret" . | indent 6 }}
-{{- if .Values.elasticsearch.client.tolerations }}
+{{- if .Values.elasticsearch.data.tolerations }}
       tolerations:
-{{ toYaml .Values.elasticsearch.client.tolerations | indent 6 }}
+{{ toYaml .Values.elasticsearch.data.tolerations | indent 6 }}
 {{- end }}
-{{- if .Values.elasticsearch.client.nodeSelector }}
+{{- if .Values.elasticsearch.data.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.elasticsearch.client.nodeSelector | indent 8 }}
+{{ toYaml .Values.elasticsearch.data.nodeSelector | indent 8 }}
 {{- end }}
       serviceAccountName: "{{ template "job.fullname" . }}"
       containers:

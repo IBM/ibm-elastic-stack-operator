@@ -5,7 +5,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-# http:#www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,26 +23,14 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: "{{ template "elasticsearch.fullname" . }}"
-      component: "{{ .Values.elasticsearch.data.name }}"
-      release: "{{ .Release.Name }}"
-      role: "data"
-      release: "{{ .Release.Name }}"
-      chart: "{{ .Chart.Name }}"
-      heritage: "{{ .Release.Service }}"      
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 6 }}
   ingress:
   - ports:
     - port: 9300
     from:
     - podSelector:
         matchLabels:
-          app: "{{ template "elasticsearch.fullname" . }}"
-          component: "{{ .Values.elasticsearch.data.name }}"
-          release: "{{ .Release.Name }}"
-          role: data
-          release: "{{ .Release.Name }}"
-          chart: "{{ .Chart.Name }}"
-          heritage: "{{ .Release.Service }}"
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 10 }}
   - ports:
     - port: 8443
     from:

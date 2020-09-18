@@ -40,7 +40,7 @@ spec:
         key: dedicated
         operator: Exists
     data:
-      replicas: 1
+      replicas: 3
       storage:
         persistent: true
         useDynamicProvisioning: true

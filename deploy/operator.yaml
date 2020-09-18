@@ -38,7 +38,7 @@ spec:
          "openshift.io/scc": "restricted"
          productName: IBM Cloud Platform Common Services
          productID: "068a62892a1e4db39641342e592daa25"
-         productVersion: "3.4.0"
+         productVersion: "3.5.1"
          productMetric: FREE
     spec:
       serviceAccountName: ibm-elastic-stack-operator

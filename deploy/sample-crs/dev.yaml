@@ -2,6 +2,8 @@ apiVersion: elasticstack.ibm.com/v1alpha1
 kind: ElasticStack
 metadata:
   name: logging
+  annotations:
+    helm.operator-sdk/upgrade-force: "true"
 spec:
   image:
     pullPolicy: Always

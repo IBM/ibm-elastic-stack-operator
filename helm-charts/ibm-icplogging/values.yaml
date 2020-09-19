@@ -199,8 +199,8 @@ elasticsearch:
         memory: 64Mi
   initImage:
     repository: "quay.io/opencloudio/icp-initcontainer"
-    tag: "1.0.0-build.4"
-    digest: "sha256:9aad9fd724ec9308bec711d7738b5f0ae0c37a72ffb19a26dbcf622f1a603e89"
+    tag: "1.0.0-build.7"
+    digest: "sha256:78c7914777de08064511033fc1065f3b1d0f593f59b8147230cd2f9c2405abd0"
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
     digest: "sha256:f6694ea8a461468989874b4b091f1d64366eacb9821cc9836d8100e34f333634"

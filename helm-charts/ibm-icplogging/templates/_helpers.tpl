@@ -167,7 +167,6 @@ scheduler.alpha.kubernetes.io/critical-pod: ""
   {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
 productName: "IBM Cloud Platform Common Services"
 productID: "068a62892a1e4db39641342e592daa25"
-productVersion: "3.5.1"
 productMetric: "FREE"
 clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
   {{- else }}

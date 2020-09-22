@@ -151,7 +151,7 @@ imagePullSecrets:
     {{- $role := (index $params 3) -}}
 app.kubernetes.io/name: "{{ $app }}"
 app.kubernetes.io/instance: "{{ $scope.Release.Name }}"
-app.kubernetes.io/managed-by: "{{ $scope.Release.Service }}"
+app.kubernetes.io/managed-by: "elasticstacks.elasticstack.ibm.com"
 helm.sh/chart: "{{ $scope.Chart.Name }}
 app.kubernetes.io/component: "{{ $component }}"
 release: "{{ $scope.Release.Name }}"

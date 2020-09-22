@@ -17,10 +17,10 @@ kind: Job
 metadata:
   name: "{{ template "elasticsearch.fullname" . }}-tls-delete"
   labels:
-    name: ibm-elastic-stack-operator
-    app.kubernetes.io/instance: common-logging
-    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
-    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+    # name: ibm-elastic-stack-operator
+    # app.kubernetes.io/instance: common-logging
+    # app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    # app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app "tls-delete" "cleanup") | indent 8 }}
 spec:
@@ -28,10 +28,10 @@ spec:
   template:
     metadata:
       labels:
-        name: ibm-elastic-stack-operator
-        app.kubernetes.io/instance: common-logging
-        app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
-        app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+        # name: ibm-elastic-stack-operator
+        # app.kubernetes.io/instance: common-logging
+        # app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+        # app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 {{ include "metadata.calculateLabels" (list . $app "tls-delete" "cleanup") | indent 8 }}
       annotations:
 {{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}

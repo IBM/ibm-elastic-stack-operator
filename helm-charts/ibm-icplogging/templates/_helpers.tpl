@@ -173,7 +173,7 @@ clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
   {{- else }}
 productName: Elasticsearch
 productVersion: 6.8.10
-productID: none
+productID: "068a62892a1e4db39641342e592daa25"
   {{- end }}
 {{- end -}}
 

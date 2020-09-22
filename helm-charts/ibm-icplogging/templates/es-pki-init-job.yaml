@@ -20,10 +20,10 @@ kind: Job
 metadata:
   name: "{{ template "elasticsearch.fullname" . }}-pki-init"
   labels:
-    name: ibm-elastic-stack-operator
-    app.kubernetes.io/instance: common-logging
-    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
-    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+    # name: ibm-elastic-stack-operator
+    # app.kubernetes.io/instance: common-logging
+    # app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    # app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app "pki-init" "init") | indent 4 }}
 spec:

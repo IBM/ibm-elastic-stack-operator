@@ -149,17 +149,15 @@ imagePullSecrets:
     {{- $app := (index $params 1) -}}
     {{- $component := (index $params 2) -}}
     {{- $role := (index $params 3) -}}
-app.kubernetes.io/name: "elasticstacks.elasticstack.ibm.com" {{/*"{{ $app }}"*/}}
-app.kubernetes.io/instance: "common-logging" {{/*"{{ $scope.Release.Name }}"*/}}
-app.kubernetes.io/managed-by: "elasticstacks.elasticstack.ibm.com"
-helm.sh/chart: "ibm-icplogging" {{/*"{{ $scope.Chart.Name }}*/}}
-{{/*app.kubernetes.io/component: "{{ $component }}"*/}}
-release: {{/*"{{ $scope.Release.Name }}"*/}}
+app.kubernetes.io/name: "{{ $app }}"
+app.kubernetes.io/instance: "{{ $scope.Release.Name }}"
+app.kubernetes.io/managed-by: "{{ $scope.Release.Service }}"
+helm.sh/chart: "{{ $scope.Chart.Name }}"
+app.kubernetes.io/component: "{{ $component }}"
+role: "{{ $role }}"
+  {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
 name: ibm-elastic-stack-operator
-{{/* role: "{{ $role }}"
- {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
-name: ibm-elastic-stack-operator
-  {{- end }} */}}
+  {{- end }}
 {{- end -}}
 
 {{- define "metadata.calculateAnnotations" -}}
@@ -175,7 +173,7 @@ clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
   {{- else }}
 productName: Elasticsearch
 productVersion: 6.8.10
-productID: "068a62892a1e4db39641342e592daa25"
+productID: none
   {{- end }}
 {{- end -}}
 

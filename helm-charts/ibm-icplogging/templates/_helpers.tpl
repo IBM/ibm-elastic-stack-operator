@@ -152,8 +152,9 @@ imagePullSecrets:
 app.kubernetes.io/name: "{{ $app }}"
 app.kubernetes.io/instance: "{{ $scope.Release.Name }}"
 app.kubernetes.io/managed-by: "{{ $scope.Release.Service }}"
-helm.sh/chart: "{{ $scope.Chart.Name }}-{{ $scope.Chart.Version }}"
+helm.sh/chart: "{{ $scope.Chart.Name }}
 app.kubernetes.io/component: "{{ $component }}"
+release: "{{ $scope.Release.Name }}"
 role: "{{ $role }}"
   {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
 name: ibm-elastic-stack-operator

@@ -118,7 +118,7 @@ kibana:
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
     tag: "2.5.5"
-    digest:
+    digest: "sha256:0070e99691123f2437f5d5b1422f9d0b8eec5746f72e656d1fc9e7947a56e00e"
     resources:
       limits:
         memory: 256Mi

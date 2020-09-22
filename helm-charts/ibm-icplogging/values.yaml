@@ -185,7 +185,7 @@ elasticsearch:
         memory: 64Mi
   initImage:
     repository: "ibmcom/icp-initcontainer"
-    tag: "1.0.0-build.6"
+    tag: "1.0.0-build.7"
     digest:
   routerImage:
     repository: "ibmcom/icp-management-ingress"

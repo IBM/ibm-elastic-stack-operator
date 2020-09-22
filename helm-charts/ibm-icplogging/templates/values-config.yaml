@@ -20,6 +20,10 @@ kind: ConfigMap
 metadata:
   name: "{{ template "fullname" . }}-values"
   labels:
+    name: ibm-elastic-stack-operator
+    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "health") | indent 4 }}
   annotations:

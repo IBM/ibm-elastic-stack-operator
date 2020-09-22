@@ -2,11 +2,6 @@ apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
   name: elasticstacks.elasticstack.ibm.com
-  labels:
-    name: ibm-elastic-stack-operator
-    app.kubernetes.io/instance: common-logging
-    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
-    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 spec:
   group: elasticstack.ibm.com
   names:
@@ -587,7 +582,6 @@ spec:
                   type: boolean
                 watcher:
                   type: boolean
-  version: v1alpha1
   versions:
   - name: v1alpha1
     served: true

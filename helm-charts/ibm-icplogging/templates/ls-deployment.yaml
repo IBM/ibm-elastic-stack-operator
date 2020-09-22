@@ -17,6 +17,10 @@
 kind: Deployment
 metadata:
   labels:
+    name: ibm-elastic-stack-operator
+    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app .Values.logstash.name "logstash") | indent 4 }}
   name: "{{ template "logstash.fullname" . }}"
@@ -35,6 +39,10 @@ spec:
   template:
     metadata:
       labels:
+        name: ibm-elastic-stack-operator
+        app.kubernetes.io/instance: common-logging
+        app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+        app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 {{ include "metadata.calculateLabels" (list . $app .Values.logstash.name "logstash") | indent 8 }}
       annotations:
 {{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}

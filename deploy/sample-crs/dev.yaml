@@ -2,8 +2,6 @@ apiVersion: elasticstack.ibm.com/v1alpha1
 kind: ElasticStack
 metadata:
   name: logging
-  annotations:
-    helm.operator-sdk/upgrade-force: "true"
 spec:
   image:
     pullPolicy: Always
@@ -34,21 +32,11 @@ spec:
       repository: "quay.io/opencloudio/icp-management-ingress"
       tag: "2.5.5"
       #digest:
-    client:
-      tolerations:
-      - effect: NoSchedule
-        key: dedicated
-        operator: Exists
     data:
       replicas: 3
       storage:
         persistent: true
         useDynamicProvisioning: true
-      tolerations:
-      - effect: NoSchedule
-        key: dedicated
-        operator: Exists
-    master:
       tolerations:
       - effect: NoSchedule
         key: dedicated

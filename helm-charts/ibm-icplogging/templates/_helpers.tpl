@@ -154,6 +154,7 @@ app.kubernetes.io/instance: "{{ $scope.Release.Name }}"
 app.kubernetes.io/managed-by: "{{ $scope.Release.Service }}"
 helm.sh/chart: "{{ $scope.Chart.Name }}-{{ $scope.Chart.Version }}"
 app.kubernetes.io/component: "{{ $component }}"
+release: "{{ $scope.Release.Name }}"
 role: "{{ $role }}"
 release: "{{ $scope.Release.Name }}"
   {{- if eq ($scope.Values.general.environment | lower) "openshift" }}

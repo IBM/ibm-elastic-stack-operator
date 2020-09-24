@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM quay.io/operator-framework/helm-operator:v1.0.0
+FROM quay.io/operator-framework/helm-operator:v1.0.1
 
 LABEL org.label-schema.vendor="IBM" \
     org.label-schema.name="ibm-elastic-stack-operator" \
@@ -29,4 +29,23 @@ LABEL org.label-schema.vendor="IBM" \
 
 COPY watches.yaml ${HOME}/watches.yaml
 COPY helm-charts/ ${HOME}/helm-charts/
+COPY build/entrypoint.sh /scripts/entrypoint.sh
+COPY build/upgrade-cr.sh /scripts/upgrade-cr.sh
+
 COPY LICENSE /licenses/
+
+USER root
+RUN microdnf update --nodocs \
+  && microdnf -y clean all \
+  && chmod +x /scripts/entrypoint.sh /scripts/upgrade-cr.sh \
+  && kubectl_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt) ;\
+	curl \
+	  -L https://storage.googleapis.com/kubernetes-release/release/${kubectl_ver}/bin/linux/amd64/kubectl \
+	  -o /usr/bin/kubectl \
+  && chmod +x /usr/bin/kubectl \
+  && curl -L https://github.com/mikefarah/yq/releases/download/3.4.0/yq_linux_amd64 -o /usr/local/bin/yq \
+  && chmod +x /usr/local/bin/yq
+
+USER ${USER_UID}
+
+ENTRYPOINT ["/scripts/entrypoint.sh"]

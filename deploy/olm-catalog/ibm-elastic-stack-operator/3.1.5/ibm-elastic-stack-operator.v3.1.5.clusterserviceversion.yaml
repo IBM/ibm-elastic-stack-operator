@@ -479,7 +479,7 @@ spec:
                 - name: OPERATOR_NAME
                   value: ibm-elastic-stack-operator
                 # 3.1.5
-                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.1.5               
+                image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:3b3ec1ee3287779250cb8362f25210ccccbc412817f0c7740893c65be9788558             
                 imagePullPolicy: Always
                 name: ibm-elastic-stack-operator
                 resources:

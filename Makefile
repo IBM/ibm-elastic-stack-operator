@@ -148,10 +148,10 @@ push-s390x:
 build-amd64-quay:
 	$(eval ARCH := $(shell uname -m|sed 's/x86_64/amd64/'))
 	@echo "Building the ${IMG} amd64 binary..."
-	@operator-sdk build --image-build-args "-f build/Dockerfile" $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)
+	@operator-sdk build --image-build-args "-f build/Dockerfile" $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)-dev
 
 push-amd64-quay:
-	docker push $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)
+	docker push $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)-dev
 
 push-multi-arch:
 ifeq ($(TARGET_OS),$(filter $(TARGET_OS),linux darwin))

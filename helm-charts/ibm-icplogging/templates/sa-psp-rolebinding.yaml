@@ -18,10 +18,6 @@ kind: ClusterRoleBinding
 metadata:
   name: "{{ template "fullname" . }}-sa-psp"
   labels:
-    # name: ibm-elastic-stack-operator
-    # app.kubernetes.io/instance: common-logging
-    # app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
-    # app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 4 }}
 roleRef:

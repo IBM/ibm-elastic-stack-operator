@@ -54,8 +54,8 @@ logstash:
   port: 5000
   image:
     repository: "quay.io/opencloudio/icp-logstash-oss"
-    tag: "6.8.10-build.1"
-    digest: "sha256:acfc9b03a286f4d1702f023d66f14e1844ad64d561e6ea074f467f8c8ed1ed46"
+    tag: "6.8.10-build.2"
+    digest: "sha256:cc32db4699a72daae2b044949b11366737d5ea2b7e283a50e838cb9cbbfa689e"
   nodeSelector:
   tolerations: []
 kibana:
@@ -103,8 +103,8 @@ kibana:
   memoryLimit: "2048Mi"
   image:
     repository: quay.io/opencloudio/icp-kibana-oss
-    tag: 6.8.10-build.1
-    digest: "sha256:43c625c138bf7657d3a9b4fbb00e8ed11b15b7d50f850bd6509555ec8a67b0b0"
+    tag: 6.8.10-build.2
+    digest: "sha256:4a5b398f4c6f725282e1189e326078e1245db24144e2892c6abc969dc1855c8c"
   init:
     resources:
       limits:
@@ -157,8 +157,8 @@ filebeat:
       memory: 64Mi
   image:
     repository: "quay.io/opencloudio/icp-filebeat-oss"
-    tag: "6.8.10-build.1"
-    digest: "sha256:33874562919f3f6007905b5939e1f99e54de7c31e4f4aee082eb2e3feec6611e"
+    tag: "6.8.10-build.2"
+    digest: "sha256:a98e22356c1e510cff4f7e3c51d744bccc8d035e39db869356f2fd2e7b6988a8"
   scope:
     nodes: {}
     namespaces: []
@@ -172,8 +172,8 @@ elasticsearch:
   internalPort: 9300
   image:
     repository: "quay.io/opencloudio/icp-elasticsearch-oss"
-    tag: "6.8.10-build.1"
-    digest: "sha256:9f4e684c379bd8165349440de67729d999b913b66b981a629635b0e5b7a40a41"
+    tag: "6.8.10-build.2"
+    digest: "sha256:70e3a69ae5d66e10d32d88f2d7656a7d649bc3aa951b79f6b5a7504eec703a4e"
   pkiInitImage:
     repository: "quay.io/opencloudio/logging-pki-init"    
     tag: "2.3.0-build.3"
@@ -250,8 +250,8 @@ curator:
       memory: 64Mi
   image:
     repository: "quay.io/opencloudio/indices-cleaner"
-    tag: "1.3.0-build.1"
-    digest: "sha256:db8334c38642ed81d4fc926ea5d3677b69c155f19743d96a869f6fde0facc1c4"
+    tag: "1.3.0-build.2"
+    digest: "sha256:59e1eae63fd6039245ee2172c474994275cf0aa41a7856783d6d48e729ccacc5"
   # runs at 23:30 UTC daily
   schedule: "30 23 * * *"
   nodeSelector:

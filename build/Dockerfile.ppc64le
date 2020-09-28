@@ -35,17 +35,16 @@ COPY build/upgrade-cr.sh /scripts/upgrade-cr.sh
 COPY LICENSE /licenses/
 
 USER root
-# RUN microdnf update --nodocs \
-#   && microdnf -y clean all \
-#   && chmod +x /scripts/entrypoint.sh /scripts/upgrade-cr.sh \
-#   && kubectl_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt) ;\
-# 	curl \
-# 	  -L https://storage.googleapis.com/kubernetes-release/release/${kubectl_ver}/bin/linux/ppc64le/kubectl \
-# 	  -o /usr/bin/kubectl \
-#   && chmod +x /usr/bin/kubectl \
-#   && curl -L https://github.com/mikefarah/yq/releases/download/3.3.0/yq_linux_ppc64le -o /usr/local/bin/yq \
-#   && chmod +x /usr/local/bin/yq
-RUN microdnf update --nodocs
+RUN microdnf update --nodocs \
+  && microdnf -y clean all \
+  && chmod +x /scripts/entrypoint.sh /scripts/upgrade-cr.sh \
+  && kubectl_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt) ;\
+	curl \
+	  -L https://storage.googleapis.com/kubernetes-release/release/${kubectl_ver}/bin/linux/ppc64le/kubectl \
+	  -o /usr/bin/kubectl \
+  && chmod +x /usr/bin/kubectl \
+  && curl -L https://github.com/mikefarah/yq/releases/download/3.3.0/yq_linux_ppc64le -o /usr/local/bin/yq \
+  && chmod +x /usr/local/bin/yq
 
 USER ${USER_UID}
 

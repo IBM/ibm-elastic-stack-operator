@@ -43,7 +43,7 @@ RUN microdnf update --nodocs \
 	  -L https://storage.googleapis.com/kubernetes-release/release/${kubectl_ver}/bin/linux/amd64/kubectl \
 	  -o /usr/bin/kubectl \
   && chmod +x /usr/bin/kubectl \
-  && curl -L https://github.com/mikefarah/yq/releases/download/3.4.0/yq_linux_amd64 -o /usr/local/bin/yq \
+  && curl -L https://github.com/mikefarah/yq/releases/download/3.3.0/yq_linux_amd64 -o /usr/local/bin/yq \
   && chmod +x /usr/local/bin/yq
 
 USER ${USER_UID}

@@ -61,7 +61,7 @@ set +x
 
 echo "`date` - 5. deleting orphan resources"
 set -x
-kubectl get scc --no-headers=true -n $namespace | awk '/logging-elk/{print $1}'| xargs kubectl delete scc -n $namespace
+kubectl get scc --no-headers=true | awk '/logging-elk/{print $1}'| xargs kubectl delete scc
 set +x
 
 echo "`date` - 6. recreating cr"

@@ -160,7 +160,7 @@ push-image-s390x: build-image-s390x
 
 multiarch-image: $(CONFIG_DOCKER_TARGET)
 	@echo "Build multiarch image for $(REGISTRY)/$(IMG):$(RELEASE_VERSION)..."
-	@common/scripts/multiarch_image.sh $(REGISTRY) $(IMG) $(VERSION) $(RELEASE_VERSION)
+	@commonUtil/scripts/multiarch_image.sh $(REGISTRY) $(IMG) $(VERSION) $(RELEASE_VERSION)
 
 ############################################################
 # application section

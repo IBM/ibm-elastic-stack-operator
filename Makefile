@@ -137,13 +137,13 @@ images: clean build push ## Release multi-arch operator image
 
 push: push-image-amd64 push-image-ppc64le push-image-s390x
 
-push-image-amd64: build-image-amd64
+push-image-amd64: $(CONFIG_DOCKER_TARGET) build-image-amd64
 	docker push $(REGISTRY)/$(IMG)-amd64:$(VERSION)
 
-push-image-ppc64le: build-image-ppc64le
+push-image-ppc64le: $(CONFIG_DOCKER_TARGET) build-image-ppc64le
 	docker push $(REGISTRY)/$(IMG)-ppc64le:$(VERSION)
 
-push-image-s390x: build-image-s390x
+push-image-s390x: $(CONFIG_DOCKER_TARGET) build-image-s390x
 	docker push $(REGISTRY)/$(IMG)-s390x:$(VERSION)
 
 # build-amd64-quay:

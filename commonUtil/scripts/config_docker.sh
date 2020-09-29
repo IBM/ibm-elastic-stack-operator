@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 KUBECTL=$(command -v kubectl)
 DOCKER_REGISTRY="hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com"
 DOCKER_USERNAME=$(${KUBECTL} -n default get secret artifactory-cred -o jsonpath='{.data.username}' | base64 --decode)

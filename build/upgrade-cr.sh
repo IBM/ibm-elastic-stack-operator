@@ -59,14 +59,19 @@ set -x
 kubectl delete elasticstack/$cr_name -n $namespace
 set +x
 
-echo "`date` - 5. recreating cr"
+echo "`date` - 5. deleting orphan resources"
+set -x
+kubectl get scc --no-headers=true | awk '/logging-elk/{print $1}'| xargs kubectl delete scc
+set +x
+
+echo "`date` - 6. recreating cr"
 set -x
 kubectl apply -f ${temp_file} -n $namespace
 set +x
 
-echo "`date` - 6. clean up"
+echo "`date` - 7. clean up"
 rm ${temp_file}
 
-echo "`date` - 7. DONE"
+echo "`date` - 8. DONE"
 echo "job exit code $exit_code"
 exit $exit_code

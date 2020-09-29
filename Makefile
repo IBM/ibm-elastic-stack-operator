@@ -41,7 +41,8 @@ BASE_DIR := ibm-elastic-stack-operator
 TESTARGS_DEFAULT := "-v"
 export TESTARGS ?= $(TESTARGS_DEFAULT)
 DEST := $(GIT_HOST)/$(BASE_DIR)
-VERSION ?= $(shell cat ./version/version.go | grep "Version =" | awk '{ print $$3}' | tr -d '"')
+VERSION ?= $(shell date +v%Y%m%d)-$(shell git describe --match=$(git rev-parse --short=8 HEAD) --tags --always --dirty)
+RELEASE_VERSION ?= $(shell cat ./version/version.go | grep "Version =" | awk '{ print $$3}' | tr -d '"')
 
 LOCAL_OS := $(shell uname)
 LOCAL_ARCH := $(shell uname -m)
@@ -113,19 +114,19 @@ ifeq ($(BUILD_LOCALLY),0)
 config-docker:
 endif
 
-build: install-operator-sdk $(CONFIG_DOCKER_TARGET) build-amd64 build-ppc64le build-s390x ## Build multi-arch operator images
+build: $(CONFIG_DOCKER_TARGET) build-image-amd64 build-image-ppc64le build-image-s390x
 
-build-amd64:
+build-image-amd64:
 	$(eval ARCH := $(shell uname -m|sed 's/x86_64/amd64/'))
-	@echo "Building the ${IMG} amd64 binary..."
+	@echo "Building the ${IMG} amd64 image..."
 	@operator-sdk build --image-build-args "-f build/Dockerfile" $(REGISTRY)/$(IMG)-amd64:$(VERSION)
 
-build-ppc64le:
-	@echo "Building the ${IMG} ppc64le binary..."
+build-image-ppc64le:
+	@echo "Building the ${IMG} ppc64le image..."
 	@operator-sdk build --image-build-args "-f build/Dockerfile.ppc64le" $(REGISTRY)/$(IMG)-ppc64le:$(VERSION)
 
-build-s390x:
-	@echo "Building the ${IMG} s390x binary..."
+build-image-s390x:
+	@echo "Building the ${IMG} s390x image..."
 	@operator-sdk build --image-build-args "-f build/Dockerfile.s390x" $(REGISTRY)/$(IMG)-s390x:$(VERSION)
 
 ############################################################
@@ -134,34 +135,32 @@ build-s390x:
 
 images: clean build push ## Release multi-arch operator image
 
-push: push-amd64 push-ppc64le push-s390x push-multi-arch
+push: push-image-amd64 push-image-ppc64le push-image-s390x
 
-push-amd64:
+push-image-amd64: build-image-amd64
 	docker push $(REGISTRY)/$(IMG)-amd64:$(VERSION)
 
-push-ppc64le:
+push-image-ppc64le: build-image-ppc64le
 	docker push $(REGISTRY)/$(IMG)-ppc64le:$(VERSION)
 
-push-s390x:
+push-image-s390x: build-image-s390x
 	docker push $(REGISTRY)/$(IMG)-s390x:$(VERSION)
 
-build-amd64-quay:
-	$(eval ARCH := $(shell uname -m|sed 's/x86_64/amd64/'))
-	@echo "Building the ${IMG} amd64 binary..."
-	@operator-sdk build --image-build-args "-f build/Dockerfile" $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)-dev
+# build-amd64-quay:
+# 	$(eval ARCH := $(shell uname -m|sed 's/x86_64/amd64/'))
+# 	@echo "Building the ${IMG} amd64 binary..."
+# 	@operator-sdk build --image-build-args "-f build/Dockerfile" $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)-dev
 
-push-amd64-quay:
-	docker push $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)-dev
+# push-amd64-quay:
+# 	docker push $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)-dev
 
-push-multi-arch:
-ifeq ($(TARGET_OS),$(filter $(TARGET_OS),linux darwin))
-	@curl -L -o /tmp/manifest-tool https://github.com/estesp/manifest-tool/releases/download/v0.7.0/manifest-tool-$(TARGET_OS)-amd64
-	@chmod +x /tmp/manifest-tool
-	@echo "Merging and push multi-arch image $(REGISTRY)/$(IMG):latest"
-	@/tmp/manifest-tool --username $(QUAY_USERNAME) --password $(QUAY_PASSWORD) push from-args --platforms linux/amd64,linux/ppc64le,linux/s390x --template $(REGISTRY)/$(IMG)-ARCH:$(VERSION) --target $(REGISTRY)/$(IMG):latest --ignore-missing
-	@echo "Merging and push multi-arch image $(REGISTRY)/$(IMG):$(VERSION)"
-	@/tmp/manifest-tool --username $(QUAY_USERNAME) --password $(QUAY_PASSWORD) push from-args --platforms linux/amd64,linux/ppc64le,linux/s390x --template $(REGISTRY)/$(IMG)-ARCH:$(VERSION) --target $(REGISTRY)/$(IMG):$(VERSION) --ignore-missing
-endif
+############################################################
+# multiarch-image section
+############################################################
+
+multiarch-image: $(CONFIG_DOCKER_TARGET)
+	@echo "Build multiarch image for $(REGISTRY)/$(IMG):$(RELEASE_VERSION)..."
+	@common/scripts/multiarch_image.sh $(REGISTRY) $(IMG) $(VERSION) $(RELEASE_VERSION)
 
 ############################################################
 # application section

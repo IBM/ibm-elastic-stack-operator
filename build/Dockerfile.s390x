@@ -27,6 +27,7 @@ LABEL org.label-schema.vendor="IBM" \
     description="Operator that installs and manages Elastic Stack logging service instances" \
     summary="IBM Elastic Stack Operator"
 
+RUN mkdir /scripts
 COPY watches.yaml ${HOME}/watches.yaml
 COPY helm-charts/ ${HOME}/helm-charts/
 RUN mkdir /scripts

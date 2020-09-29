@@ -14,4 +14,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 /scripts/upgrade-cr.sh &
-/usr/local/bin/helm-operator run --watches-file=./watches.yaml
+#/usr/local/bin/helm-operator run --watches-file=./watches.yaml

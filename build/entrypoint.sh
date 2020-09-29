@@ -13,5 +13,5 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-/scripts/upgrade-cr.sh &
+#/scripts/upgrade-cr.sh &
 /usr/local/bin/helm-operator run --watches-file=./watches.yaml

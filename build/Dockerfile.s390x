@@ -29,6 +29,7 @@ LABEL org.label-schema.vendor="IBM" \
 
 COPY watches.yaml ${HOME}/watches.yaml
 COPY helm-charts/ ${HOME}/helm-charts/
+RUN mkdir /scripts
 COPY build/entrypoint.sh /scripts/entrypoint.sh
 COPY build/upgrade-cr.sh /scripts/upgrade-cr.sh
 

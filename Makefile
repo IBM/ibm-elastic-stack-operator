@@ -116,7 +116,7 @@ endif
 
 build: $(CONFIG_DOCKER_TARGET) build-image-amd64 build-image-ppc64le build-image-s390x
 
-build-image-amd64:
+build-image-amd64: $(CONFIG_DOCKER_TARGET)
 	$(eval ARCH := $(shell uname -m|sed 's/x86_64/amd64/'))
 	@echo "Building the ${IMG} amd64 image..."
 	@operator-sdk build --image-build-args "-f build/Dockerfile" $(REGISTRY)/$(IMG)-amd64:$(VERSION)

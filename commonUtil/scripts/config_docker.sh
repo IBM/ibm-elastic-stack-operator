@@ -14,18 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-echo "test1"
 KUBECTL=$(command -v kubectl)
 DOCKER_REGISTRY="hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com"
 DOCKER_USERNAME=$(${KUBECTL} -n default get secret artifactory-cred -o jsonpath='{.data.username}' | base64 --decode)
 DOCKER_PASSWORD=$(${KUBECTL} -n default get secret artifactory-cred -o jsonpath='{.data.password}' | base64 --decode)
 
-echo "test2"
 # support other container tools
 CONTAINER_CLI=${CONTAINER_CLI:-docker}
 
-echo "test3"
 # login the docker registry
 ${CONTAINER_CLI} login "${DOCKER_REGISTRY}" -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
-
-echo "test4"

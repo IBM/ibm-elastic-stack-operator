@@ -30,11 +30,6 @@ get-cluster-credentials: activate-serviceaccount
 config-docker: get-cluster-credentials
 	@commonUtil/scripts/config_docker.sh
 
-install-operator-sdk:
-	chmod u+r+x ./commonUtil/scripts/install-operator-sdk.sh
-	@operator-sdk version 2> /dev/null ; if [ $$? -ne 0 ]; then ./commonUtil/scripts/install-operator-sdk.sh; fi
-
-
 FINDFILES=find . \( -path ./.git -o -path ./.github \) -prune -o -type f
 XARGS = xargs -0 ${XARGS_FLAGS}
 CLEANXARGS = xargs ${XARGS_FLAGS}

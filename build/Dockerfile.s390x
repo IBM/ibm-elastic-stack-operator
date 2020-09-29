@@ -48,7 +48,8 @@ USER root
 
 #RUN microdnf update --nodocs \
 #  && microdnf -y clean all \
-#RUN chmod +x /scripts/entrypoint.sh 
+RUN ls -lrt /scripts
+RUN chmod +x /scripts/entrypoint.sh 
 RUN chmod +x /scripts/upgrade-cr.sh
 RUN kubectl_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt) ;
 RUN curl -L https://storage.googleapis.com/kubernetes-release/release/${kubectl_ver}/bin/linux/s390x/kubectl -o /usr/bin/kubectl

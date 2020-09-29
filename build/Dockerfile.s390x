@@ -35,9 +35,9 @@ COPY build/upgrade-cr.sh /scripts/upgrade-cr.sh
 COPY LICENSE /licenses/
 
 USER root
-RUN microdnf update --nodocs \
-  && microdnf -y clean all \
-  && chmod +x /scripts/entrypoint.sh /scripts/upgrade-cr.sh \
+#RUN microdnf update --nodocs \
+#  && microdnf -y clean all \
+RUN chmod +x /scripts/entrypoint.sh /scripts/upgrade-cr.sh \
   && kubectl_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt) ;\
         curl \
           -L https://storage.googleapis.com/kubernetes-release/release/${kubectl_ver}/bin/linux/s390x/kubectl \

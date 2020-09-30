@@ -26,6 +26,8 @@ spec:
     metadata:
       labels:
 {{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "migration") | indent 8 }}
+      annotations:
+{{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
     spec:
       restartPolicy: OnFailure
 {{ include "image.pullSecret" . | indent 6 }}

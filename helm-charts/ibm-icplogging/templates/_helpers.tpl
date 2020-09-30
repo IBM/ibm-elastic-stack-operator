@@ -174,6 +174,7 @@ clusterhealth.ibm.com/dependencies: auth-idp, auth-pap, auth-pdp
 productName: Elasticsearch
 productVersion: 6.8.10
 productID: none
+productMetric: "FREE"
   {{- end }}
 {{- end -}}
 

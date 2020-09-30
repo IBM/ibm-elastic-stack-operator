@@ -156,7 +156,6 @@ helm.sh/chart: "{{ $scope.Chart.Name }}-{{ $scope.Chart.Version }}"
 app.kubernetes.io/component: "{{ $component }}"
 release: "{{ $scope.Release.Name }}"
 role: "{{ $role }}"
-release: "{{ $scope.Release.Name }}"
   {{- if eq ($scope.Values.general.environment | lower) "openshift" }}
 name: ibm-elastic-stack-operator
   {{- end }}

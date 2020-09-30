@@ -26,7 +26,7 @@ spec:
     metadata:
       labels:
 {{ include "metadata.calculateLabels" (list . $app .Values.kibana.name "migration") | indent 8 }}
-       annotations:
+      annotations:
 {{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
     spec:
       restartPolicy: OnFailure

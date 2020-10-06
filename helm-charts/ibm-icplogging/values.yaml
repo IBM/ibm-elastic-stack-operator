@@ -113,8 +113,8 @@ kibana:
         memory: 64Mi
   initImage:
     repository: "quay.io/opencloudio/curl"
-    tag: "4.2.0-build.6"
-    digest: "sha256:90256103fbff2b68202d1bebc57481f337f4cf397cc126c084d0e29f9ef6c11f"
+    tag: "4.2.0-build.7"
+    digest: "sha256:2c83a6453e7f8265b1cbb297745633c2672c022fef38f278098937e005554bf5"
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
     tag: "2.5.5"

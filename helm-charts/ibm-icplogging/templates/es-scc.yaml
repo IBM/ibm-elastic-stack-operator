@@ -31,6 +31,7 @@ allowPrivilegedContainer: true
 allowedCapabilities:
   - IPC_LOCK
   - SYS_RESOURCE
+  - SYS_CHROOT
 defaultAddCapabilities: []
 fsGroup:
   type: RunAsAny

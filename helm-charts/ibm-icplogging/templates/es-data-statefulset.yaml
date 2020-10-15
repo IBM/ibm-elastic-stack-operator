@@ -148,6 +148,10 @@ spec:
             add:
               - IPC_LOCK
               - SYS_RESOURCE
+        {{- else }}
+          capabilities:
+            add:
+              - SYS_CHROOT
         {{- end }}
         image: {{ include "image.calculateImage" (list .Values.elasticsearch.image.repository .Values.elasticsearch.image.tag .Values.elasticsearch.image.digest) }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}

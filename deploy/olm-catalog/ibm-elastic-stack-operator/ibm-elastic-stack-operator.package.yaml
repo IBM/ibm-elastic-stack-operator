@@ -14,11 +14,11 @@
 # limitations under the License.
 
 channels:
-- currentCSV: ibm-elastic-stack-operator.v3.2.2
+- currentCSV: ibm-elastic-stack-operator.v3.2.3
   name: dev
-- currentCSV: ibm-elastic-stack-operator.v3.1.4
+- currentCSV: ibm-elastic-stack-operator.v3.2.2
   name: beta
-- currentCSV: ibm-elastic-stack-operator.v3.1.4
+- currentCSV: ibm-elastic-stack-operator.v3.2.2
   name: stable-v1
 defaultChannel: stable-v1
 packageName: ibm-elastic-stack-operator-app

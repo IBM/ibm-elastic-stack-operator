@@ -1,0 +1,524 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  name: ibm-elastic-stack-operator.v3.2.3
+  labels:
+    name: ibm-elastic-stack-operator
+    app.kubernetes.io/instance: common-logging
+    app.kubernetes.io/managed-by: elasticstacks.elasticstack.ibm.com
+    app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
+  namespace: placeholder
+  annotations:
+    olm.skipRange: '>=3.0.5 <3.2.3'
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "elasticstack.ibm.com/v1alpha1",
+          "kind": "ElasticStack",
+          "metadata": {
+            "name": "logging",
+            "annotations": {
+            }
+          },
+          "spec": {
+            "image": {
+              "pullSecret": {
+                "enabled": false,
+                "name": "infra-registry-key"
+              }
+            },
+            "curator": {
+              "tolerations": [
+                {
+                  "effect": "NoSchedule",
+                  "key": "dedicated",
+                  "operator": "Exists"
+                }
+              ]
+            },
+            "elasticsearch": {
+              "data": {
+                "replicas": 1,
+                "storage": {
+                  "persistent": true,
+                  "useDynamicProvisioning": true
+                },
+                "tolerations": [
+                  {
+                    "effect": "NoSchedule",
+                    "key": "dedicated",
+                    "operator": "Exists"
+                  }
+                ]
+              },
+              "security": {
+                "authz": {
+                  "enabled": true,
+                  "provider": "icp"
+                }
+              }
+            },
+            "filebeat": {
+              "scope": {
+                "namespaces": [],
+                "nodes": {}
+              },
+              "tolerations": [
+                {
+                  "effect": "NoSchedule",
+                  "key": "dedicated",
+                  "operator": "Exists"
+                }
+              ]
+            },
+            "general": {
+              "environment": "Openshift",
+              "ingressPort": 443
+            },
+            "kibana": {
+              "access": "ingress",
+              "ingress": {
+                "labels": {
+                  "inmenu": "false",
+                  "target": "platform-logging"
+                },
+                "path": "/kibana"
+              },
+              "replicas": 1,
+              "security": {
+                "authc": {
+                  "enabled": true,
+                  "provider": "icp"
+                },
+                "authz": {
+                  "enabled": false,
+                  "icp": {
+                    "authorizedNamespaces": []
+                  },
+                  "provider": "icp"
+                }
+              },
+              "service": {
+                "annotations": {
+                  "id": "add-ons",
+                  "name": "Logging",
+                  "roles": "ClusterAdministrator,Administrator,Operator,Viewer,Auditor,Editor"
+                },
+                "labels": {
+                  "inmenu": "false",
+                  "target": "platform-logging"
+                },
+                "path": "/kibana"
+              },
+              "tolerations": [
+                {
+                  "effect": "NoSchedule",
+                  "key": "dedicated",
+                  "operator": "Exists"
+                }
+              ]
+            },
+            "logstash": {
+              "port": 5044,
+              "replicas": 1,
+              "tolerations": [
+                {
+                  "effect": "NoSchedule",
+                  "key": "dedicated",
+                  "operator": "Exists"
+                }
+              ]
+            },
+            "nameOverride": "elk",
+            "security": {
+              "ca": {
+                "external": {
+                  "certFieldName": "tls.crt",
+                  "keyFieldName": "tls.key",
+                  "secretName": "cs-ca-certificate-secret"
+                },
+                "origin": "internal"
+              },
+              "tls": {
+                "version": "TLSv1.2"
+              }
+            }
+          }
+        }, 
+        {
+          "apiVersion": "operator.ibm.com/v1alpha1",
+          "kind": "OperandBindInfo",
+          "metadata": {
+            "name": "ibm-elastic-stack-bindinfo"
+          },
+          "spec": {
+            "operand": "ibm-elastic-stack-operator",
+            "registry": "common-service",
+            "description": "Certificates needed to access Elastic stack instances for whitelisted clients only",
+            "bindings": {
+              "public-certs": {
+                "secret": "logging-elk-certs"
+              },
+              "public-passphrases": {
+                "secret": "logging-elk-elasticsearch-pki-secret"
+              }
+            }
+          }
+        },
+        {
+          "apiVersion": "operator.ibm.com/v1alpha1",
+          "kind": "OperandRequest",
+          "metadata": {
+            "name": "ibm-elastic-stack-request"
+          },
+          "spec": {
+            "requests": [
+              {
+                "operands": [
+                  {
+                    "name": "ibm-iam-operator"
+                  }
+                ],
+                "registry": "common-service"
+              }
+            ]
+          }
+        }
+      ]
+    capabilities: "Basic Install"
+    "operatorframework.io/suggested-namespace": ibm-common-services
+    categories: "Logging & Tracing"
+    certified: "false"
+    support: "IBM"
+    repository: https://github.com/IBM/ibm-elastic-stack-operator
+    image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.3
+    createdAt: '2020-09-6T20:12:00Z'
+    description: |-
+      Operator that installs and manages Elastic Stack logging service instances. 
+      Each Elastic Stack instance provides user-friendly visibility to system/application
+      logs by collecting, transforming, storing, presenting and archiving logs in a
+      secure, scalable and customizable way. Filebeat, Logstash, Elasticsearch, Kibana,
+      Curator and Nginx are the main components
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: Log processing, storage, management, analysis, search and visalization solution including  logging service instance including Elasticsearch, Kibana, Logstash, Filebeats and Curator
+      displayName: Elastic Stack
+      kind: ElasticStack
+      name: elasticstacks.elasticstack.ibm.com
+      version: v1alpha1
+  description: |
+    Operator that installs and manages Elastic Stack logging service instances
+
+    ## Overview
+    Each Elastic Stack instance provides user-friendly visibility to system/application
+      logs by collecting, transforming, storing, presenting and archiving logs in a 
+      secure, scalable and customizable way. Filebeat, Logstash, Elasticsearch, Kibana,
+      Curator and Nginx are the main components
+
+    ## Key Features
+    ### Tenant Isolation
+    - Multiple customizd Logging instances can be deployed individually
+    - For each instance, isolation in hardware resource, data storage, data transportation, access control, encryption and retention policy
+    - Tenant instance provisioning/deprovisioning can be driven by automation scripts. All customization points controlled by parameters
+
+    ### Resource Customization
+    - Node affinity
+    - Resource limits, heap size, replica, etc
+    - Namespace
+    - Storage classes for data persistence
+
+    ### Security
+    - Traffic between the follow components are secured with mutual TLS:
+      - filebeat - logstash
+      - logstash - elasticsearch
+      - elasticsearch - kibana
+      - curator - elasticsearch
+    - Elasticsearch access control based on user role and namespac access. None admin users cannot see logs outside of their own namespace (need IBM IAM)
+    - Kibana access control based on user role and namespace. None admin users cannot access Kibana if required namespace access is missing (need IBM IAM)
+    - Both self-signed TLS keys, as well as bring-your-own signing CA
+    - Kibana authentication Login page with integrated Identity Management (need IBM IAM)
+
+    ### Platform and Architecutres
+    - Supports and validated on amd64, IBM s390x, IBM Power PC
+    - Supports and validated on Openshift 3.11, 4.1, 4.2, 4.3, 4.4, IBM Cloud Private 3.21
+
+    ### Log pipeline customization
+    - Collect log only from workloads on selected hosts
+    - Collect log only from workloads in configurable namespaces
+
+    ### Data Retention
+    - Customize data retention policy for individual indices
+    - Customize data retention job schedule
+
+    ### Stability
+    - Persistent queue to buffer traffic surges
+    - Persistent log harvest pointers to avoid payload replay upon node restart
+    
+    ### Usablity
+    - Automatically set kibana default index and timestamp fields upon start
+    - Customizable kibana endpoint url (e.g. https://1.2.3.4:8443/tenant-a-kibana)
+    - Zero user intervention two-way data migration between Elastic stack 5.5 and 6.6 (Elasticsearch and Kibana)
+
+    ## Capacity Planning
+    The Elastic Stack is designed to handle large amounts of log data. The more
+      data that you choose to retain, the more resources it requires. You could
+      prototype the cluster and applications before full production deployment
+      to measure the impact of log data on your system
+    
+    ### Default Resource Allocation is Minimal
+    The default memory and disk allocation for the in the Elastic Stack CR is not
+      intended for production use. Actual production usage might be much higher.
+      The default values provide a starting point for prototyping and other
+      demonstration efforts
+
+    ### Some Notes on Capacity Planning
+    - The Elastic stack works better by scaling out (adding more identical
+      pod instances) than scaling up (adding more memory to fixed number of pods)
+    - Elasticsearch pod heap size, pod memory limit, replica are some examples of key tuining points
+    - Deploy and validate in lab and staging environments before going to production
+    - Keep track of resource allocations and monitor workload periodically
+
+    ## Installing in Namespaces Other than kube-system
+    Additional permissions might be needed
+  displayName: IBM Elastic Stack Operator
+  minKubeVersion: 1.9.0
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          - serviceaccounts
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - get
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          - secrets
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - ibm-elastic-stack-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          - deployments
+          verbs:
+          - get
+        - apiGroups:
+          - elasticstack.ibm.com
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - networking.k8s.io
+          resources:
+          - networkpolicies
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - jobs
+          - cronjobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - extensions
+          resources:
+          - ingresses
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - roles
+          - rolebindings
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - create
+          - delete
+          - get
+          - use
+          - patch
+          - update
+          - watch
+        serviceAccountName: ibm-elastic-stack-operator
+      deployments:
+      - name: ibm-elastic-stack-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: ibm-elastic-stack-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: ibm-elastic-stack-operator
+                operatorframework.io/arch.s390x: supported
+                operatorframework.io/os.linux: supported 
+                operatorframework.io/arch.amd64: supported
+                operatorframework.io/arch.ppc64le: supported 
+              annotations:
+                productName: IBM Cloud Platform Common Services
+                productID: "068a62892a1e4db39641342e592daa25"
+                productVersion: "3.4.0"
+                productMetric: FREE
+                "openshift.io/scc": "restricted"
+            spec:
+              containers:
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: ibm-elastic-stack-operator
+                # 3.2.3
+                # image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:9b21af3f4e3cbc4342921297197f331dd3dba839db914af1697ccf5c5e70dd43
+                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.3
+                imagePullPolicy: Always
+                name: ibm-elastic-stack-operator
+                resources:
+                limits:
+                  cpu: 150m
+                  memory: 512Mi
+              serviceAccountName: ibm-elastic-stack-operator
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: true
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - IBM
+  - Cloud
+  - Logging
+  - Elastic
+  - Elasticsearch
+  - Kibana
+  - Logstash
+  - Filebeat
+  maintainers:
+  - email: https://www.ibm.com/mysupport/
+    name: IBM Support
+  maturity: alpha
+  provider:
+    name: IBM
+  links:
+  - name: Elastic
+    url: https://www.elastic.co/
+  - name: Elastic Stack Operator
+    url: https://github.com/IBM/ibm-elastic-stack-operator
+  replaces: ibm-elastic-stack-operator.v3.1.2
+  version: 3.2.3

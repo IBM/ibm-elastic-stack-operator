@@ -26,7 +26,7 @@ NAMESPACE=ibm-common-services
 # Use your own docker registry and image name for dev/test by overridding the IMG and REGISTRY environment variable.
 IMG ?= ibm-elastic-stack-operator
 REGISTRY ?= "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom"
-QUAY_REGISTRY ?= "quay.io/opencloudio"
+DEV_REGISTRY ?= "quay.io/hxiao"
 CSV_VERSION ?= 3.2.3
 
 QUAY_USERNAME ?=
@@ -146,13 +146,13 @@ push-image-ppc64le: $(CONFIG_DOCKER_TARGET) build-image-ppc64le
 push-image-s390x: $(CONFIG_DOCKER_TARGET) build-image-s390x
 	docker push $(REGISTRY)/$(IMG)-s390x:$(VERSION)
 
-# build-amd64-quay:
-# 	$(eval ARCH := $(shell uname -m|sed 's/x86_64/amd64/'))
-# 	@echo "Building the ${IMG} amd64 binary..."
-# 	@operator-sdk build --image-build-args "-f build/Dockerfile" $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)-dev
+build-amd64-quay:
+	$(eval ARCH := $(shell uname -m|sed 's/x86_64/amd64/'))
+	@echo "Building the ${IMG} amd64 binary..."
+	@operator-sdk build --image-build-args "-f build/Dockerfile" $(DEV_REGISTRY)/$(IMG)-amd64:$(CSV_VERSION)-dev
 
-# push-amd64-quay:
-# 	docker push $(QUAY_REGISTRY)/$(IMG)-amd64:$(VERSION)-dev
+push-amd64-quay:
+	docker push $(DEV_REGISTRY)/$(IMG)-amd64:$(CSV_VERSION)-dev
 
 ############################################################
 # multiarch-image section

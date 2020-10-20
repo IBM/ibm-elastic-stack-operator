@@ -185,7 +185,7 @@ metadata:
           }
         }
       ]
-    capabilities: "Basic Install" #for linting purposes, this has to change to Seamless Upgrades. Not sure what effect this will have
+    capabilities: Seamless Upgrade
     "operatorframework.io/suggested-namespace": ibm-common-services
     categories: "Logging & Tracing"
     certified: "false"

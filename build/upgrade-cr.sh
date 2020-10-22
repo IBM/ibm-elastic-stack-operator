@@ -41,7 +41,6 @@ yq d -i $temp_file status
 yq d -i $temp_file metadata.creationTimestamp
 yq d -i $temp_file metadata.finalizers
 yq d -i $temp_file metadata.generation
-yq d -i $temp_file 'metadata.labels."operator.ibm.com/opreq-control"'
 yq d -i $temp_file metadata.resourceVersion
 yq d -i $temp_file metadata.selfLink
 yq d -i $temp_file metadata.uid

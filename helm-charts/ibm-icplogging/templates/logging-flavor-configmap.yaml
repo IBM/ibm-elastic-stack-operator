@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  logging-flavor-key: |-
+    kibanaURL=https://127.0.0.1:5601/kibana
+    logging-flavor=CS
+  # logging-flavor-ocp-key: |-
+  #   kibanaURL=
+  #   logging-flavor=OCP
+kind: ConfigMap
+metadata:
+  name: logging-flavor
+  namespace: ibm-common-services
+  labels:
+{{ $app := include "elasticsearch.fullname" . -}}
+{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "proxy") | indent 4 }}
+  selfLink: /api/v1/namespaces/ibm-common-services/configmaps/logging-flavor

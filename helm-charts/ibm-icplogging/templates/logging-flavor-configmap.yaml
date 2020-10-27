@@ -1,9 +1,10 @@
+{{ template "cp-console.url.set" . -}}
 apiVersion: v1
 data:
   {{ if .Values.kibana.https }}
-    dashboard-url: "https://{{ .Values.kibana.name }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+    dashboard-url: "https://{{ .Values.kibana.cp_console_host }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
   {{ else }}
-    dashboard-url: "http://{{ .Values.kibana.name }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+    dashboard-url: "http://{{ .Values.kibana.cp_console_host }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
   {{ end }}
     logging-flavor: "common-services"
 kind: ConfigMap

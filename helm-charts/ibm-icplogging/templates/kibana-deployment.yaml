@@ -146,6 +146,11 @@ spec:
           limits:
             memory: {{ .Values.kibana.memoryLimit }}
         env:
+        - name: CP_CONSOLE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: management-ingress-info
+              key: MANAGEMENT_INGRESS_ROUTE_HOST
         - name: "NODE_OPTIONS"
           value: "--max-old-space-size={{ .Values.kibana.maxOldSpaceSize }}"
         - name: CFG_BASEDIR

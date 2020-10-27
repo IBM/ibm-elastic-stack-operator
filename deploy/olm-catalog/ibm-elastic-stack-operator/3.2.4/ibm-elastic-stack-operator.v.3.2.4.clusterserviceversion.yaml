@@ -162,7 +162,7 @@ metadata:
               "public-passphrases": {
                 "secret": "logging-elk-elasticsearch-pki-secret"
               },
-              "public":{
+              "public": {
                  "secret": "logging-elk-certs"
                  "configmap": "logging-access-config"               
               }

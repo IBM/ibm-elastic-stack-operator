@@ -1,11 +1,25 @@
+# {{ template "elk.settings.all.prepare" . -}}
+# # 1. prepare kibana api url
+# {{- if .Values.kibana.https }}
+# protocol=https
+# {{ else }}
+# protocol=http
+# {{- end }}
+
+# endpoint={{ .Values.kibana.name }}
+# port={{ .Values.kibana.internal }}
+# path={{ .Values.kibana.ingress.path }}
+# url="$protocol://$endpoint:$port$path"
+
+# {{ template "kibana.settings.url.set" }}
 apiVersion: v1
 data:
-  logging-flavor-key: |-
-    kibanaURL=https://127.0.0.1:5601/kibana
-    logging-flavor=CS
-  # logging-flavor-ocp-key: |-
-  #   kibanaURL=
-  #   logging-flavor=OCP
+  {{ if .Values.kibana.https }}
+    dashboard-url: "https://{{ .Values.kibana.name }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+  {{ else }}
+    dashboard-url: "http://{{ .Values.kibana.name }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+  {{ end }}
+    logging-flavor: "common-services"
 kind: ConfigMap
 metadata:
   name: logging-flavor

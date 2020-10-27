@@ -1,17 +1,3 @@
-# {{ template "elk.settings.all.prepare" . -}}
-# # 1. prepare kibana api url
-# {{- if .Values.kibana.https }}
-# protocol=https
-# {{ else }}
-# protocol=http
-# {{- end }}
-
-# endpoint={{ .Values.kibana.name }}
-# port={{ .Values.kibana.internal }}
-# path={{ .Values.kibana.ingress.path }}
-# url="$protocol://$endpoint:$port$path"
-
-# {{ template "kibana.settings.url.set" }}
 apiVersion: v1
 data:
   {{ if .Values.kibana.https }}
@@ -22,9 +8,9 @@ data:
     logging-flavor: "common-services"
 kind: ConfigMap
 metadata:
-  name: logging-flavor
+  name: logging-access-config
   namespace: ibm-common-services
   labels:
 {{ $app := include "elasticsearch.fullname" . -}}
 {{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "proxy") | indent 4 }}
-  selfLink: /api/v1/namespaces/ibm-common-services/configmaps/logging-flavor
+  selfLink: /api/v1/namespaces/ibm-common-services/configmaps/logging-access-config

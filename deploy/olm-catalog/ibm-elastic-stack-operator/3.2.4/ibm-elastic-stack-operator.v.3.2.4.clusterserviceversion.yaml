@@ -164,7 +164,7 @@ metadata:
               },
               "public":{
                  "secret": "logging-elk-certs"
-                 "configmap": "logging-flavor"               
+                 "configmap": "logging-access-config"               
               }
             }
           }

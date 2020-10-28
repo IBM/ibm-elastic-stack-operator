@@ -1,9 +1,9 @@
 apiVersion: v1
 data:
   {{ if .Values.kibana.https }}
-    dashboard-url: "https://127.0.0.1:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+    dashboard-url: "https://{{ .Values.kibana.image.env.CP_CONSOLE_HOST }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
   {{ else }}
-    dashboard-url: "http://127.0.0.1:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+    dashboard-url: "http://{{ .Values.kibana.image.env.CP_CONSOLE_HOST }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
   {{ end }}
     logging-flavor: "common-services"
 kind: ConfigMap

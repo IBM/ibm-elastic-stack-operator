@@ -1,16 +1,16 @@
-# {{ template "cp-console.url.set" . -}}
+{{ template "cp-console.url.set" . -}}
 apiVersion: v1
 data:
-  # {{ if .Values.kibana.https }}
-  #   dashboard-url: "https://{{ .Values.kibana.cp_console_host }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
-  # {{ else }}
-  #   dashboard-url: "http://{{ .Values.kibana.cp_console_host }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
-  # {{ end }}
   {{ if .Values.kibana.https }}
-    dashboard-url: "https://{{ .Values.kibana.image.env[0] }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+    dashboard-url: "https://{{ .Values.kibana.cp_console_host }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
   {{ else }}
-    dashboard-url: "http://{{ .Values.kibana.image.env[0] }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+    dashboard-url: "http://{{ .Values.kibana.cp_console_host }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
   {{ end }}
+  # {{ if .Values.kibana.https }}
+  #   dashboard-url: "https://{{ .Values.kibana.image.env[0] }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+  # {{ else }}
+  #   dashboard-url: "http://{{ .Values.kibana.image.env[0] }}:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
+  # {{ end }}
   # {{ if .Values.kibana.https }}
   #   dashboard-url: "https://127.0.0.1:{{ .Values.kibana.internal }}{{ .Values.kibana.ingress.path }}"
   # {{ else }}

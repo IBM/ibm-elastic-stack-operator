@@ -301,10 +301,12 @@ determine if kibana uses https. http is only used for legacy users when security
 
 {{/*
 set console url for use in logging-access-config configmap
-*/}}
+
 {{- define "cp-console.url.set" -}}
   {{- set .Values.kibana "cp_console_host" $CP_CONSOLE_HOST }}
 {{- end }}
+
+*/}}
 
 {{/*
 calculate if es client router is needed. router is only needed for icp authz

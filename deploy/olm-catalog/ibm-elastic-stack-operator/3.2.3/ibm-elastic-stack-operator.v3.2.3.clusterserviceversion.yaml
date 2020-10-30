@@ -27,50 +27,6 @@ metadata:
                 "name": "infra-registry-key"
               }
             },
-            "curator": {
-              "tolerations": [
-                {
-                  "effect": "NoSchedule",
-                  "key": "dedicated",
-                  "operator": "Exists"
-                }
-              ]
-            },
-            "elasticsearch": {
-              "data": {
-                "replicas": 1,
-                "storage": {
-                  "persistent": true,
-                  "useDynamicProvisioning": true
-                },
-                "tolerations": [
-                  {
-                    "effect": "NoSchedule",
-                    "key": "dedicated",
-                    "operator": "Exists"
-                  }
-                ]
-              },
-              "security": {
-                "authz": {
-                  "enabled": true,
-                  "provider": "icp"
-                }
-              }
-            },
-            "filebeat": {
-              "scope": {
-                "namespaces": [],
-                "nodes": {}
-              },
-              "tolerations": [
-                {
-                  "effect": "NoSchedule",
-                  "key": "dedicated",
-                  "operator": "Exists"
-                }
-              ]
-            },
             "general": {
               "environment": "Openshift",
               "ingressPort": 443
@@ -110,17 +66,6 @@ metadata:
                 },
                 "path": "/kibana"
               },
-              "tolerations": [
-                {
-                  "effect": "NoSchedule",
-                  "key": "dedicated",
-                  "operator": "Exists"
-                }
-              ]
-            },
-            "logstash": {
-              "port": 5044,
-              "replicas": 1,
               "tolerations": [
                 {
                   "effect": "NoSchedule",
@@ -482,7 +427,7 @@ spec:
                   value: ibm-elastic-stack-operator
                 # 3.2.3
                 # image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:9b21af3f4e3cbc4342921297197f331dd3dba839db914af1697ccf5c5e70dd43
-                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.3
+                image: quay.io/bluzarraga/ibm-elastic-stack-operator-amd64:3.2.3-dev
                 imagePullPolicy: Always
                 name: ibm-elastic-stack-operator
                 resources:

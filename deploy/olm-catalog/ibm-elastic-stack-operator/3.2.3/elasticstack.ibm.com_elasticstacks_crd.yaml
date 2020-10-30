@@ -110,220 +110,220 @@ spec:
                       type: integer
                     unit:
                       type: string
-            elasticsearch:
-              type: object
-              properties:
-                client:
-                  type: object
-                  properties:
-                    antiAffinity:
-                      type: string
-                    heapSize:
-                      type: string
-                    memoryLimit:
-                      type: string
-                    name:
-                      type: string
-                    nodeSelector:
-                      type: object #null
-                    replicas:
-                      type: integer
-                    restPort:
-                      type: integer
-                    tolerations:
-                      type: array #null
-                data:
-                  type: object
-                  properties:
-                    antiAffinity:
-                      type: string
-                    heapSize:
-                      type: string
-                    memoryLimit:
-                      type: string
-                    name:
-                      type: string
-                    nodeSelector:
-                      type: object #null
-                    replicas:
-                      type: integer
-                    storage:
-                      type: object
-                      properties:
-                        accessModes:
-                          type: array #may be a list
-                        persistent:
-                          type: boolean
-                        selector:
-                          type: object
-                          properties:
-                            label: #both of these values are blank
-                              type: string
-                            value:
-                              type: string
-                        size:
-                          type: string
-                        storageClass:
-                          type: string #also blank
-                        useDynamicProvisioning:
-                          type: boolean
-                    tolerations:
-                      type: array #null
-                image:
-                  type: object
-                  properties:
-                    repository:
-                      type: string
-                    tag:
-                      type: string
-                initImage:
-                  type: object
-                  properties:
-                    repository:
-                      type: string
-                    tag:
-                      type: string
-                internalPort:
-                  type: integer
-                master:
-                  type: object
-                  properties:
-                    antiAffinity:
-                      type: string
-                    heapSize:
-                      type: string
-                    memoryLimit:
-                      type: string
-                    name:
-                      type: string
-                    nodeSelector:
-                      type: object #null
-                    replicas:
-                      type: integer
-                    restPort:
-                      type: integer
-                    tolerations:
-                      type: array #null
-                name:
-                  type: string
-                pkiInitImage:
-                  type: object
-                  properties:
-                    repository:
-                      type: string
-                    resources:
-                      type: object
-                      properties:
-                        limits:
-                          type: object
-                          properties:
-                            memory:
-                              type: string
-                        requests:
-                          type: object
-                          properties:
-                            memory: 
-                              type: string
-                    tag:
-                      type: string
-                routerImage:
-                  type: object
-                  properties:
-                    repository:
-                      type: string
-                    resources:
-                      type: object
-                      properties:
-                        limits:
-                          type: object
-                          properties:
-                            memory:
-                              type: string
-                        requests:
-                          type: object
-                          properties:
-                            memory: 
-                              type: string
-                    tag:
-                      type: string
-                security:
-                  type: object
-                  properties:
-                    authc:
-                      type: object
-                      properties:
-                        enabled:
-                          type: boolean
-                        provider:
-                          type: string
-                    authz:
-                      type: object
-                      properties:
-                        enabled:
-                          type: boolean
-                        provider:
-                          type: string
-            filebeat:
-              type: object
-              properties:
-                image:
-                  type: object
-                  properties:
-                    repository:
-                      type: string
-                    tag:
-                      type: string
-                logFormat:
-                  type: string
-                name:
-                  type: string
-                registryHostPath:
-                  type: string
-                resources:
-                  type: object
-                  properties:
-                    limits:
-                      type: object
-                      properties:
-                        memory:
-                          type: string
-                    requests:
-                      type: object
-                      properties:
-                        memory:
-                          type: string
-                scope:
-                  type: object
-                  properties:
-                    namespaces: #both these values are null
-                      type: array
-                    nodes:
-                      type: object
-                tolerations:
-                  type: array #null
-            general:
-              type: object
-              properties:
-                clusterDomain:
-                  type: string
-                clusterName:
-                  type: string
-                environment:
-                  type: string
-                ingressPort:
-                  type: integer
-            image:
-              type: object
-              properties:
-                pullPolicy:
-                  type: string
-                pullSecret:
-                  type: object
-                  properties:
-                    enabled: 
-                      type: boolean
-                    name:
-                      type: string
+            # elasticsearch:
+            #   type: object
+            #   properties:
+            #     client:
+            #       type: object
+            #       properties:
+            #         antiAffinity:
+            #           type: string
+            #         heapSize:
+            #           type: string
+            #         memoryLimit:
+            #           type: string
+            #         name:
+            #           type: string
+            #         nodeSelector:
+            #           type: object #null
+            #         replicas:
+            #           type: integer
+            #         restPort:
+            #           type: integer
+            #         tolerations:
+            #           type: array #null
+            #     data:
+            #       type: object
+            #       properties:
+            #         antiAffinity:
+            #           type: string
+            #         heapSize:
+            #           type: string
+            #         memoryLimit:
+            #           type: string
+            #         name:
+            #           type: string
+            #         nodeSelector:
+            #           type: object #null
+            #         replicas:
+            #           type: integer
+            #         storage:
+            #           type: object
+            #           properties:
+            #             accessModes:
+            #               type: array #may be a list
+            #             persistent:
+            #               type: boolean
+            #             selector:
+            #               type: object
+            #               properties:
+            #                 label: #both of these values are blank
+            #                   type: string
+            #                 value:
+            #                   type: string
+            #             size:
+            #               type: string
+            #             storageClass:
+            #               type: string #also blank
+            #             useDynamicProvisioning:
+            #               type: boolean
+            #         tolerations:
+            #           type: array #null
+            #     image:
+            #       type: object
+            #       properties:
+            #         repository:
+            #           type: string
+            #         tag:
+            #           type: string
+            #     initImage:
+            #       type: object
+            #       properties:
+            #         repository:
+            #           type: string
+            #         tag:
+            #           type: string
+            #     internalPort:
+            #       type: integer
+            #     master:
+            #       type: object
+            #       properties:
+            #         antiAffinity:
+            #           type: string
+            #         heapSize:
+            #           type: string
+            #         memoryLimit:
+            #           type: string
+            #         name:
+            #           type: string
+            #         nodeSelector:
+            #           type: object #null
+            #         replicas:
+            #           type: integer
+            #         restPort:
+            #           type: integer
+            #         tolerations:
+            #           type: array #null
+            #     name:
+            #       type: string
+            #     pkiInitImage:
+            #       type: object
+            #       properties:
+            #         repository:
+            #           type: string
+            #         resources:
+            #           type: object
+            #           properties:
+            #             limits:
+            #               type: object
+            #               properties:
+            #                 memory:
+            #                   type: string
+            #             requests:
+            #               type: object
+            #               properties:
+            #                 memory: 
+            #                   type: string
+            #         tag:
+            #           type: string
+            #     routerImage:
+            #       type: object
+            #       properties:
+            #         repository:
+            #           type: string
+            #         resources:
+            #           type: object
+            #           properties:
+            #             limits:
+            #               type: object
+            #               properties:
+            #                 memory:
+            #                   type: string
+            #             requests:
+            #               type: object
+            #               properties:
+            #                 memory: 
+            #                   type: string
+            #         tag:
+            #           type: string
+            #     security:
+            #       type: object
+            #       properties:
+            #         authc:
+            #           type: object
+            #           properties:
+            #             enabled:
+            #               type: boolean
+            #             provider:
+            #               type: string
+            #         authz:
+            #           type: object
+            #           properties:
+            #             enabled:
+            #               type: boolean
+            #             provider:
+            #               type: string
+            # filebeat:
+            #   type: object
+            #   properties:
+            #     image:
+            #       type: object
+            #       properties:
+            #         repository:
+            #           type: string
+            #         tag:
+            #           type: string
+            #     logFormat:
+            #       type: string
+            #     name:
+            #       type: string
+            #     registryHostPath:
+            #       type: string
+            #     resources:
+            #       type: object
+            #       properties:
+            #         limits:
+            #           type: object
+            #           properties:
+            #             memory:
+            #               type: string
+            #         requests:
+            #           type: object
+            #           properties:
+            #             memory:
+            #               type: string
+            #     scope:
+            #       type: object
+            #       properties:
+            #         namespaces: #both these values are null
+            #           type: array
+            #         nodes:
+            #           type: object
+            #     tolerations:
+            #       type: array #null
+            # general:
+            #   type: object
+            #   properties:
+            #     clusterDomain:
+            #       type: string
+            #     clusterName:
+            #       type: string
+            #     environment:
+            #       type: string
+            #     ingressPort:
+            #       type: integer
+            # image:
+            #   type: object
+            #   properties:
+            #     pullPolicy:
+            #       type: string
+            #     pullSecret:
+            #       type: object
+            #       properties:
+            #         enabled: 
+            #           type: boolean
+            #         name:
+            #           type: string
             kibana:
               type: object
               properties:
@@ -452,61 +452,61 @@ spec:
                           type: string
                 tolerations:
                   type: array #null
-            logstash:
-              type: object
-              properties:
-                heapSize:
-                  type: string
-                image:
-                  type: object
-                  properties:
-                    repository:
-                      type: string
-                    tag:
-                      type: string
-                memoryLimit:
-                  type: string
-                name:
-                  type: string
-                nodeSelector:
-                  type: object #null
-                port:
-                  type: integer
-                probe:
-                  type: object
-                  properties:
-                    enabled:
-                      type: boolean
-                    image:
-                      type: object
-                      properties:
-                        repository:
-                          type: string
-                        tag:
-                          type: string
-                    maxUnavailablePeriod:
-                      type: integer
-                    minEventsPerPeriod:
-                      type: integer
-                    periodSeconds:
-                      type: integer
-                    resources:
-                      type: object
-                      properties:
-                        limits:
-                          type: object
-                          properties:
-                            memory:
-                              type: string
-                        requests:
-                          type: object
-                          properties:
-                            memory:
-                              type: string      
-                replicas:
-                  type: integer
-                tolerations:
-                  type: array
+            # logstash:
+            #   type: object
+            #   properties:
+            #     heapSize:
+            #       type: string
+            #     image:
+            #       type: object
+            #       properties:
+            #         repository:
+            #           type: string
+            #         tag:
+            #           type: string
+            #     memoryLimit:
+            #       type: string
+            #     name:
+            #       type: string
+            #     nodeSelector:
+            #       type: object #null
+            #     port:
+            #       type: integer
+            #     probe:
+            #       type: object
+            #       properties:
+            #         enabled:
+            #           type: boolean
+            #         image:
+            #           type: object
+            #           properties:
+            #             repository:
+            #               type: string
+            #             tag:
+            #               type: string
+            #         maxUnavailablePeriod:
+            #           type: integer
+            #         minEventsPerPeriod:
+            #           type: integer
+            #         periodSeconds:
+            #           type: integer
+            #         resources:
+            #           type: object
+            #           properties:
+            #             limits:
+            #               type: object
+            #               properties:
+            #                 memory:
+            #                   type: string
+            #             requests:
+            #               type: object
+            #               properties:
+            #                 memory:
+            #                   type: string      
+            #     replicas:
+            #       type: integer
+            #     tolerations:
+            #       type: array
             security:
               type: object
               properties:

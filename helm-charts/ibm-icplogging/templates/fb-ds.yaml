@@ -12,124 +12,124 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-{{ template "elk.settings.all.prepare" . -}}
-{{ template "apiVersionTryV1" .  }}
-kind: DaemonSet
-metadata:
-  labels:
-{{ $app := include "filebeat.fullname" . -}}
-{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 4 }}
-  name: "{{ template "filebeat.fullname" . }}"
-spec:
-  selector:
-    matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 6 }}
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-  minReadySeconds: 5
-  template:
-    metadata:
-      labels:
-{{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 8 }}
-      annotations:
-{{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
-    spec:
-      terminationGracePeriodSeconds: 30
-      {{- if .Values.filebeat.scope.nodes }}
-      nodeSelector:
-{{ toYaml .Values.filebeat.scope.nodes | indent 8 }}
-      {{- end }}
-{{ include "image.pullSecret" . | indent 6 }}
-{{- if .Values.filebeat.tolerations }}
-      tolerations:
-{{ toYaml .Values.filebeat.tolerations | indent 6 }}
-{{- end }}
-      securityContext:
-        runAsUser: 0
-      hostPID: true
-      serviceAccountName: "{{ template "filebeat.fullname" . }}"
-      containers:
-      - name: filebeat
-        securityContext:
-          readOnlyRootFilesystem: true
-        image: {{ include "image.calculateImage" (list .Values.filebeat.image.repository .Values.filebeat.image.tag .Values.filebeat.image.digest) }}
-        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-        resources:
-{{ toYaml .Values.filebeat.resources | indent 12 }}
-        readinessProbe:
-        livenessProbe:
-        env:
-        - name: NODE_HOSTNAME
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
-        - name: HOST_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
-{{- if .Values.elasticsearch.security.authc.enabled }}
-        - name: CA_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "elasticsearch.fullname" . }}-pki-secret
-              key: caTruststorePassword
-        - name: APP_KEYSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "elasticsearch.fullname" . }}-pki-secret
-              key: appKeystorePassword
-{{- end }}
-        volumeMounts:
-        - name: config
-          mountPath: /usr/share/filebeat/filebeat.yml
-          subPath: filebeat.yml
-        - name: input-config
-          mountPath: /usr/share/filebeat/inputs.d
-          readOnly: true
-        - name: data
-          mountPath: /usr/share/filebeat/data
-{{- if .Values.elasticsearch.security.authc.enabled }}
-        - name: certs
-          mountPath: "/usr/share/elasticsearch/config/tls"
-          readOnly: true
-{{- end }}
-        - name: container-log
-          mountPath: /var/log/containers
-          readOnly: true
-        - name: pod-log
-          mountPath: /var/log/pods
-          readOnly: true
-        - name: docker-log
-          mountPath: /var/lib/docker/containers/
-          readOnly: true
-      volumes:
-      - name: config
-        configMap:
-          name: {{ template "filebeat.fullname" . }}-config
-      - name: input-config
-        configMap:
-          name: {{ template "filebeat.fullname" . }}-input-config
-{{- if .Values.elasticsearch.security.authc.enabled }}
-      - name: certs
-        secret:
-          secretName: {{ template "fullname" . }}-certs
-{{- end }}
-      - name: data
-        hostPath:
-          path: {{ tpl .Values.filebeat.registryHostPath . | quote }}
-          type: DirectoryOrCreate
-      - name: container-log
-        hostPath:
-          path: /var/log/containers
-      - name: pod-log
-        hostPath:
-          path: /var/log/pods
-      - name: docker-log
-        hostPath:
-          path: /var/lib/docker/containers
+# {{ template "elk.settings.all.prepare" . -}}
+# {{ template "apiVersionTryV1" .  }}
+# kind: DaemonSet
+# metadata:
+#   labels:
+# {{ $app := include "filebeat.fullname" . -}}
+# {{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 4 }}
+#   name: "{{ template "filebeat.fullname" . }}"
+# spec:
+#   selector:
+#     matchLabels:
+# {{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 6 }}
+#   updateStrategy:
+#     type: RollingUpdate
+#     rollingUpdate:
+#       maxUnavailable: 1
+#   minReadySeconds: 5
+#   template:
+#     metadata:
+#       labels:
+# {{ include "metadata.calculateLabels" (list . $app .Values.filebeat.name "filebeat") | indent 8 }}
+#       annotations:
+# {{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
+#     spec:
+#       terminationGracePeriodSeconds: 30
+#       {{- if .Values.filebeat.scope.nodes }}
+#       nodeSelector:
+# {{ toYaml .Values.filebeat.scope.nodes | indent 8 }}
+#       {{- end }}
+# {{ include "image.pullSecret" . | indent 6 }}
+# {{- if .Values.filebeat.tolerations }}
+#       tolerations:
+# {{ toYaml .Values.filebeat.tolerations | indent 6 }}
+# {{- end }}
+#       securityContext:
+#         runAsUser: 0
+#       hostPID: true
+#       serviceAccountName: "{{ template "filebeat.fullname" . }}"
+#       containers:
+#       - name: filebeat
+#         securityContext:
+#           readOnlyRootFilesystem: true
+#         image: {{ include "image.calculateImage" (list .Values.filebeat.image.repository .Values.filebeat.image.tag .Values.filebeat.image.digest) }}
+#         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+#         resources:
+# {{ toYaml .Values.filebeat.resources | indent 12 }}
+#         readinessProbe:
+#         livenessProbe:
+#         env:
+#         - name: NODE_HOSTNAME
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: spec.nodeName
+#         - name: POD_IP
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: status.podIP
+#         - name: HOST_IP
+#           valueFrom:
+#             fieldRef:
+#               fieldPath: status.hostIP
+# {{- if .Values.elasticsearch.security.authc.enabled }}
+#         - name: CA_TRUSTSTORE_PASSWORD
+#           valueFrom:
+#             secretKeyRef:
+#               name: {{ template "elasticsearch.fullname" . }}-pki-secret
+#               key: caTruststorePassword
+#         - name: APP_KEYSTORE_PASSWORD
+#           valueFrom:
+#             secretKeyRef:
+#               name: {{ template "elasticsearch.fullname" . }}-pki-secret
+#               key: appKeystorePassword
+# {{- end }}
+#         volumeMounts:
+#         - name: config
+#           mountPath: /usr/share/filebeat/filebeat.yml
+#           subPath: filebeat.yml
+#         - name: input-config
+#           mountPath: /usr/share/filebeat/inputs.d
+#           readOnly: true
+#         - name: data
+#           mountPath: /usr/share/filebeat/data
+# {{- if .Values.elasticsearch.security.authc.enabled }}
+#         - name: certs
+#           mountPath: "/usr/share/elasticsearch/config/tls"
+#           readOnly: true
+# {{- end }}
+#         - name: container-log
+#           mountPath: /var/log/containers
+#           readOnly: true
+#         - name: pod-log
+#           mountPath: /var/log/pods
+#           readOnly: true
+#         - name: docker-log
+#           mountPath: /var/lib/docker/containers/
+#           readOnly: true
+#       volumes:
+#       - name: config
+#         configMap:
+#           name: {{ template "filebeat.fullname" . }}-config
+#       - name: input-config
+#         configMap:
+#           name: {{ template "filebeat.fullname" . }}-input-config
+# {{- if .Values.elasticsearch.security.authc.enabled }}
+#       - name: certs
+#         secret:
+#           secretName: {{ template "fullname" . }}-certs
+# {{- end }}
+#       - name: data
+#         hostPath:
+#           path: {{ tpl .Values.filebeat.registryHostPath . | quote }}
+#           type: DirectoryOrCreate
+#       - name: container-log
+#         hostPath:
+#           path: /var/log/containers
+#       - name: pod-log
+#         hostPath:
+#           path: /var/log/pods
+#       - name: docker-log
+#         hostPath:
+#           path: /var/lib/docker/containers

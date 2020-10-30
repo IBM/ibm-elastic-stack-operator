@@ -12,260 +12,260 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-{{ template "elk.settings.all.prepare" . -}}
-{{ template "apiVersionTryV1" . }}
-kind: StatefulSet
-metadata:
-  labels:
-{{ $app := include "elasticsearch.fullname" . -}}
-{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 4 }}
-  name: {{ template "data.fullname" . }}
-spec:
-  selector:
-    matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 6 }}
-  updateStrategy:
-    type: RollingUpdate
-  revisionHistoryLimit: 3
-  podManagementPolicy: Parallel
-  serviceName: {{ template "elasticsearch.fullname" . }}-data
-  replicas: {{ .Values.elasticsearch.data.replicas }}
-  template:
-    metadata:
-      labels:
-{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 8 }}
-      annotations:
-{{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
-    spec:
-{{ include "image.pullSecret" . | indent 6 }}
-{{- if .Values.elasticsearch.data.tolerations }}
-      tolerations:
-{{ toYaml .Values.elasticsearch.data.tolerations | indent 6 }}
-{{- end }}
-{{- if .Values.elasticsearch.data.nodeSelector }}
-      nodeSelector:
-{{ toYaml .Values.elasticsearch.data.nodeSelector | indent 8 }}
-{{- end }}
-    {{- if eq .Values.elasticsearch.data.antiAffinity "hard" }}
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: "kubernetes.io/hostname"
-              labelSelector:
-                matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 18 }}
-    {{- else if eq .Values.elasticsearch.data.antiAffinity "soft" }}
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            podAffinityTerm:
-              topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 18 }}
-    {{- end }}
-      securityContext:
-        fsGroup: 1000
-      serviceAccountName: "{{ template "elasticsearch.fullname" . }}"
-      initContainers:
-    {{- if ne (.Values.general.environment | lower) "openshift" }}
-      - name: "chmod"
-        securityContext:
-          privileged: true
-          readOnlyRootFilesystem: true
-        image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
-        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-        command: ["chmod", "777", "/data-dir"]          
-        volumeMounts:
-        - name: data
-          mountPath: /data-dir
-    {{- end }}
-      - name: "sysctl"
-        securityContext:
-          privileged: true
-        image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
-        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-        command: ["/bin/sh", "-c", "sysctl -w vm.max_map_count=262144 && touch /etc/sysctl.conf && sed -i '/^vm.max_map_count /d' /etc/sysctl.conf && echo 'vm.max_map_count = 262144' >> /etc/sysctl.conf"]
-      - name: migrate-data
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsUser: 1000
-          runAsNonRoot: true
-        image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: ["/scripts/migrate-elk551-data.sh"]
-        volumeMounts:
-        - name: data
-          mountPath: /usr/share/elasticsearch/data
-        - name: entrypoint
-          mountPath: /scripts
-      containers:
-{{- if .Values.elasticsearch.routerEnabled }}
-      - name: router
-        securityContext:
-          allowPrivilegeEscalation: false
-        resources:
-{{ toYaml .Values.elasticsearch.routerImage.resources | indent 12 }}
-        image: {{ include "image.calculateImage" (list .Values.elasticsearch.routerImage.repository .Values.elasticsearch.routerImage.tag .Values.elasticsearch.routerImage.digest) }}
-        imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-        command: ["nginx"]
-        env:
-        - name: CLUSTER_DOMAIN
-          value: "{{ template "clusterDomain" . }}"
-        - name: CLUSTER_NAME
-          value: "{{ template "clusterName" . }}"
-        - name: WLP_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              name: platform-oidc-credentials
-              key: WLP_CLIENT_ID
-        ports:
-        - name: router
-          containerPort: 8443
-        volumeMounts:
-          - name: router-config
-            mountPath: "/opt/ibm/router/nginx/conf/nginx.conf"
-            subPath: nginx.conf
-          - name: rbac-config
-            mountPath: "/opt/ibm/router/rbac"
-  {{- if .Values.elasticsearch.security.authc.enabled }}
-          - name: certs
-            mountPath: "/opt/ibm/router/tls"
-            readOnly: true
-          - name: cert-passphrases
-            mountPath: "/opt/ibm/router/tls-pass"
-            readOnly: true
-  {{- end }}
-{{- end }}
-      - name: es-data
-        securityContext:
-          allowPrivilegeEscalation: false
-        {{- if ne (.Values.general.environment | lower) "openshift" }}
-          privileged: false
-          capabilities:
-            add:
-              - IPC_LOCK
-              - SYS_RESOURCE
-        {{- else }}
-          capabilities:
-            add:
-              - SYS_CHROOT
-        {{- end }}
-        image: {{ include "image.calculateImage" (list .Values.elasticsearch.image.repository .Values.elasticsearch.image.tag .Values.elasticsearch.image.digest) }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: ["/bin/bash", "/scripts/entrypoint.sh"]
-        resources:
-          limits:
-            memory: {{ .Values.elasticsearch.data.memoryLimit }}
-        readinessProbe:
-        livenessProbe:
-        env:
-        - name: "ES_JAVA_OPTS"
-          value: "-Xms{{ .Values.elasticsearch.data.heapSize }} -Xmx{{ .Values.elasticsearch.data.heapSize }}"
-        - name: CFG_BASEDIR
-          value: /usr/share/elasticsearch
-        {{- if .Values.elasticsearch.security.authc.enabled }}
-        - name: CA_TRUSTSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "elasticsearch.fullname" . }}-pki-secret
-              key: caTruststorePassword
-        - name: APP_KEYSTORE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "elasticsearch.fullname" . }}-pki-secret
-              key: appKeystorePassword
-        {{- end }}
-        ports:
-        - containerPort: {{ .Values.elasticsearch.client.restPort }}
-          name: rest
-          protocol: TCP
-        - containerPort: {{ .Values.elasticsearch.internalPort }}
-          name: transport
-          protocol: TCP
-        volumeMounts:
-        - name: data
-          mountPath: /usr/share/elasticsearch/data
-        - name: config
-          mountPath: /usr/share/config/elasticsearch.yml
-          subPath: elasticsearch.yml
-        - name: entrypoint
-          mountPath: /scripts
-      {{- if .Values.elasticsearch.security.authc.enabled }}
-        - name: certs
-          mountPath: "/usr/share/elasticsearch/config/tls"
-          readOnly: true
-      {{- end }}
-      volumes:
-        - name: config
-          configMap:
-            name: {{ template "elasticsearch.fullname" . }}-config
-            items:
-              - key: data.yml
-                path: elasticsearch.yml
-        {{- if and .Values.elasticsearch.security.authc.enabled (eq .Values.elasticsearch.security.authc.provider "xpack") }}
-              - key: roles.yml
-                path: roles.yml
-              - key: role_mapping.yml
-                path: role_mapping.yml
-        {{- end }}
-        - name: entrypoint
-          configMap:
-            name: {{ template "elasticsearch.fullname" . }}-entrypoint
-            defaultMode: 365
-            items:
-              - key: entrypoint.sh
-                path: entrypoint.sh
-              - key: map-config.sh
-                path: map-config.sh
-              - key: migrate-elk551-data.sh
-                path: migrate-elk551-data.sh
-        {{- if .Values.elasticsearch.security.authc.enabled }}
-        - name: certs
-          secret:
-            secretName: {{ template "fullname" . }}-certs
-        - name: cert-passphrases
-          secret:
-            secretName: {{ template "elasticsearch.fullname" . }}-pki-secret
-        {{- end }}
-{{- if .Values.elasticsearch.routerEnabled }}
-        - name: router-config
-          configMap:
-            name: {{ template "elasticsearch.fullname" . }}-router-config
-        - name: rbac-config
-          configMap:
-            name: {{ template "elasticsearch.fullname" . }}-rbac-config
-{{- end }}
-        {{- if not .Values.elasticsearch.data.storage.persistent }}
-        - name: data
-          emptyDir:
-            medium: ""
-        {{- end }}
+# {{ template "elk.settings.all.prepare" . -}}
+# {{ template "apiVersionTryV1" . }}
+# kind: StatefulSet
+# metadata:
+#   labels:
+# {{ $app := include "elasticsearch.fullname" . -}}
+# {{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 4 }}
+#   name: {{ template "data.fullname" . }}
+# spec:
+#   selector:
+#     matchLabels:
+# {{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 6 }}
+#   updateStrategy:
+#     type: RollingUpdate
+#   revisionHistoryLimit: 3
+#   podManagementPolicy: Parallel
+#   serviceName: {{ template "elasticsearch.fullname" . }}-data
+#   replicas: {{ .Values.elasticsearch.data.replicas }}
+#   template:
+#     metadata:
+#       labels:
+# {{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 8 }}
+#       annotations:
+# {{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
+#     spec:
+# {{ include "image.pullSecret" . | indent 6 }}
+# {{- if .Values.elasticsearch.data.tolerations }}
+#       tolerations:
+# {{ toYaml .Values.elasticsearch.data.tolerations | indent 6 }}
+# {{- end }}
+# {{- if .Values.elasticsearch.data.nodeSelector }}
+#       nodeSelector:
+# {{ toYaml .Values.elasticsearch.data.nodeSelector | indent 8 }}
+# {{- end }}
+#     {{- if eq .Values.elasticsearch.data.antiAffinity "hard" }}
+#       affinity:
+#         podAntiAffinity:
+#           requiredDuringSchedulingIgnoredDuringExecution:
+#             - topologyKey: "kubernetes.io/hostname"
+#               labelSelector:
+#                 matchLabels:
+# {{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 18 }}
+#     {{- else if eq .Values.elasticsearch.data.antiAffinity "soft" }}
+#       affinity:
+#         podAntiAffinity:
+#           preferredDuringSchedulingIgnoredDuringExecution:
+#           - weight: 1
+#             podAffinityTerm:
+#               topologyKey: kubernetes.io/hostname
+#               labelSelector:
+#                 matchLabels:
+# {{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 18 }}
+#     {{- end }}
+#       securityContext:
+#         fsGroup: 1000
+#       serviceAccountName: "{{ template "elasticsearch.fullname" . }}"
+#       initContainers:
+#     {{- if ne (.Values.general.environment | lower) "openshift" }}
+#       - name: "chmod"
+#         securityContext:
+#           privileged: true
+#           readOnlyRootFilesystem: true
+#         image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
+#         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+#         command: ["chmod", "777", "/data-dir"]          
+#         volumeMounts:
+#         - name: data
+#           mountPath: /data-dir
+#     {{- end }}
+#       - name: "sysctl"
+#         securityContext:
+#           privileged: true
+#         image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
+#         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+#         command: ["/bin/sh", "-c", "sysctl -w vm.max_map_count=262144 && touch /etc/sysctl.conf && sed -i '/^vm.max_map_count /d' /etc/sysctl.conf && echo 'vm.max_map_count = 262144' >> /etc/sysctl.conf"]
+#       - name: migrate-data
+#         securityContext:
+#           allowPrivilegeEscalation: false
+#           readOnlyRootFilesystem: true
+#           runAsUser: 1000
+#           runAsNonRoot: true
+#         image: {{ include "image.calculateImage" (list .Values.elasticsearch.initImage.repository .Values.elasticsearch.initImage.tag .Values.elasticsearch.initImage.digest) }}
+#         imagePullPolicy: {{ .Values.image.pullPolicy }}
+#         command: ["/scripts/migrate-elk551-data.sh"]
+#         volumeMounts:
+#         - name: data
+#           mountPath: /usr/share/elasticsearch/data
+#         - name: entrypoint
+#           mountPath: /scripts
+#       containers:
+# {{- if .Values.elasticsearch.routerEnabled }}
+#       - name: router
+#         securityContext:
+#           allowPrivilegeEscalation: false
+#         resources:
+# {{ toYaml .Values.elasticsearch.routerImage.resources | indent 12 }}
+#         image: {{ include "image.calculateImage" (list .Values.elasticsearch.routerImage.repository .Values.elasticsearch.routerImage.tag .Values.elasticsearch.routerImage.digest) }}
+#         imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+#         command: ["nginx"]
+#         env:
+#         - name: CLUSTER_DOMAIN
+#           value: "{{ template "clusterDomain" . }}"
+#         - name: CLUSTER_NAME
+#           value: "{{ template "clusterName" . }}"
+#         - name: WLP_CLIENT_ID
+#           valueFrom:
+#             secretKeyRef:
+#               name: platform-oidc-credentials
+#               key: WLP_CLIENT_ID
+#         ports:
+#         - name: router
+#           containerPort: 8443
+#         volumeMounts:
+#           - name: router-config
+#             mountPath: "/opt/ibm/router/nginx/conf/nginx.conf"
+#             subPath: nginx.conf
+#           - name: rbac-config
+#             mountPath: "/opt/ibm/router/rbac"
+#   {{- if .Values.elasticsearch.security.authc.enabled }}
+#           - name: certs
+#             mountPath: "/opt/ibm/router/tls"
+#             readOnly: true
+#           - name: cert-passphrases
+#             mountPath: "/opt/ibm/router/tls-pass"
+#             readOnly: true
+#   {{- end }}
+# {{- end }}
+#       - name: es-data
+#         securityContext:
+#           allowPrivilegeEscalation: false
+#         {{- if ne (.Values.general.environment | lower) "openshift" }}
+#           privileged: false
+#           capabilities:
+#             add:
+#               - IPC_LOCK
+#               - SYS_RESOURCE
+#         {{- else }}
+#           capabilities:
+#             add:
+#               - SYS_CHROOT
+#         {{- end }}
+#         image: {{ include "image.calculateImage" (list .Values.elasticsearch.image.repository .Values.elasticsearch.image.tag .Values.elasticsearch.image.digest) }}
+#         imagePullPolicy: {{ .Values.image.pullPolicy }}
+#         command: ["/bin/bash", "/scripts/entrypoint.sh"]
+#         resources:
+#           limits:
+#             memory: {{ .Values.elasticsearch.data.memoryLimit }}
+#         readinessProbe:
+#         livenessProbe:
+#         env:
+#         - name: "ES_JAVA_OPTS"
+#           value: "-Xms{{ .Values.elasticsearch.data.heapSize }} -Xmx{{ .Values.elasticsearch.data.heapSize }}"
+#         - name: CFG_BASEDIR
+#           value: /usr/share/elasticsearch
+#         {{- if .Values.elasticsearch.security.authc.enabled }}
+#         - name: CA_TRUSTSTORE_PASSWORD
+#           valueFrom:
+#             secretKeyRef:
+#               name: {{ template "elasticsearch.fullname" . }}-pki-secret
+#               key: caTruststorePassword
+#         - name: APP_KEYSTORE_PASSWORD
+#           valueFrom:
+#             secretKeyRef:
+#               name: {{ template "elasticsearch.fullname" . }}-pki-secret
+#               key: appKeystorePassword
+#         {{- end }}
+#         ports:
+#         - containerPort: {{ .Values.elasticsearch.client.restPort }}
+#           name: rest
+#           protocol: TCP
+#         - containerPort: {{ .Values.elasticsearch.internalPort }}
+#           name: transport
+#           protocol: TCP
+#         volumeMounts:
+#         - name: data
+#           mountPath: /usr/share/elasticsearch/data
+#         - name: config
+#           mountPath: /usr/share/config/elasticsearch.yml
+#           subPath: elasticsearch.yml
+#         - name: entrypoint
+#           mountPath: /scripts
+#       {{- if .Values.elasticsearch.security.authc.enabled }}
+#         - name: certs
+#           mountPath: "/usr/share/elasticsearch/config/tls"
+#           readOnly: true
+#       {{- end }}
+#       volumes:
+#         - name: config
+#           configMap:
+#             name: {{ template "elasticsearch.fullname" . }}-config
+#             items:
+#               - key: data.yml
+#                 path: elasticsearch.yml
+#         {{- if and .Values.elasticsearch.security.authc.enabled (eq .Values.elasticsearch.security.authc.provider "xpack") }}
+#               - key: roles.yml
+#                 path: roles.yml
+#               - key: role_mapping.yml
+#                 path: role_mapping.yml
+#         {{- end }}
+#         - name: entrypoint
+#           configMap:
+#             name: {{ template "elasticsearch.fullname" . }}-entrypoint
+#             defaultMode: 365
+#             items:
+#               - key: entrypoint.sh
+#                 path: entrypoint.sh
+#               - key: map-config.sh
+#                 path: map-config.sh
+#               - key: migrate-elk551-data.sh
+#                 path: migrate-elk551-data.sh
+#         {{- if .Values.elasticsearch.security.authc.enabled }}
+#         - name: certs
+#           secret:
+#             secretName: {{ template "fullname" . }}-certs
+#         - name: cert-passphrases
+#           secret:
+#             secretName: {{ template "elasticsearch.fullname" . }}-pki-secret
+#         {{- end }}
+# {{- if .Values.elasticsearch.routerEnabled }}
+#         - name: router-config
+#           configMap:
+#             name: {{ template "elasticsearch.fullname" . }}-router-config
+#         - name: rbac-config
+#           configMap:
+#             name: {{ template "elasticsearch.fullname" . }}-rbac-config
+# {{- end }}
+#         {{- if not .Values.elasticsearch.data.storage.persistent }}
+#         - name: data
+#           emptyDir:
+#             medium: ""
+#         {{- end }}
 
-{{- if .Values.elasticsearch.data.storage.persistent }}
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-      labels:
-{{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 8 }}
-    spec:
-      {{- if .Values.elasticsearch.data.storage.useDynamicProvisioning }}
-      storageClassName: {{ default nil .Values.elasticsearch.data.storage.storageClass | quote }}
-      {{- else }}
-      storageClassName: {{ default "" .Values.elasticsearch.data.storage.storageClass | quote }}
-      {{- end }}
-      accessModes:
-      {{- range .Values.elasticsearch.data.storage.accessModes }}
-        - {{ . | quote }}
-      {{- end }}
-      {{- if .Values.elasticsearch.data.storage.selector.label }}
-      selector:
-        matchExpressions:
-          - {key: {{ .Values.elasticsearch.data.storage.selector.label }}, operator: In, values: [{{ .Values.elasticsearch.data.storage.selector.value }}]}
-      {{- end }}
-      resources:
-        requests:
-          storage: {{ .Values.elasticsearch.data.storage.size | quote }}
-{{- end }}
+# {{- if .Values.elasticsearch.data.storage.persistent }}
+#   volumeClaimTemplates:
+#   - metadata:
+#       name: data
+#       labels:
+# {{ include "metadata.calculateLabels" (list . $app .Values.elasticsearch.data.name "data") | indent 8 }}
+#     spec:
+#       {{- if .Values.elasticsearch.data.storage.useDynamicProvisioning }}
+#       storageClassName: {{ default nil .Values.elasticsearch.data.storage.storageClass | quote }}
+#       {{- else }}
+#       storageClassName: {{ default "" .Values.elasticsearch.data.storage.storageClass | quote }}
+#       {{- end }}
+#       accessModes:
+#       {{- range .Values.elasticsearch.data.storage.accessModes }}
+#         - {{ . | quote }}
+#       {{- end }}
+#       {{- if .Values.elasticsearch.data.storage.selector.label }}
+#       selector:
+#         matchExpressions:
+#           - {key: {{ .Values.elasticsearch.data.storage.selector.label }}, operator: In, values: [{{ .Values.elasticsearch.data.storage.selector.value }}]}
+#       {{- end }}
+#       resources:
+#         requests:
+#           storage: {{ .Values.elasticsearch.data.storage.size | quote }}
+# {{- end }}

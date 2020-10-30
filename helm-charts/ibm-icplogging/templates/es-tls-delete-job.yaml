@@ -12,56 +12,56 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: "{{ template "elasticsearch.fullname" . }}-tls-delete"
-  labels:
-{{ $app := include "elasticsearch.fullname" . -}}
-{{ include "metadata.calculateLabels" (list . $app "tls-delete" "cleanup") | indent 8 }}
-spec:
-  backoffLimit: 90
-  template:
-    metadata:
-      labels:
-{{ include "metadata.calculateLabels" (list . $app "tls-delete" "cleanup") | indent 8 }}
-      annotations:
-{{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
-    spec:
-      restartPolicy: OnFailure
-{{ include "image.pullSecret" . | indent 6 }}
-{{- if .Values.elasticsearch.data.tolerations }}
-      tolerations:
-{{ toYaml .Values.elasticsearch.data.tolerations | indent 6 }}
-{{- end }}
-{{- if .Values.elasticsearch.data.nodeSelector }}
-      nodeSelector:
-{{ toYaml .Values.elasticsearch.data.nodeSelector | indent 8 }}
-{{- end }}
-      serviceAccountName: "{{ template "job.fullname" . }}"
-      containers:
-      - name: cleanup
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsUser: 1000
-          runAsNonRoot: true
-        image: {{ include "image.calculateImage" (list .Values.kibana.initImage.repository .Values.kibana.initImage.tag .Values.kibana.initImage.digest) }}
-        command: ["/opt/entry/cleanup.sh"]
-        volumeMounts:
-          - mountPath: "/opt/entry"
-            name: entrypoint
-{{- if .Values.elasticsearch.security.authc.enabled }}
-          - name: certs
-            mountPath: "/usr/share/elasticsearch/config/tls"
-            readOnly: true
-{{- end }}
-      volumes:
-      - name: entrypoint
-        configMap:
-          name: {{ template "elasticsearch.fullname" . }}-tls-cleanup
-          defaultMode: 0777
-{{- if .Values.elasticsearch.security.authc.enabled }}
-      - name: certs
-        secret:
-          secretName: {{ template "fullname" . }}-certs
-{{- end }}
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: "{{ template "elasticsearch.fullname" . }}-tls-delete"
+#   labels:
+# {{ $app := include "elasticsearch.fullname" . -}}
+# {{ include "metadata.calculateLabels" (list . $app "tls-delete" "cleanup") | indent 8 }}
+# spec:
+#   backoffLimit: 90
+#   template:
+#     metadata:
+#       labels:
+# {{ include "metadata.calculateLabels" (list . $app "tls-delete" "cleanup") | indent 8 }}
+#       annotations:
+# {{ include "metadata.calculateAnnotations" (list . ) | indent 8 }}
+#     spec:
+#       restartPolicy: OnFailure
+# {{ include "image.pullSecret" . | indent 6 }}
+# {{- if .Values.elasticsearch.data.tolerations }}
+#       tolerations:
+# {{ toYaml .Values.elasticsearch.data.tolerations | indent 6 }}
+# {{- end }}
+# {{- if .Values.elasticsearch.data.nodeSelector }}
+#       nodeSelector:
+# {{ toYaml .Values.elasticsearch.data.nodeSelector | indent 8 }}
+# {{- end }}
+#       serviceAccountName: "{{ template "job.fullname" . }}"
+#       containers:
+#       - name: cleanup
+#         securityContext:
+#           allowPrivilegeEscalation: false
+#           runAsUser: 1000
+#           runAsNonRoot: true
+#         image: {{ include "image.calculateImage" (list .Values.kibana.initImage.repository .Values.kibana.initImage.tag .Values.kibana.initImage.digest) }}
+#         command: ["/opt/entry/cleanup.sh"]
+#         volumeMounts:
+#           - mountPath: "/opt/entry"
+#             name: entrypoint
+# {{- if .Values.elasticsearch.security.authc.enabled }}
+#           - name: certs
+#             mountPath: "/usr/share/elasticsearch/config/tls"
+#             readOnly: true
+# {{- end }}
+#       volumes:
+#       - name: entrypoint
+#         configMap:
+#           name: {{ template "elasticsearch.fullname" . }}-tls-cleanup
+#           defaultMode: 0777
+# {{- if .Values.elasticsearch.security.authc.enabled }}
+#       - name: certs
+#         secret:
+#           secretName: {{ template "fullname" . }}-certs
+# {{- end }}

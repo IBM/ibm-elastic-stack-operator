@@ -35,7 +35,7 @@ kibana.defaultAppId: "discover"
 
 # 2. elastisearch settings
 {{- if .Values.elasticsearch.security.authc.enabled }}
-elasticsearch.hosts: "https://{{ .Values.elasticsearch.name }}:{{ .Values.elasticsearch.client.restPort }}"
+elasticsearch.hosts: "https://elasticsearch.openshift-logging.svc.cluster.local:9200" #"https://{{ .Values.elasticsearch.name }}:{{ .Values.elasticsearch.client.restPort }}"
 elasticsearch.ssl.alwaysPresentCertificate: true
 elasticsearch.ssl.certificate: /usr/share/elasticsearch/config/tls/kibana.crt
 elasticsearch.ssl.key: /usr/share/elasticsearch/config/tls/kibana.key
@@ -43,7 +43,7 @@ elasticsearch.ssl.certificateAuthorities: /usr/share/elasticsearch/config/tls/ca
 elasticsearch.ssl.keyPassphrase: "{{ .Values.security.app.keystore.password }}"
 elasticsearch.ssl.verificationMode: certificate
 {{- else }}
-elasticsearch.hosts: "http://{{ .Values.elasticsearch.name }}:{{ .Values.elasticsearch.client.restPort }}"
+elasticsearch.hosts: "http://elasticsearch.openshift-logging.svc.cluster.local:9200" #"http://{{ .Values.elasticsearch.name }}:{{ .Values.elasticsearch.client.restPort }}"
 {{- end }}
 
 # 3. ssl settings

@@ -1,7 +1,0 @@
-{
-  "index_patterns": "logstash-*",
-  "settings": {
-    "index.mapping.ignore_malformed": true,
-    "number_of_shards": 1
-  }
-}

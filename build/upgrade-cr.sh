@@ -41,7 +41,6 @@ yq d -i $temp_file status
 yq d -i $temp_file metadata.creationTimestamp
 yq d -i $temp_file metadata.finalizers
 yq d -i $temp_file metadata.generation
-yq d -i $temp_file 'metadata.labels."operator.ibm.com/opreq-control"'
 yq d -i $temp_file metadata.resourceVersion
 yq d -i $temp_file metadata.selfLink
 yq d -i $temp_file metadata.uid
@@ -49,6 +48,7 @@ yq d -i $temp_file 'metadata.annotations."kubectl.kubernetes.io/last-applied-con
 yq d -i $temp_file metadata.managedFields
 yq d -i $temp_file 'metadata.annotations."operator-sdk/primary-resource"'
 yq d -i $temp_file 'metadata.annotations."operator-sdk/primary-resource-type"'
+yq w -i $temp_file 'metadata.labels."operator.ibm.com/opreq-control"' true
 
 set +x
 echo "cr with fields preserved for recreation:"

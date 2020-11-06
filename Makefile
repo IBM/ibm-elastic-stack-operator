@@ -27,7 +27,7 @@ NAMESPACE=ibm-common-services
 IMG ?= ibm-elastic-stack-operator
 REGISTRY ?= "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom"
 DEV_REGISTRY ?= "quay.io/hxiao"
-CSV_VERSION ?= 3.2.3
+CSV_VERSION ?= 3.2.4
 
 QUAY_USERNAME ?=
 QUAY_PASSWORD ?=

@@ -25,4 +25,4 @@ scorecard:
     - olm:
         cr-manifest:
           - "deploy/crdselasticstack.ibm.com_v1alpha1_elasticstack_cr.yaml"
-        csv-path: "deploy/olm-catalog/ibm-elastic-stack-operator/3.2.3/ibm-elastic-stack-operator.v3.2.3.clusterserviceversion.yaml"
+        csv-path: "deploy/olm-catalog/ibm-elastic-stack-operator/3.2.4/ibm-elastic-stack-operator.v3.2.4.clusterserviceversion.yaml"

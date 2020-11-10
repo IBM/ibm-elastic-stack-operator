@@ -15,6 +15,7 @@ Filebeat, Logstash, Elasticsearch, Kibana, Curator, and Nginx are the main compo
 ## Operator versions
 
 - 3.2.4
+- 3.2.3
 - 3.2.2
 - 3.2.0
 - 3.1.4

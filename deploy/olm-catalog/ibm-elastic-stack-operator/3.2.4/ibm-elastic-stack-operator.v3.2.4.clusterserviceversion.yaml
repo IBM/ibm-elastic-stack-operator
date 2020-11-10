@@ -1,7 +1,7 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: ibm-elastic-stack-operator.v3.2.3
+  name: ibm-elastic-stack-operator.v3.2.4
   labels:
     name: ibm-elastic-stack-operator
     app.kubernetes.io/instance: common-logging
@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: elasticstacks.elasticstack.ibm.com
   namespace: placeholder
   annotations:
-    olm.skipRange: '>=3.0.5 <3.2.3'
+    olm.skipRange: '>=3.0.5 <3.2.4'
     alm-examples: |-
       [
         {
@@ -191,7 +191,7 @@ metadata:
     certified: "false"
     support: "IBM"
     repository: https://github.com/IBM/ibm-elastic-stack-operator
-    image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.3
+    image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.4
     createdAt: '2020-09-6T20:12:00Z'
     description: |-
       Operator that installs and manages Elastic Stack logging service instances. 
@@ -481,9 +481,9 @@ spec:
                       fieldPath: metadata.name
                 - name: OPERATOR_NAME
                   value: ibm-elastic-stack-operator
-                # 3.2.3
+                # 3.2.4
                 # image: quay.io/opencloudio/ibm-elastic-stack-operator@sha256:9b21af3f4e3cbc4342921297197f331dd3dba839db914af1697ccf5c5e70dd43
-                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.3
+                image: quay.io/opencloudio/ibm-elastic-stack-operator:3.2.4
                 imagePullPolicy: Always
                 name: ibm-elastic-stack-operator
                 resources:
@@ -521,5 +521,5 @@ spec:
     url: https://www.elastic.co/
   - name: Elastic Stack Operator
     url: https://github.com/IBM/ibm-elastic-stack-operator
-  replaces: ibm-elastic-stack-operator.v3.2.2
-  version: 3.2.3
+  replaces: ibm-elastic-stack-operator.v3.2.3
+  version: 3.2.4

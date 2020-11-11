@@ -54,7 +54,7 @@ logstash:
   port: 5000
   image:
     repository: "quay.io/opencloudio/icp-logstash-oss"
-    tag: "6.8.10-build.2"
+    tag: "6.8.10-build.3"
     digest: "sha256:cc32db4699a72daae2b044949b11366737d5ea2b7e283a50e838cb9cbbfa689e"
   nodeSelector:
   tolerations: []
@@ -113,8 +113,8 @@ kibana:
         memory: 64Mi
   initImage:
     repository: "quay.io/opencloudio/curl"
-    tag: "4.2.0-build.6"
-    digest: "sha256:90256103fbff2b68202d1bebc57481f337f4cf397cc126c084d0e29f9ef6c11f"
+    tag: "4.2.0-build.8"
+    digest: "sha256:1f8d46187c2330a73c895f37aa010235288083972516f97fe518247c8a68dc57"
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
     tag: "2.5.5"
@@ -172,8 +172,8 @@ elasticsearch:
   internalPort: 9300
   image:
     repository: "quay.io/opencloudio/icp-elasticsearch-oss"
-    tag: "6.8.10-build.2"
-    digest: "sha256:70e3a69ae5d66e10d32d88f2d7656a7d649bc3aa951b79f6b5a7504eec703a4e"
+    tag: "6.8.10-build.3"
+    digest: "sha256:6ece80649d7be909986776b8b5a85c620e855626c7deb262ffd91b07f2c69e5f"
   pkiInitImage:
     repository: "quay.io/opencloudio/logging-pki-init"    
     tag: "2.3.0-build.3"

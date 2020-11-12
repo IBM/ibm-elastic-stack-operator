@@ -16,7 +16,7 @@
 channels:
 - currentCSV: ibm-elastic-stack-operator.v3.2.4
   name: dev
-- currentCSV: ibm-elastic-stack-operator.v3.2.3
+- currentCSV: ibm-elastic-stack-operator.v3.2.4
   name: beta
 - currentCSV: ibm-elastic-stack-operator.v3.2.3
   name: stable-v1

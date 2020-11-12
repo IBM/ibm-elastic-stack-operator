@@ -55,7 +55,7 @@ logstash:
   image:
     repository: "quay.io/opencloudio/icp-logstash-oss"
     tag: "6.8.10-build.3"
-    digest: "sha256:cc32db4699a72daae2b044949b11366737d5ea2b7e283a50e838cb9cbbfa689e"
+    digest: "sha256:9d2630efe8e492fc97821f79d5871b7d53c4420fc4dd2c0e449d3f767e4ba3e0"
   nodeSelector:
   tolerations: []
 kibana:
@@ -157,8 +157,8 @@ filebeat:
       memory: 64Mi
   image:
     repository: "quay.io/opencloudio/icp-filebeat-oss"
-    tag: "6.8.10-build.2"
-    digest: "sha256:a98e22356c1e510cff4f7e3c51d744bccc8d035e39db869356f2fd2e7b6988a8"
+    tag: "6.8.10-build.3"
+    digest: "sha256:42ef999c708e91f658e71d2983f9c675bf815b9dc0a838fe34de8f6c4d432acf"
   scope:
     nodes: {}
     namespaces: []

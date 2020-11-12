@@ -185,7 +185,7 @@ metadata:
           }
         }
       ]
-    capabilities: Seamless Upgrades
+    capabilities: "Basic Install"
     "operatorframework.io/suggested-namespace": ibm-common-services
     categories: "Logging & Tracing"
     certified: "false"

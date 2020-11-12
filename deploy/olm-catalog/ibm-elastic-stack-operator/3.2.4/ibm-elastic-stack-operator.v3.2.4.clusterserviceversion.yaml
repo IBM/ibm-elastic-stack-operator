@@ -203,19 +203,34 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - description: Log processing, storage, management, analysis, search and visalization solution including  logging service instance including Elasticsearch, Kibana, Logstash, Filebeats and Curator
+    - description: Log processing, storage, management, analysis, search and visalization solution including logging service instance including Elasticsearch, Kibana, Logstash, Filebeats and Curator. Documentation For additional details regarding install parameters check the readme at http://ibm.biz/cpcsdocs. License By installing this product you accept the license terms http://ibm.biz/cpcsdocs.
+      displayName: Elastic Stack
       displayName: Elastic Stack
       kind: ElasticStack
       name: elasticstacks.elasticstack.ibm.com
       version: v1alpha1
   description: |
     Operator that installs and manages Elastic Stack logging service instances
-
+    # Introduction
     ## Overview
     Each Elastic Stack instance provides user-friendly visibility to system/application
       logs by collecting, transforming, storing, presenting and archiving logs in a 
       secure, scalable and customizable way. Filebeat, Logstash, Elasticsearch, Kibana,
       Curator and Nginx are the main components
+
+    # Details
+    ## Prerequisites
+    1. Red Hat OpenShift Container Platform 4.x must be installed.
+    2. Cluster Admin role for installation.
+    3. [IBM IAM Operator](https://github.com/IBM/ibm-iam-operator)
+    4. [IBM Management Ingress Operator](https://github.com/IBM/ibm-management-ingress-operator)
+    ## Resources Required
+    * Elasticsearch resource needs can vary widely based on your cluster and workload details. Please read the capacity planning guide in the [IBM Cloud Platform Common Services documentation](http://ibm.biz/cpcsdocs) for helpful information to plan the necessary resources.
+    * See Storage section below
+    ## Installing
+    * Include installation instructions or links to documentation
+    * Include the basic things necessary to install the product
+    * Include environment setup or any other items required
 
     ## Key Features
     ### Tenant Isolation
@@ -282,7 +297,12 @@ spec:
 
     ## Installing in Namespaces Other than kube-system
     Additional permissions might be needed
-  displayName: IBM Elastic Stack Operator
+    # Configuration
+    Please see readme
+    ### Limitations
+    Deploys one instance into ibm-common-services namespace. Cluster must be running OCP 4.x. See Prerequisites section for more.
+    ### SecurityContextConstraints Requirements
+  displayName: IBM Elastic Stack
   minKubeVersion: 1.9.0
   install:
     spec:

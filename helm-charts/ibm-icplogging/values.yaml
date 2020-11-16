@@ -117,8 +117,8 @@ kibana:
     digest: "sha256:90256103fbff2b68202d1bebc57481f337f4cf397cc126c084d0e29f9ef6c11f"
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
-    tag: "2.5.5"
-    digest: "sha256:0070e99691123f2437f5d5b1422f9d0b8eec5746f72e656d1fc9e7947a56e00e"
+    tag: "2.5.7"
+    digest: "sha256:fa6650cd65f943d5d3c8c6fd84ae97abdd51396bed9b2ffaae2895b484435e26"
     resources:
       limits:
         memory: 256Mi
@@ -189,8 +189,8 @@ elasticsearch:
     digest: "sha256:78c7914777de08064511033fc1065f3b1d0f593f59b8147230cd2f9c2405abd0"
   routerImage:
     repository: "quay.io/opencloudio/icp-management-ingress"
-    digest: "sha256:0070e99691123f2437f5d5b1422f9d0b8eec5746f72e656d1fc9e7947a56e00e"
-    tag: "2.5.5"
+    tag: "2.5.7"
+    digest: "sha256:fa6650cd65f943d5d3c8c6fd84ae97abdd51396bed9b2ffaae2895b484435e26"
     resources:
        limits:
          memory: 256Mi

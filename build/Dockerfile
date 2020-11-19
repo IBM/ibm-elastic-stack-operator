@@ -36,6 +36,7 @@ COPY LICENSE /licenses/
 
 USER root
 RUN microdnf update --nodocs \
+  && microdnf install findutils \
   && microdnf -y clean all \
   && chmod +x /scripts/entrypoint.sh /scripts/upgrade-cr.sh \
   && kubectl_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt) ;\

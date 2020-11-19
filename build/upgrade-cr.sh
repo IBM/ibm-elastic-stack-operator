@@ -59,7 +59,7 @@ yq d -i $temp_file 'metadata.annotations."kubectl.kubernetes.io/last-applied-con
 yq d -i $temp_file metadata.managedFields
 yq d -i $temp_file 'metadata.annotations."operator-sdk/primary-resource"'
 yq d -i $temp_file 'metadata.annotations."operator-sdk/primary-resource-type"'
-yq w -i $temp_file 'metadata.labels."operator.ibm.com/opreq-control"' true
+yq w -i $temp_file 'metadata.labels."operator.ibm.com/opreq-control"' true --style=double
 
 set +x
 echo "cr with fields preserved for recreation:"

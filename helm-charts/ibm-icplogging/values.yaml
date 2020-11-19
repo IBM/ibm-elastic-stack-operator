@@ -103,8 +103,8 @@ kibana:
   memoryLimit: "2048Mi"
   image:
     repository: quay.io/opencloudio/icp-kibana-oss
-    tag: 6.8.10-build.2
-    digest: "sha256:4a5b398f4c6f725282e1189e326078e1245db24144e2892c6abc969dc1855c8c"
+    tag: 6.8.10-build.3
+    digest: "sha256:fceed38cd068aac38437ee4ed1159c3b7130eacb7fb43247602e706c8bf26ccb"
   init:
     resources:
       limits:

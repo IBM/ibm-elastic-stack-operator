@@ -30,7 +30,7 @@ set +x
 
 if [ -s $temp_file ] 
 then
-	echo "unmodified cr:"
+    echo "unmodified cr:"
     cat $temp_file
 else
     echo "cr doesn't exist. "

@@ -28,8 +28,19 @@ set -x
 kubectl get elasticstack/$cr_name -n $namespace -o yaml > $temp_file
 set +x
 
-echo "unmodified cr:"
-cat $temp_file
+if [ -s $temp_file ] 
+then
+    echo "unmodified cr:"
+    cat $temp_file
+else
+    echo "cr doesn't exist. "
+    echo "`date` - 2b. clean up"
+    rm ${temp_file}
+
+    echo "`date` - 2c. EXIT"
+    echo "job exit code $exit_code"
+    exit $exit_code
+fi
 
 operator_version=$(yq r $temp_file metadata.generation)
 echo "operator_version=$operator_version"
@@ -48,7 +59,7 @@ yq d -i $temp_file 'metadata.annotations."kubectl.kubernetes.io/last-applied-con
 yq d -i $temp_file metadata.managedFields
 yq d -i $temp_file 'metadata.annotations."operator-sdk/primary-resource"'
 yq d -i $temp_file 'metadata.annotations."operator-sdk/primary-resource-type"'
-yq w -i $temp_file 'metadata.labels."operator.ibm.com/opreq-control"' true
+yq w -i $temp_file 'metadata.labels."operator.ibm.com/opreq-control"' true --style=double
 
 set +x
 echo "cr with fields preserved for recreation:"

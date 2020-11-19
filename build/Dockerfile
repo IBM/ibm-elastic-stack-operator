@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM quay.io/operator-framework/helm-operator:v1.0.1
+FROM quay.io/operator-framework/helm-operator:v1.2.0
 
 LABEL org.label-schema.vendor="IBM" \
     org.label-schema.name="ibm-elastic-stack-operator" \
@@ -36,6 +36,7 @@ COPY LICENSE /licenses/
 
 USER root
 RUN microdnf update --nodocs \
+  && microdnf install findutils \
   && microdnf -y clean all \
   && chmod +x /scripts/entrypoint.sh /scripts/upgrade-cr.sh \
   && kubectl_ver=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt) ;\

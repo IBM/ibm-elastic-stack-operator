@@ -33,7 +33,7 @@ then
 	echo "unmodified cr:"
     cat $temp_file
 else
-	echo "cr doesn't exist. "
+    echo "cr doesn't exist. "
     echo "`date` - 2b. clean up"
     rm ${temp_file}
 

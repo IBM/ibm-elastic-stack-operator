@@ -203,7 +203,7 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
-    - description: Log processing, storage, management, analysis, search and visalization solution including logging service instance including Elasticsearch, Kibana, Logstash, Filebeats and Curator. Documentation For additional details regarding install parameters check the readme at http://ibm.biz/cpcsdocs. License By installing this product you accept the license terms http://ibm.biz/cpcsdocs.
+    - description: Log processing, storage, management, analysis, search and visalization solution including logging service instance including Elasticsearch, Kibana, Logstash, Filebeats and Curator. Documentation For additional details regarding install parameters check the readme at http://ibm.biz/cpcsdocs.
       displayName: Elastic Stack
       displayName: Elastic Stack
       kind: ElasticStack

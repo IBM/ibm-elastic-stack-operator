@@ -14,6 +14,7 @@
 # limitations under the License.
 
 name: ibm-icplogging
+appVersion: 3.2.5
 version: 3.2.5
 description: Log storage and search management solution
 kubeVersion: ">=1.9.0"

@@ -1,4 +1,4 @@
-## Introduction
+# Introduction
 
 Contains a fully integrated Elasticsearch solution to securely collect logs in a Kubernetes environment.
 
@@ -16,42 +16,6 @@ Configurable features include:
   - Automated TLS configuration
   - Kibana ingress with authentication and authorization verification
   - UI navigation link to the Kibana ingress
-
-## Resources Required
-
-* Elasticsearch resource needs can vary widely based on your cluster and workload details. Please read the capacity planning guide in the [IBM Cloud Platform Common Services documentation](http://ibm.biz/cpcsdocs) for helpful information to plan the necessary resources.
-* See [Storage](#storage)
-
-
-## Prerequisites
-
-* Kubernetes 1.9 or higher
-* Tiller 2.7.2 or higher
-* PV provisioner support in the underlying infrastructure
-
-
-## Installing and Removing the Chart
-
-### Installing the Chart
-
-To install the chart with the release name `my-release`:
-
-```console
-$ helm install --name my-release stable/ibm-icplogging
-```
-
-The command deploys ibm-icplogging on the Kubernetes cluster with default values. The configuration section lists the parameters that can be configured during installation.
-
-### Uninstalling the Chart
-
-To uninstall/delete the my-release deployment:
-
-```console
-$ helm delete my-release
-```
-
-The command removes all the Kubernetes components associated with the chart and deletes the release.
-
 
 ## Configuration
 
@@ -197,6 +161,44 @@ Parameter | Description | Default
 `curator.nodeSelector`      | Kubernetes selector that can restrict the pod to run on certain nodes | `empty (nil)`
 `curator.resources.limits.memory` | The maximum memory allowed per pod    | `256Mi`
 `curator.resources.requests.memory` | The minimum memory required per pod | `64Mi`
+
+## Installing and Removing the Chart
+
+### Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm install --name my-release stable/ibm-icplogging
+```
+
+The command deploys ibm-icplogging on the Kubernetes cluster with default values. The configuration section lists the parameters that can be configured during installation.
+
+### Uninstalling the Chart
+
+To uninstall/delete the my-release deployment:
+
+```console
+$ helm delete my-release
+```
+
+The command removes all the Kubernetes components associated with the chart and deletes the release.
+
+# Limitations
+
+## Prerequisites
+
+* Kubernetes 1.9 or higher
+* Tiller 2.7.2 or higher
+* PV provisioner support in the underlying infrastructure
+
+### Resources Required
+
+* Elasticsearch resource needs can vary widely based on your cluster and workload details. Please read the capacity planning guide in the [IBM Cloud Platform Common Services documentation](http://ibm.biz/cpcsdocs) for helpful information to plan the necessary resources.
+* See [Storage](#storage)
+
+# PodSecurityPolicy Requirements
+# SecurityContextConstraints Requirements
 
 ## Storage
 

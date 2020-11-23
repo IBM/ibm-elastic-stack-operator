@@ -1,8 +1,8 @@
 # What's New
 
-# Fixes
+### Fixes
 
-# Prerequisites
+## Prerequisites
 
 # Known Issues
 

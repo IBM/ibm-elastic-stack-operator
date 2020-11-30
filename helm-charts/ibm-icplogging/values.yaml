@@ -177,9 +177,9 @@ elasticsearch:
     tag: "6.8.10-build.3"
     digest: "sha256:6ece80649d7be909986776b8b5a85c620e855626c7deb262ffd91b07f2c69e5f"
   pkiInitImage:
-    repository: "quay.io/opencloudio/logging-pki-init"    
-    tag: "2.3.0-build.3"
-    digest: "sha256:d73cbc2895486c425bde39497b10e00fd45b550e4953eb8d3e04c1ac3936b4a8"
+    repository: "quay.io/bluzarraga/pki-init"    
+    tag: "2.3.0-build.6"
+    digest: "sha256:dbd3231256901128f2ed887fa48911879757fd4d991993bb3b9bb3e2b31f2f99"
     resources:
       limits:
         memory: 512Mi

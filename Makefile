@@ -26,8 +26,9 @@ NAMESPACE=ibm-common-services
 # Use your own docker registry and image name for dev/test by overridding the IMG and REGISTRY environment variable.
 IMG ?= ibm-elastic-stack-operator
 REGISTRY ?= "hyc-cloud-private-integration-docker-local.artifactory.swg-devops.com/ibmcom"
-DEV_REGISTRY ?= "quay.io/bluzarraga"
-CSV_VERSION ?= 3.2.4
+#DEV_REGISTRY ?= "quay.io/bluzarraga"
+DEV_REGISTRY ?= "quay.io/hxiao"
+CSV_VERSION ?= 3.2.5
 
 QUAY_USERNAME ?=
 QUAY_PASSWORD ?=

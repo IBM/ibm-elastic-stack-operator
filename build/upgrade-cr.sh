@@ -72,7 +72,16 @@ set +x
 
 echo "`date` - 5. deleting orphan resources"
 set -x
-kubectl get scc --no-headers=true | awk '/logging-elk/{print $1}'| xargs kubectl delete scc
+kubectl get scc --no-headers=true | awk '/logging-elk/{print $1}'
+
+kubectl delete --ignore-not-found=true scc logging-elk-elasticsearch
+kubectl delete --ignore-not-found=true scc logging-elk-filebeat-ds
+kubectl delete --ignore-not-found=true scc logging-elk-job
+kubectl delete --ignore-not-found=true scc logging-elk-kibana
+kubectl delete --ignore-not-found=true scc logging-elk-logstash
+
+kubectl get scc --no-headers=true | awk '/logging-elk/{print $1}'
+
 set +x
 
 echo "`date` - 6. recreating cr"

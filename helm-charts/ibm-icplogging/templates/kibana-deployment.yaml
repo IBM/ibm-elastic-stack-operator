@@ -74,6 +74,9 @@ spec:
       - name: router
         securityContext:
           allowPrivilegeEscalation: false
+          capabilities:
+            add:
+              - NET_BIND_SERVICE
         resources:
 {{ toYaml .Values.kibana.routerImage.resources | indent 12 }}
         image: {{ include "image.calculateImage" (list .Values.kibana.routerImage.repository .Values.kibana.routerImage.tag .Values.kibana.routerImage.digest) }}

@@ -14,7 +14,8 @@
 # limitations under the License.
 
 name: ibm-icplogging
-version: 3.2.4
+appVersion: 3.2.5
+version: 3.2.5
 description: Log storage and search management solution
 kubeVersion: ">=1.9.0"
 home: https://elastic.co
@@ -32,6 +33,7 @@ keywords:
 - logstash
 - filebeat
 - ICP
+- ICPRHOCP
 - amd64
 - ppc64le
 - OpenSource

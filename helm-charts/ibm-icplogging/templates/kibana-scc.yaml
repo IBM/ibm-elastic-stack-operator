@@ -26,8 +26,6 @@ allowHostIPC: false
 allowHostNetwork: false
 allowHostPID: false
 allowHostPorts: false
-allowedCapabilities:
-  - NET_BIND_SERVICE
 allowPrivilegedContainer: false
 defaultAddCapabilities: []
 readOnlyRootFilesystem: false

@@ -73,7 +73,7 @@ metadata:
             },
             "general": {
               "environment": "Openshift",
-              "ingressPort": 443
+              "ingressPort": 8443
             },
             "kibana": {
               "access": "ingress",
